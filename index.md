@@ -24,7 +24,7 @@ Without this separation of concerns, it is easy to get stuck re-writing inferenc
 
 The trace abstract data type is most closely aligned with **Monte Carlo** algorithms, but also supports **variational inference** algorithms, **deep learning** algorithms, and hybrid algorithms that combine all three inference and learning paradigms.
 It is also compatible with symbolic inference algorithms.
-An early version of this abstract data type is described in [Marco Cusumano-Towner's PhD thesis](https://www.mct.dev/assets/mct-thesis.pdf) and a 2019 PLDI paper ([paper](https://dl.acm.org/doi/10.1145/3314221.3314642), [bibtex](https://www.gen.dev/assets/gen-pldi.txt)).
+An early version of this abstract data type is described in [this PhD thesis](https://www.mct.dev/assets/mct-thesis.pdf) and a 2019 PLDI paper ([paper](https://dl.acm.org/doi/10.1145/3314221.3314642), [bibtex](https://www.gen.dev/assets/gen-pldi.txt)).
 
 **Probabilistic programming languages** can be used to automatically generate the implementation of the trace abstract data type from your declarative specification of the model.
 You can also always implement the data type yourself for your model for more control and, usually, better performance, once it is time to optimize your implementation.
