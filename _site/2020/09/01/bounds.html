@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS --> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- MathJax -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>Estimating upper bounds on inference approximation error</title>
+  </head>
+  <body>
+    
+    <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+  <a class="navbar-brand mr-0 mr-md-2" href="/" aria-label="Gen">
+<svg version="1.1" width="36" height="36" viewBox="0.0 0.0 433.7244094488189 432.76640419947506" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="p.0"><path d="m0 0l433.7244 0l0 432.76642l-433.7244 0l0 -432.76642z" clip-rule="nonzero"/></clipPath><g clip-path="url(#p.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l433.7244 0l0 432.76642l-433.7244 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="16.0" stroke-linejoin="round" stroke-linecap="butt" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m95.40751 8.810548l290.11023 0l0 288.18896l-290.11023 0z" fill-rule="evenodd"/><path fill="#ffffff" d="m308.04813 300.89618q-12.859375 15.421875 -36.375 23.921875q-23.5 8.484375 -52.09375 8.484375q-30.03125 0 -52.671875 -13.09375q-22.625 -13.109375 -34.9375 -38.046875q-12.312492 -24.9375 -12.624992 -58.625l0 -15.71875q0 -34.640625 11.671867 -59.96875q11.671875 -25.34375 33.671875 -38.765625q22.0 -13.421875 51.546875 -13.421875q41.140625 0 64.328125 19.625q23.203125 19.609375 27.484375 57.109375l-46.375 0q-3.171875 -19.859375 -14.0625 -29.0625q-10.875 -9.21875 -29.9375 -9.21875q-24.3125 0 -37.015625 18.265625q-12.703125 18.265625 -12.875 54.328125l0 14.765625q0 36.375 13.8125 54.96875q13.828125 18.578125 40.515625 18.578125q26.859375 0 38.296875 -11.4375l0 -39.875l-43.375 0l0 -35.09375l91.015625 0l0 92.28125z" fill-rule="nonzero"/><path fill="#000000" fill-opacity="0.0" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="24.0" stroke-linejoin="round" stroke-linecap="butt" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/></g></svg>
+</a>
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav bd-navbar-nav flex-row">
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://www.gen.dev/dev/">Documentation</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/tutorials/">Tutorials</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://github.com/probcomp/Gen.jl">Source</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/ecosystem/">Ecosystem</a>
+      </li>
+    
+    </ul>
+  </div>
+
+</header>
+
+
+
+<main role="main">
+    <br>
+<div class="container">
+<br/>
+<h1>Estimating upper bounds on inference approximation error</h1>
+<p><b>Marco Cusumano-Towner</b>- 01 Sep 2020</p>
+
+<p>A key feature of probabilistic inference as a paradigm for AI is that programs
+that implement probabilistic inference have well-defined mathematical
+specifications for their desired behavior.
+When generative models are used as the basis of inference, the generative model together with the observed data defines a specification for the desired behavior of an inference program—the inference program should encode the conditional distribution on the latent variables given the values of the observed variables.
+But, probabilistic inference algorithms are often approximate, and it is not straightforward to evaluate <em>how well</em> an inference program actually meets its specification.
+This is a problem for all algorithmic approaches to approximate inference, including variational and Monte Carlo algorithms, discriminative models, and hybrids of these.</p>
+
+<p>This is the first in a series of blog posts that will explore techniques for estimating how accurately a given inference program approximates a conditional distribution, focusing on techniques that I have personally used in my research.
+I will use code examples in the <a href="https://www.gen.dev">Gen probabilistic programming system</a> to illustrate the techniques.
+This post focuses on evaluating the approximation error of variational inference programs on simulated data sets by estimating upper bounds on the (inclusive) Kullback-Leibler divergence to the conditional distribution.</p>
+
+<h2 id="an-example-generative-model">An example generative model</h2>
+
+<p>The techniques I’ll describe are relevant to inference in any generative model, but I’ll use a simplified robotics application as motivation.
+Suppose we are a robot moving around in a 2D plane, and we are trying to search for and retrieve a certain object.
+Suppose we have an object detector that returns the heading angle in the plane of the object detection, relative to the heading of the robot, and suppose the robot has some prior beliefs about the location of the object.
+In order to rationally move through the environment in search of the object, we need to keep track of our (unceratin) beliefs about the location of the object over time as we accumulate more observations.</p>
+
+<p>Let’s start with a much simplified generative model of this scenario that includes a single time-step and no other objects in the environment, implemented using Gen.
+The code below defines a generative model of the object’s location <code class="language-plaintext highlighter-rouge">(x, y)</code> and the noisy heading measurement <code class="language-plaintext highlighter-rouge">obs</code> returned by the object detector.
+The robot is assumed to lie at the origin <code class="language-plaintext highlighter-rouge">(0, 0)</code> and to be facing down the positive x-axis.</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> heading_model</span><span class="x">()</span>
+    <span class="n">x</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">1.0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">)</span>
+    <span class="n">y</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">atan</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span>
+    <span class="n">obs</span> <span class="o">~</span> <span class="n">von_mises</span><span class="x">(</span><span class="n">theta</span><span class="x">,</span> <span class="mf">50.0</span><span class="x">)</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>Let’s walk through this code briefly.
+The first two random choices, <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>, are the coordinates of the object.
+Here, the robot has a prior belief that the object is probably located somewhere in front of the robot.
+The plot below shows some samples of of <code class="language-plaintext highlighter-rouge">(x, y)</code> from the prior distribution:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/no-occlusion-prior-overlay.png" alt="prior-samples-of-object-location" class="img-responsive" width="300px" /></p>
+
+<p>Next, <code class="language-plaintext highlighter-rouge">theta = atan(y, x)</code> computes the angle in radians of the object relative to the origin.
+Finally, we sample a random choice (<code class="language-plaintext highlighter-rouge">obs</code>) that represents the observed heading from a <a href="https://en.wikipedia.org/wiki/Von_Mises_distribution">von Mises distribution</a> centered at the true angle.
+The plots below show several samples the prior, where the object location is a red dot, the true heading angle is shown as a blue line, and the observed heading angle is a dotted line:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/no-occlusion-prior.png" alt="prior-samples-of-object-location-and-heading" class="img-responsive" width="800px" /></p>
+
+<p>Now, given an observed angle <code class="language-plaintext highlighter-rouge">obs</code>, we want to write an inference program that approximates the conditional distribution on <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>.</p>
+
+<h2 id="what-does-the-approximate-posterior-look-like">What does the (approximate) posterior look like?</h2>
+
+<p>Because this is a simple low-dimensional model, we can actually get a good approximation to the posterior distribution using sampling importance resampling (SIR) and the prior as the proposal.
+This simple inference program is trivial to implement in Gen:</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="n">samples</span> <span class="o">=</span> <span class="x">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
+    <span class="n">trace</span><span class="x">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">importance_resampling</span><span class="x">(</span><span class="n">heading_model</span><span class="x">,</span> <span class="x">(),</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">obs</span><span class="x">,</span> <span class="nb">pi</span><span class="o">/</span><span class="mi">4</span><span class="x">)),</span> <span class="mi">10000</span><span class="x">)</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">samples</span><span class="x">,</span> <span class="x">(</span><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">y</span><span class="x">]))</span>
+<span class="k">end</span> </code></pre></figure>
+
+<p>(Note that we could have also used <code class="language-plaintext highlighter-rouge">Gen.importance_sampling</code> and resampled a collection of 100 particles in proportion to the weights instead; that would have been more efficient and would give similar results in this case.)</p>
+
+<p>Below are approximate samples of the object’s location, given <code class="language-plaintext highlighter-rouge">obs</code> is $\pi/4$, and 10000 particles.</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/single-posterior-1.png" alt="example-posterior-samples" class="img-responsive" width="300px" /></p>
+
+<p>This result seems to make sense qualitatively.</p>
+
+<h2 id="applying-variational-inference">Applying variational inference</h2>
+
+<p>Let’s now try to apply variational inference to this problem.
+We will use Gen’s support for <a href="https://www.gen.dev/dev/ref/vi/#Black-box-variational-inference-1">black box variational inference</a>, which is a class of algorithms introduced by Rajesh Ranganath et al. in a <a href="https://arxiv.org/abs/1401.0118">2013 paper</a> that requires only the ability to evaluate the unnormalized log probability density of the model.
+Gen lets you apply black box variational inference using variational approximating families that are themselves defined as probabilistic programs.</p>
+
+<p>The first step is to write the probabilistic program that defines the variational approximating family that we will optimize to match the posterior as closely as possible.
+To keep things simple, I’ll use a simple approximating family consisting of axis-aligned multivariate normal distributions:</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> q_axis_aligned_gaussian</span><span class="x">()</span>
+    <span class="nd">@param</span> <span class="n">x_mu</span><span class="o">::</span><span class="kt">Float64</span>
+    <span class="nd">@param</span> <span class="n">y_mu</span><span class="o">::</span><span class="kt">Float64</span>
+    <span class="nd">@param</span> <span class="n">x_log_std</span><span class="o">::</span><span class="kt">Float64</span>
+    <span class="nd">@param</span> <span class="n">y_log_std</span><span class="o">::</span><span class="kt">Float64</span>
+    <span class="n">x</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">x_mu</span><span class="x">,</span> <span class="n">exp</span><span class="x">(</span><span class="n">x_log_std</span><span class="x">))</span>
+    <span class="n">y</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">y_mu</span><span class="x">,</span> <span class="n">exp</span><span class="x">(</span><span class="n">y_log_std</span><span class="x">))</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>Then, we can apply Gen’s black box variational inference procedure to optimize the four variational parameters (<code class="language-plaintext highlighter-rouge">x_mu</code>, <code class="language-plaintext highlighter-rouge">y_mu</code>, <code class="language-plaintext highlighter-rouge">x_log_std</code>, and <code class="language-plaintext highlighter-rouge">y_log_std</code>), which are all initialized to zero:</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">q</span><span class="x">,</span> <span class="o">:</span><span class="n">x_mu</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">)</span>
+<span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">q</span><span class="x">,</span> <span class="o">:</span><span class="n">y_mu</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">)</span>
+<span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">q</span><span class="x">,</span> <span class="o">:</span><span class="n">x_log_std</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">)</span>
+<span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">q</span><span class="x">,</span> <span class="o">:</span><span class="n">y_log_std</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">)</span>
+<span class="n">update</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">ParamUpdate</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">FixedStepGradientDescent</span><span class="x">(</span><span class="mf">0.001</span><span class="x">),</span> <span class="n">q_axis_aligned_gaussian</span><span class="x">)</span>
+<span class="x">(</span><span class="n">elbo_estimate</span><span class="x">,</span> <span class="n">_</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">black_box_vi!</span><span class="x">(</span>
+    <span class="n">heading_model</span><span class="x">,</span> <span class="x">(</span><span class="mf">50.0</span><span class="x">,),</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">obs</span><span class="x">,</span> <span class="n">obs</span><span class="x">)),</span>
+    <span class="n">q_axis_aligned_gaussian</span><span class="x">,</span> <span class="x">(),</span> <span class="n">update</span><span class="x">;</span> <span class="n">iters</span><span class="o">=</span><span class="mi">1000</span><span class="x">,</span> <span class="n">samples_per_iter</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span></code></pre></figure>
+
+<p>After optimizing the parameters, we can sample from the approximating distribution and compare the approximate posterior samples from importance sampling (left) with the approximate posterior samples from the variational approximation (right):</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/single-posterior-1.png" alt="example-posterior-samples" class="img-responsive" width="300px" />
+<img src="/assets/posts/2020-09-01-bounds/single-posterior-bbvi-1.png" alt="example-variational-samples" class="img-responsive" width="300px" /></p>
+
+<p>There is a clear qualitative difference in the inferences.
+Let’s compare the approximate posteriors obtained from importance sampling and variational inference when <code class="language-plaintext highlighter-rouge">obs</code> is $\pi/2$:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/single-posterior-2.png" alt="example-posterior-samples-2" class="img-responsive" width="300px" />
+<img src="/assets/posts/2020-09-01-bounds/single-posterior-bbvi-2.png" alt="example-variational-samples-2" class="img-responsive" width="300px" /></p>
+
+<p>It looks like maybe the variational approximation is more accurate
+for the inference problem when <code class="language-plaintext highlighter-rouge">obs</code> is $\pi/2$ than when <code class="language-plaintext highlighter-rouge">obs</code> is $\pi/4$.
+This does make sense; our variational approximating family
+assumes the two coordinate dimensions are independent, and this assumption appears
+less valid when <code class="language-plaintext highlighter-rouge">obs</code> is $\pi/4$.
+I’ll now discuss a quantitative technique that can reveal this type of disparity in variational approximation accuracy.</p>
+
+<h2 id="quantifying-the-error-of-a-variational-approximation">Quantifying the error of a variational approximation</h2>
+
+<p>In order to understand when our variational approximations are more or less accurate,
+and in order to make rational decisions about choices of variational approximating family and how
+much programming effort and computational resources to expend improving inference,
+we need to be able to evaluate or estimate
+the approximation error of a given variational approximation.</p>
+
+<p>For the simple example above, we can qualitatively discern differences in the approximating distributions of the two algorithms, but the comparison has (at least) two issues:
+It is not quantitative, and comparing against the importance sampling results is fraught since we can’t be sure that the importance sampling algorithm is actually giving us accurate results either.
+These problems are magnified in more realistic higher-dimensional problems.</p>
+
+<p>In the remainder of this post, I’ll introduce a technique that addresses both of these issues, and
+then demonstrate the technique on this simple inference problem.
+Prepare to see some math!</p>
+
+<h4 id="evidence-lower-bound-and-exclusive-kl-divergence">Evidence lower bound and exclusive KL divergence</h4>
+
+<p>Black box variational inference is based a clear objective function, and we will use this objective function 
+as the starting point for a quantitative evaluation of the approximation error.
+Let’s denote latent variables by $z$, observed variables by $x$, variational parameters by $\theta$, the density function for the variational approximating family by $q(\cdot; \theta)$ and the generative model joint density by $p(z, x)$.</p>
+
+<p>Briefly, black box variational inference attempts to maximize the ‘evidence lower bound’ or ‘ELBO’:</p>
+
+\[\displaystyle
+\max_{\theta} \mathbb{E}_{z \sim q(\cdot; \theta)}\left[ \log \frac{p(z, x)}{q(z; \theta)} \right]
+= \max_{\theta} \left[ \log p(x) - \mathrm{KL}(q(\cdot; \theta) || p(\cdot | z)) \right]\]
+
+<p>This is equivalent to minimizing the exclusive KL divergence:</p>
+
+\[\min_{\theta} \mathrm{KL}(q(\cdot; \theta) || p(\cdot | z))\]
+
+<p>This KL divergence is a reasonable choice of approximation error metric to use to evaluate variational approximations.
+However, while is straightforward to estimate the ELBO by sampling from the variational approximation, because
+the the actual log marginal likelihood $\log p(x)$ is unknown, it is not straightforward to estimate this KL divergence itself.</p>
+
+<p>To illustrate the issue, I fit the variational family defined above for a grid of observation values, and plot the resulting ELBO estimates below:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/elbos-only.png" alt="elbo-estimates-only" class="img-responsive" width="500px" /></p>
+
+<p>While this plot looks interesting, it does’t really give us much information about how accurate our variational approximation is.
+For any given observed angle, we don’t know the gap between the ELBO and the actual log marginal likelihood, so we can’t tell from this plot whether it is worth improving our variational approximation or not.
+Also, the plot doesn’t tell us how the accuracy of the variational approximation depends on the observation.
+While it looks like the ELBO is higher for observations near the x-axis, we don’t know how much to attribute this to higher marginal likelihood for these observations versus lower KL divergence.</p>
+
+<p>We could use what we believe is a more accurate estimator of the log marginal likelihood like annealed importance sampling (or, for this problem, importance sampling), and then take differences between those estimates and the ELBO estimates.
+But that approach relies on trusting that the more accurate estimator is sufficiently accurate, which is undesirable.</p>
+
+<h3 id="stochastic-lower-and-upper-bounds-on-the-log-marginal-likelihood">Stochastic lower and upper bounds on the log marginal likelihood</h3>
+
+<p>Next, we’ll look into some math and derive a technique that gives us estimates of upper bounds on the log marginal likelihood, and show how to implement the technique using Gen.
+The technique builds on an idea proposed in the 2015 paper
+<a href="https://arxiv.org/abs/1511.02543">Sandwiching the marginal likelihood using bidirectional Monte Carlo</a> by 
+Roger Grosse, Zoubin Ghahramani, and Ryan Adams.</p>
+
+<p>The technique is based on two facts regarding marginal likelihood estimators:</p>
+
+<ul>
+  <li>Any nonnegative unbiased estimator of the marginal likelihood gives a stochastic lower bound on the log marginal likelihood. That is, if $\widehat{p}(x)$ is a non-negative random variable and $\mathbb{E}[\widehat{p}(x)] = p(x)$, then</li>
+</ul>
+
+\[\mathrm{Pr}(\log \widehat{p}(x) &lt; \log p(x) + \delta) \ge 1 - \exp(-\delta)\]
+
+<ul>
+  <li>Any nonnegative unbiased estimator of the <em>reciprocal</em> of the marginal likelihood gives a stochastic <em>upper</em> bound on the log marginal likelihood.
+That is, if $\widehat{p}(x)$ is a non-negative random variable and $\mathbb{E}[1 / \widehat{p}(x)] = 1/p(x)$, then</li>
+</ul>
+
+\[\mathrm{Pr}(\log \widehat{p}(x) &gt; \log p(x) - \delta) \ge 1 - \exp(-\delta)\]
+
+<p>Both of these facts can be proven using straightforward application of
+<a href="https://en.wikipedia.org/wiki/Markov%27s_inequality">Markov’s inequality</a>.</p>
+
+<p>For example, for some observations $x$, if we obtain estimates $\hat{p}_1(x)$ and $\hat{p}_2(x)$ from an unbiased and unbiased reciprocal estimators respectively, then:</p>
+
+\[\mathrm{Pr}(p(x) \in [\log \hat{p}_1(x) - 4, \log \hat{p}_2(x) + 4]) \ge 1 - 2 \exp(-4) \approx 0.96\]
+
+<p>(Note that this is a frequentist probability and not a Bayesian statement of subjective belief about $p(x)$.)</p>
+
+<p>Many of the most popular marginal likelihood estimators, including importance sampling, annealed importance sampling, and sequential Monte Carlo, are unbiased; and can therefore be used to obtain stochastic lower bounds.
+For example, importance sampling can be used to construct an unbiased estimate of the marginal likelihood, using $N$ independent samples from a proposal distribution $q(\cdot)$:</p>
+
+\[\widehat{p}(x) := \frac{1}{N} \sum_{i=1}^N \frac{p(z_i, x)}{q(z_i)} \;\; \mbox{for} \;\; z_i \sim q(\cdot)\]
+
+<p>There are a number of asymptotically consistent unbiased estimators of the reciprocal of the marginal likelihood that can be constructed given access to a single posterior sample.
+Grosse et al. 2015 describe one based on running annealed importance sampling (AIS) in reverse, starting from an exact posterior sample,
+that is straightforward to implement using Gen (and, along with regular AIS, is part of Gen’s core inference library).</p>
+
+<p>I’ll now introduce another estimator that gives stochastic upper bounds that is simpler to implement,
+and will suffice for the example used in this post.
+Like importance sampling, the estimator is parametrized by a number $N$ of particles to use.
+The estimator obtains a single posterior sample $z_1 \sim p(\cdot | x)$ and
+samples $N-1$ samples $z_i$ for $i = 2, \ldots, N$ from a proposal distribution $q(\cdot)$.
+Then, it returns the average importance weight:</p>
+
+\[\hat{p}(x) := \frac{1}{N} \sum_{i=1}^N \frac{p(z_i, x)}{q(z_i)}\]
+
+<p>Note that this procedure is identical to the importance sampling estimator of the marginal likelihood,
+except that one of the importance samples is sampled from the conditional distribution $p(\cdot | x)$ instead
+of from the proposal distribution.
+Like importance sampling, it is asymptotically consistent as $N \to \infty$, but
+unlike importance sampling, it is a stochastic upper bound on the log marginal likelihood (for all $N$).</p>
+
+<p>Aside: To see that $\mathbb{E}[1 / \hat{p}(x)] = 1/p(x)$ consider the following sampling distribution
+on the vector $\mathbf{z} := (z_1, \ldots, z_N)$:</p>
+
+\[q(\mathbf{z}) := \frac{1}{N} \sum_{i=1}^N p(z_i | x) \prod_{j \ne i} q(z_j)\]
+
+<p>Then,</p>
+
+\[\displaystyle \mathbb{E}_{\mathbf{z} \sim q(\cdot)} \left[ \displaystyle \frac{1}{\hat{p}(x)} \right]
+=
+\displaystyle \mathbb{E}_{\mathbf{z} \sim q(\cdot)} \left[ \displaystyle \frac{\prod_{i=1}^N q(z_i)}{\frac{1}{N} \sum_{i=1}^N p(z_i; x) \prod_{j \ne i} q(z_j)} \right] = \frac{1}{p(x)}\]
+
+<p>The stochastic upper bound here, and those described in Grosse et al. 2015 all require one or more exact posterior samples.
+While these can in principle be obtained using an exact inference method, like <a href="https://en.wikipedia.org/wiki/Rejection_sampling">rejection sampling</a>, in practice this is not feasible for large problems.
+Instead, Grosse et al. observes that if we jointly simulate latent variables and observed variables $(z, x)$ from a generative model, then $z | x \sim p(\cdot | x)$, and we have a single exact conditional sample.</p>
+
+<p>I applied this technique, using the importance sampling based stochastic lower and upper bounds described above.
+For the stochastic lower bounds, I used an importance sampling estimate of the marginal likelhood based on the internal proposal of the model:</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="x">(</span><span class="n">_</span><span class="x">,</span> <span class="n">stoch_lb</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">importance_resampling</span><span class="x">(</span><span class="n">heading_model</span><span class="x">,</span> <span class="x">(),</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">obs</span><span class="x">,</span> <span class="n">obs</span><span class="x">)),</span> <span class="n">num_particles</span><span class="x">)</span></code></pre></figure>
+
+<p>For the stochastic upper bound, I implemented a procedure based on importance sampling described above, also using the internal proposal.
+To return a stochastic upper bound, the procedure requires a trace with latent variables sampled from the conditional distribution given the observed variables.</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="k">function</span><span class="nf"> stochastic_upper_bound</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">observed</span><span class="o">::</span><span class="n">Selection</span><span class="x">,</span> <span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_gen_fn</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+    <span class="n">model_args</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_selected</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">),</span> <span class="n">observed</span><span class="x">)</span>
+    <span class="n">log_weights</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
+    <span class="n">log_weights</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">project</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">observed</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="n">num_particles</span>
+        <span class="x">(</span><span class="n">_</span><span class="x">,</span> <span class="n">log_weights</span><span class="x">[</span><span class="n">i</span><span class="x">])</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">model_args</span><span class="x">,</span> <span class="n">observations</span><span class="x">)</span>
+    <span class="k">end</span>
+    <span class="n">log_total_weight</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">logsumexp</span><span class="x">(</span><span class="n">log_weights</span><span class="x">)</span>
+    <span class="n">log_ml_estimate</span> <span class="o">=</span> <span class="n">log_total_weight</span> <span class="o">-</span> <span class="n">log</span><span class="x">(</span><span class="n">num_particles</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">log_ml_estimate</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>I jointly simulated 1000 times from the generative model.
+For each simulated observed data $x$ (in this case, the observed angle <code class="language-plaintext highlighter-rouge">obs</code>), I ran black box variational inference, and plotted the resulting ELBO estimate after optimization in blue, with the angle <code class="language-plaintext highlighter-rouge">obs</code> on the x-axis.
+For I also ran importance sampling with 1000 particles to obtain an stochastic lower bound estimate of the log marginal likelihood, shown in orange.
+Finally, I input the single exact posterior sample $z$ and the observed data $x$ into the stochastic upper bound estimator described above with 1000 particles to obtain the stochastic upper bounds, shown in green.
+The procedure for simulating a joint sample from the model and evaluating the stochastic lower and upper bounds is:</p>
+
+<figure class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="k">function</span><span class="nf"> joint_sample_and_estimates</span><span class="x">(</span><span class="n">num_particles</span><span class="x">)</span>
+    <span class="n">sim_trace</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">heading_model</span><span class="x">,</span> <span class="x">())</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">sim_trace</span><span class="x">[</span><span class="o">:</span><span class="n">obs</span><span class="x">]</span>
+    <span class="x">(</span><span class="n">_</span><span class="x">,</span> <span class="n">stoch_lb</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">importance_resampling</span><span class="x">(</span><span class="n">heading_model</span><span class="x">,</span> <span class="x">(),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">obs</span><span class="x">,</span> <span class="n">obs</span><span class="x">)),</span> <span class="n">num_particles</span><span class="x">)</span>
+    <span class="n">stoch_ub</span> <span class="o">=</span> <span class="n">stochastic_upper_bound</span><span class="x">(</span><span class="n">sim_trace</span><span class="x">,</span> <span class="n">Gen</span><span class="o">.</span><span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">obs</span><span class="x">),</span> <span class="n">num_particles</span><span class="x">)</span>
+    <span class="k">return</span> <span class="x">(</span><span class="n">stoch_lb</span><span class="x">,</span> <span class="n">stoch_ub</span><span class="x">,</span> <span class="n">obs</span><span class="x">)</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>The results are shown below.
+The plot on the right shows the difference between the stochastic upper bounds and the ELBO estimates, for each simulated observation:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/no-occlusion-exclusive-kls-1000.png" alt="combined-estimates" class="img-responsive" width="900px" /></p>
+
+<p>First, note that the stochastic upper bounds and the stochastic lower bounds are generally very close,
+suggesting that we have succesfully ‘sandwiched’ the log marginal likelihood (borrowing terminology from Grosse et al.).
+However, technically the stochastic bounds are too loose to allow us to make confident quantitative statements based only on this evidence—they only guarantee that they sandwich the true log marginal likelihood within a few nats with high probability, and the span of the entire y-axis is on the order of a few nats as well.
+The ability to estimate the log marginal likelihood to within a few nats is more significant in more difficult inference problems.
+But, using the stochastic upper bound as our estimate of the log marginal likelhood, the resulting KL divergence estimates on the right seem to reflect the weakness in our variational approximating family.
+The data suggest that for <code class="language-plaintext highlighter-rouge">obs</code> near 0 and $-\pi/2$ and $\pi/2$, the KL divergence is lower, which
+agrees with our qualitative observations above.
+For <code class="language-plaintext highlighter-rouge">obs</code> near $\pi$, our marginal likelihood estimators appear to have somewhat higher variance, and we are more uncertain about the KL divergence for those observations as a result.</p>
+
+<p>I also ran same procedure but using stochastic lower and upper bounds using only 10 particles each, instead of 1000 particles:</p>
+
+<p style="text-align: center;"><img src="/assets/posts/2020-09-01-bounds/no-occlusion-exclusive-kls-10.png" alt="combined-estimates" class="img-responsive" width="900px" /></p>
+
+<p>Now, the gap between the stochastic lower and upper bounds is significant (note the scale of the y-axes in both plots).
+In particular, whereas importance sampling fails to accurately estimate the log marginal likelihood,
+the modified importance sampling procedure that uses the single posterior sample still gives a stochastic upper bound.
+The estimates of the upper bound on the KL divergence are higher than the earlier estimates obtained using 1000 particles, and have more variance.
+In particular, the pattern where the accuracy of the variational approximation is lower for obs near $\pi/4$ and $-\pi/4$ is no longer apparent.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>There are a few interesting conclusions that arise from this technique.</p>
+
+<p>First, it is not surprising that an exact conditional sample is needed to make
+any (even stochastic) guarantees about generic upper bounds on the log marginal likelihood.
+The conditional distribution can assign arbitrary mass to arbitrarily small regions of the 
+state space that are exceedingly unlikely to be examined by generic estimators.
+The ability to sample from the conditional distribution ensures that these such regions have 
+high probability of being sampled and therefore accounted for in the log marginal likelihood estimate.</p>
+
+<p>Second, we can either run the technique for simulated data, or using a certifiably exact sampler,
+like rejection sampling.
+If we run the technique on simulated data only, then we do not get to choose which observations
+we run this analysis for.
+For example, in the above analysis, we have less data about the KL divergence in scenarios when the object lies behind
+the robot, because these scenarios are less likely under our prior distribution.
+It should be possible to fit regression models to the KL estimates shown above, that will allow us to be more confident about KL values in sparsely sampled regions of the observation space, and in order to interpolate and make predictions about the KL divergence for real-world data sets that were not simulated.</p>
+
+<p>In a future post, I will describe a generalization of the technique in this post that I presented at NeurIPS 2017 called <a href="https://papers.nips.cc/paper/6893-aide-an-algorithm-for-measuring-the-accuracy-of-probabilistic-inference-algorithms.pdf">AIDE</a>, which
+allows for many Monte Carlo algorithms can be evaluated using the same KL-divergence based metric used here and compared directly against variational approximations, as well as estimation of upper bounds on the symmetric KL divergence between two samplers.
+I will also discuss how amortized variational inference and discriminative models can be interpreted from the perspective of approximation error of inference programs.</p>
+
+<h2 id="references">References</h2>
+
+<p><a href="http://proceedings.mlr.press/v33/ranganath14.html">Rajesh Ranganath, Sean Gerrish, and David Blei. Black box variational inference. 2014.</a></p>
+
+<p><a href="https://arxiv.org/abs/1511.02543">Roger Grosse, Zoubin Ghahramani, and Ryan Adams. Sandwiching the marginal likelihood using bidirectional Monte Carlo. 2015.</a></p>
+
+<p><a href="https://link.springer.com/article/10.1023/A:1008923215028">Neal, Radford M. Annealed importance sampling. 2001.</a></p>
+
+<p>Christian Robert and George Casella. Monte Carlo statistical methods. 2013.</p>
+
+<p><a href="https://papers.nips.cc/paper/6893-aide-an-algorithm-for-measuring-the-accuracy-of-probabilistic-inference-algorithms.pdf">Marco Cusumano-Towner and Vikash K. Mansinghka. AIDE: An algorithm for measuring the accuracy of probabilistic inference algorithms. 2017.</a></p>
+
+
+<div>
+    
+    
+<div id="gh-comments">
+    <br/><br/>
+    <h3>Comments</h3>
+    <div id="gh-comments-list"></div>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<script src="/js/github-comments.js"> </script>
+
+<script type="text/javascript"> 
+    DoGithubComments ( 
+        "probcomp/gen-blog-comments" , 
+        "1" 
+    ); 
+</script>
+
+<noscript>Please enable JavaScript to view comments.</noscript>
+
+
+
+</div>
+<br>
+</div>
+
+</main><!-- /.container -->
+
+<!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright: The author(s).
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.min.js"
+			  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+			  crossorigin="anonymous"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  </body>
+</html>

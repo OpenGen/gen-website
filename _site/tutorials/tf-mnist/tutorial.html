@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS --> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- MathJax -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>Modeling with TensorFlow Code</title>
+  </head>
+  <body>
+    
+    <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+  <a class="navbar-brand mr-0 mr-md-2" href="/" aria-label="Gen">
+<svg version="1.1" width="36" height="36" viewBox="0.0 0.0 433.7244094488189 432.76640419947506" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="p.0"><path d="m0 0l433.7244 0l0 432.76642l-433.7244 0l0 -432.76642z" clip-rule="nonzero"/></clipPath><g clip-path="url(#p.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l433.7244 0l0 432.76642l-433.7244 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="16.0" stroke-linejoin="round" stroke-linecap="butt" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m95.40751 8.810548l290.11023 0l0 288.18896l-290.11023 0z" fill-rule="evenodd"/><path fill="#ffffff" d="m308.04813 300.89618q-12.859375 15.421875 -36.375 23.921875q-23.5 8.484375 -52.09375 8.484375q-30.03125 0 -52.671875 -13.09375q-22.625 -13.109375 -34.9375 -38.046875q-12.312492 -24.9375 -12.624992 -58.625l0 -15.71875q0 -34.640625 11.671867 -59.96875q11.671875 -25.34375 33.671875 -38.765625q22.0 -13.421875 51.546875 -13.421875q41.140625 0 64.328125 19.625q23.203125 19.609375 27.484375 57.109375l-46.375 0q-3.171875 -19.859375 -14.0625 -29.0625q-10.875 -9.21875 -29.9375 -9.21875q-24.3125 0 -37.015625 18.265625q-12.703125 18.265625 -12.875 54.328125l0 14.765625q0 36.375 13.8125 54.96875q13.828125 18.578125 40.515625 18.578125q26.859375 0 38.296875 -11.4375l0 -39.875l-43.375 0l0 -35.09375l91.015625 0l0 92.28125z" fill-rule="nonzero"/><path fill="#000000" fill-opacity="0.0" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="24.0" stroke-linejoin="round" stroke-linecap="butt" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/></g></svg>
+</a>
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav bd-navbar-nav flex-row">
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://www.gen.dev/dev/">Documentation</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/tutorials/">Tutorials</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://github.com/probcomp/Gen.jl">Source</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/ecosystem/">Ecosystem</a>
+      </li>
+    
+    </ul>
+  </div>
+
+</header>
+
+
+
+<main role="main">
+    <br/>
+<div class="container">
+<h1 id="modeling-with-tensorflow-code">Modeling with TensorFlow code</h1>
+
+<p>So far, we have seen generative functions that are defined only using the built-in modeling language, which uses the <code class="language-plaintext highlighter-rouge">@gen</code> keyword. However, Gen can also be extended with other modeling languages, as long as they produce generative functions that implement the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/">Generative Function Interface</a>. The <a href="https://github.com/probcomp/GenTF">GenTF</a> Julia package provides one such modeling language which allow generative functions to be constructed from user-defined TensorFlow computation graphs. Generative functions written in the built-in language can invoke generative functions defined using the GenTF language.</p>
+
+<p>This notebook shows how to write a generative function in the GenTF language, how to invoke a GenTF generative function from a <code class="language-plaintext highlighter-rouge">@gen</code> function, and how to perform basic supervised training of a generative function. Specifically, we will train a softmax regression conditional inference model to generate the label of an MNIST digit given the pixels. Later tutorials will show how to use deep learning and TensorFlow to accelerate inference in generative models, using ideas from “amortized inference”.</p>
+
+<p>NOTE: Only attempt to run this notebook if you have a working installation of TensorFlow and GenTF (see the <a href="https://probcomp.github.io/GenTF/dev/#Installation-1">GenTF installation instructions</a>).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">Plots</span>
+</code></pre></div></div>
+
+<p>First, we load the GenTF package and the PyCall package. The PyCall package is used because TensorFlow computation graphs are constructed using the TensorFlow Python API, and the PyCall package allows Python code to be run from Julia.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">GenTF</span><span class="x">,</span> <span class="n">PyCall</span>
+</code></pre></div></div>
+
+<p>We text load the TensorFlow and TensorFlow.nn Python modules into our scope. The <code class="language-plaintext highlighter-rouge">@pyimport</code> macro is defined by PyCall.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span> <span class="o">=</span> <span class="n">pyimport</span><span class="x">(</span><span class="s">"tensorflow"</span><span class="x">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">disable_eager_execution</span><span class="x">()</span>
+<span class="n">nn</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PyObject &lt;module 'tensorflow._api.v2.nn' from '/Users/alexlew/gen-quickstart/tutorials/tensorflow/venv/lib/python3.8/site-packages/tensorflow/_api/v2/nn/__init__.py'&gt;
+</code></pre></div></div>
+
+<p>Next, we define a TensorFlow computation graph. The graph will have placeholders for an N x 784 matrix of pixel values, where N is the number of images that will be processed in batch, and 784 is the number of pixels in an MNIST image (28x28). There are 10 possible digit classes. The <code class="language-plaintext highlighter-rouge">probs</code> Tensor is an N x 10 matrix, where each row of the matrix is the vector of normalized probabilities of each digit class for a single input image. Note that this code is largely identical to the corresponding Python code. We provide initial values for the weight and bias parameters that are computed in Julia (it is also possible to use TensorFlow initializers for this purpose).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># input images, shape (N, 784)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">placeholder</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float64</span><span class="x">,</span> <span class="n">shape</span><span class="o">=</span><span class="x">(</span><span class="nb">nothing</span><span class="x">,</span> <span class="mi">784</span><span class="x">))</span>
+
+<span class="c"># weight matrix parameter for soft-max regression, shape (784, 10)</span>
+<span class="c"># initialize to a zeros matrix generated by Julia.</span>
+<span class="n">init_W</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="kt">Float64</span><span class="x">,</span> <span class="mi">784</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Variable</span><span class="x">(</span><span class="n">init_W</span><span class="x">)</span>
+
+<span class="c"># bias vector parameter for soft-max regression, shape (10,)</span>
+<span class="c"># initialize to a zeros vector generated by Julia.</span>
+<span class="n">init_b</span> <span class="o">=</span> <span class="n">zeros</span><span class="x">(</span><span class="kt">Float64</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Variable</span><span class="x">(</span><span class="n">init_b</span><span class="x">)</span>
+
+<span class="c"># probabilities for each class, shape (N, 10)</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">W</span><span class="x">),</span> <span class="n">b</span><span class="x">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>Next, we construct the generative function from this graph. The GenTF package provides a <code class="language-plaintext highlighter-rouge">TFFunction</code> type that implements the generative function interface. The <code class="language-plaintext highlighter-rouge">TFFunction</code> constructor takes:</p>
+
+<p>(i) A vector of Tensor objects that will be the trainable parameters of the generative function (<code class="language-plaintext highlighter-rouge">[W, b]</code>). These should be TensorFlow variables.</p>
+
+<p>(ii) A vector of Tensor object that are the inputs to the generative function (<code class="language-plaintext highlighter-rouge">[xs]</code>). These should be TensorFlow placeholders.</p>
+
+<p>(iii) The Tensor object that is the return value of the generative function (<code class="language-plaintext highlighter-rouge">probs</code>).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf_softmax_model</span> <span class="o">=</span> <span class="n">TFFunction</span><span class="x">([</span><span class="n">W</span><span class="x">,</span> <span class="n">b</span><span class="x">],</span> <span class="x">[</span><span class="n">xs</span><span class="x">],</span> <span class="n">probs</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">TFFunction</code> constructor creates a new TensorFlow session that will be used to execute all TensorFlow code for this generative function. It is also TensorFlow possible to supply a session explicitly to the constructor. See the <a href="https://probcomp.github.io/GenTF/dev/">GenTF documentation</a> for more details.</p>
+
+<p>We can run the resulting generative function on some fake input data. This causes the TensorFlow to execute code in the TensorFlow session associated with <code class="language-plaintext highlighter-rouge">tf_softmax_model</code>:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fake_xs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">5</span><span class="x">,</span> <span class="mi">784</span><span class="x">)</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">tf_softmax_model</span><span class="x">(</span><span class="n">fake_xs</span><span class="x">)</span>
+<span class="n">println</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">probs</span><span class="x">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(5, 10)
+</code></pre></div></div>
+
+<p>We can also use <code class="language-plaintext highlighter-rouge">Gen.initialize</code> to obtain a trace of this generative function.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">tf_softmax_model</span><span class="x">,</span> <span class="x">(</span><span class="n">fake_xs</span><span class="x">,));</span>
+</code></pre></div></div>
+
+<p>Note that generative functions constructed using GenTF do not make random choices:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p>The return value is the Julia value corresponding to the Tensor <code class="language-plaintext highlighter-rouge">y</code>:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">println</span><span class="x">(</span><span class="n">size</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(5, 10)
+</code></pre></div></div>
+
+<p>Finally, we write a generative function using the built-in modeling DSL that invokes the TFFunction generative function we just defined. Note that we wrap the call to <code class="language-plaintext highlighter-rouge">tf_softmax_model</code> in an <code class="language-plaintext highlighter-rouge">@addr</code> statement.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> digit_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    
+    <span class="c"># there are N input images, each with D pixels</span>
+    <span class="x">(</span><span class="n">N</span><span class="x">,</span> <span class="n">D</span><span class="x">)</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    
+    <span class="c"># invoke the `net` generative function to compute the digit label probabilities for all input images</span>
+    <span class="n">probs</span> <span class="o">~</span> <span class="n">tf_softmax_model</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="nd">@assert</span> <span class="n">size</span><span class="x">(</span><span class="n">probs</span><span class="x">)</span> <span class="o">==</span> <span class="x">(</span><span class="n">N</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+    
+    <span class="c"># sample a digit label for each of the N input images</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+        <span class="x">{(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">categorical</span><span class="x">(</span><span class="n">probs</span><span class="x">[</span><span class="n">i</span><span class="x">,</span><span class="o">:</span><span class="x">])</span>
+    <span class="k">end</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Let’s obtain a trace of <code class="language-plaintext highlighter-rouge">digit_model</code> on the fake tiny input:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">digit_model</span><span class="x">,</span> <span class="x">(</span><span class="n">fake_xs</span><span class="x">,));</span>
+</code></pre></div></div>
+
+<p>We see that the <code class="language-plaintext highlighter-rouge">net</code> generative function does not make any random choices. The only random choices are the digit labels for each input input:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+├── (:y, 1) : 6
+│
+├── (:y, 5) : 8
+│
+├── (:y, 4) : 3
+│
+├── (:y, 3) : 4
+│
+├── (:y, 2) : 8
+│
+└── :probs
+</code></pre></div></div>
+
+<p>Before the <code class="language-plaintext highlighter-rouge">digit_model</code> will be useful for anything, it needs to be trained. We load some code for loading batches of MNIST training data.</p>
+
+<p>The following cell will ask permission to download MNIST; type “y” at the prompt, if prompted.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span><span class="x">(</span><span class="s">"mnist.jl"</span><span class="x">)</span>
+<span class="n">training_data_loader</span> <span class="o">=</span> <span class="n">MNISTTrainDataLoader</span><span class="x">();</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>stdin&gt; yes
+This program has requested access to the data dependency MNIST.
+which is not currently installed. It can be installed automatically, and you will not see this message again.
+
+Dataset: THE MNIST DATABASE of handwritten digits
+Authors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
+Website: http://yann.lecun.com/exdb/mnist/
+
+[LeCun et al., 1998a]
+    Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner.
+    "Gradient-based learning applied to document recognition."
+    Proceedings of the IEEE, 86(11):2278-2324, November 1998
+
+The files are available for download at the offical
+website linked above. Note that using the data
+responsibly and respecting copyright remains your
+responsibility. The authors of MNIST aren't really
+explicit about any terms of use, so please read the
+website to make sure you want to download the
+dataset.
+
+
+
+Do you want to download the dataset from ["https://ossci-datasets.s3.amazonaws.com/mnist/train-images-idx3-ubyte.gz", "https://ossci-datasets.s3.amazonaws.com/mnist/train-labels-idx1-ubyte.gz", "https://ossci-datasets.s3.amazonaws.com/mnist/t10k-images-idx3-ubyte.gz", "https://ossci-datasets.s3.amazonaws.com/mnist/t10k-labels-idx1-ubyte.gz"] to "/Users/alexlew/.julia/datadeps/MNIST"?
+[y/n]
+</code></pre></div></div>
+
+<p>Now, we train the trainable parameters of the <code class="language-plaintext highlighter-rouge">tf_softmax_model</code> generative function  (<code class="language-plaintext highlighter-rouge">W</code> and <code class="language-plaintext highlighter-rouge">b</code>) on the MNIST traing data. Note that these parameters are stored as the state of the TensorFlow variables. We will use the <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.train!"><code class="language-plaintext highlighter-rouge">Gen.train!</code></a> method, which supports supervised training of generative functions using stochastic gradient opimization methods. In particular, this method takes the generative function to be trained (<code class="language-plaintext highlighter-rouge">digit_model</code>), a Julia function of no arguments that generates a batch of training data, and the update to apply to the trainable parameters.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">ParamUpdate</code> constructor takes the type of update to perform (in this case a gradient descent update with step size 0.00001), and a specification of which trainable parameters should be updated). Here, we request that the <code class="language-plaintext highlighter-rouge">W</code> and <code class="language-plaintext highlighter-rouge">b</code> trainable parameters of the <code class="language-plaintext highlighter-rouge">tf_softmax_model</code> generative function should be trained.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">update</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">ParamUpdate</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">FixedStepGradientDescent</span><span class="x">(</span><span class="mf">0.00001</span><span class="x">),</span> <span class="n">tf_softmax_model</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="n">W</span><span class="x">,</span> <span class="n">b</span><span class="x">]);</span>
+</code></pre></div></div>
+
+<p>For the data generator, we obtain a batch of 100 MNIST training images. The data generator must return a tuple, where the first element is a set of arguments to the generative function being trained (<code class="language-plaintext highlighter-rouge">(xs,)</code>) and the second element contains the values of random choices. <code class="language-plaintext highlighter-rouge">train!</code> attempts to maximize the expected log probability of these random choices given their corresponding input values.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> data_generator</span><span class="x">()</span>
+    <span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span> <span class="o">=</span> <span class="n">next_batch</span><span class="x">(</span><span class="n">training_data_loader</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+
+    <span class="nd">@assert</span> <span class="n">size</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span> <span class="o">==</span> <span class="x">(</span><span class="mi">100</span><span class="x">,</span> <span class="mi">784</span><span class="x">)</span>
+    <span class="nd">@assert</span> <span class="n">size</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span> <span class="o">==</span> <span class="x">(</span><span class="mi">100</span><span class="x">,)</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
+    <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span>
+        <span class="n">constraints</span><span class="x">[(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="k">end</span>
+    <span class="x">((</span><span class="n">xs</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">)</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>We run 10000 iterations of stochastic gradient descent, where each iteration uses a batch of 100 images to get a noisy gradient estimate. This might take one or two minutes.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">digit_model</span><span class="x">,</span> <span class="n">data_generator</span><span class="x">,</span> <span class="n">update</span><span class="x">;</span>
+    <span class="n">num_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">false</span><span class="x">);</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 25.649759 seconds (86.57 M allocations: 28.992 GiB, 3.90% gc time, 4.76% compilation time)
+</code></pre></div></div>
+
+<p>We plot an estimate of the objective function function over time:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">scores</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"iterations of stochastic gradient descent"</span><span class="x">,</span> 
+    <span class="n">ylabel</span><span class="o">=</span><span class="s">"Estimate of expected conditional log likelihood"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_37_0.svg" alt="svg" /></p>
+
+<h3 id="exercise">Exercise</h3>
+
+<p>It is common to “vectorize” deep learning code so that it runs on multiple inputs at a time. This is important for making efficient use of GPU resources when training. The TensorFlow code above is vectorized across images. Construct a new TFFunction that only runs on one image at a time, and use a Julia for loop over multiple invocations of this new TFFunction, one for each image. Run the training procedure for 100 iterations. Comment on the performance difference.</p>
+
+<p>We have provided you with starter code, including a new TensorFlow computation graph where <code class="language-plaintext highlighter-rouge">x</code> is a placeholder for a single image, and where <code class="language-plaintext highlighter-rouge">probs_unvec</code> are the digit class probabilities for a single image:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># input images, shape (784,)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">placeholder</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float64</span><span class="x">,</span> <span class="n">shape</span><span class="o">=</span><span class="x">(</span><span class="mi">784</span><span class="x">,))</span>
+
+<span class="c"># weight matrix parameter for soft-max regression, shape (784, 10)</span>
+<span class="c"># initialize to a zeros matrix generated by Julia.</span>
+<span class="n">W_unvec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Variable</span><span class="x">(</span><span class="n">init_W</span><span class="x">)</span>
+    
+<span class="c"># bias vector parameter for soft-max regression, shape (10,)</span>
+<span class="c"># initialize to a zeros vector generated by Julia.</span>
+<span class="n">b_unvec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Variable</span><span class="x">(</span><span class="n">init_b</span><span class="x">)</span>
+
+<span class="c"># probabilities for each class, shape (10,)</span>
+<span class="n">probs_unvec</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="x">(</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="x">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="x">),</span> <span class="n">W_unvec</span><span class="x">),</span> <span class="n">b_unvec</span><span class="x">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="x">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>We also provide you with the definition of the new TFFunction based on this computation graph:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf_softmax_model_single</span> <span class="o">=</span> <span class="n">TFFunction</span><span class="x">([</span><span class="n">W_unvec</span><span class="x">,</span> <span class="n">b_unvec</span><span class="x">],</span> <span class="x">[</span><span class="n">x</span><span class="x">],</span> <span class="n">probs_unvec</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>We will use an update that modifies the parameters of <code class="language-plaintext highlighter-rouge">tf_softmax_model_single</code>:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">update_unvec</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">ParamUpdate</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">FixedStepGradientDescent</span><span class="x">(</span><span class="mf">0.00001</span><span class="x">),</span> <span class="n">tf_softmax_model_single</span> <span class="o">=&gt;</span> <span class="x">[</span><span class="n">W_unvec</span><span class="x">,</span> <span class="n">b_unvec</span><span class="x">]);</span>
+</code></pre></div></div>
+
+<p>Fill in the missing sections in the cells below.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> digit_model_single_image</span><span class="x">(</span><span class="n">x</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    
+    <span class="c"># number of pixels in the image</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
+    
+    <span class="c"># &lt; your code here &gt;</span>
+    
+    <span class="c"># sample the digit label for the image</span>
+    <span class="nd">@trace</span><span class="x">(</span><span class="n">categorical</span><span class="x">(</span><span class="n">probs</span><span class="x">),</span> <span class="o">:</span><span class="n">y</span><span class="x">)</span>
+    
+    <span class="k">return</span> <span class="nb">nothing</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> digit_model_unvectorized</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="x">(</span><span class="n">N</span><span class="x">,</span> <span class="n">D</span><span class="x">)</span> <span class="o">=</span> <span class="n">size</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+
+         <span class="c"># &lt; your code here &gt;</span>
+    
+    <span class="k">end</span>
+    
+    <span class="k">return</span> <span class="nb">nothing</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>After you have filled in the cells above, try running <code class="language-plaintext highlighter-rouge">digit_model_unvectorized</code> on some input to help debug your solution.</p>
+
+<p>Next, fill in the data generator that you will use to train the new model:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> data_generator_unvectorized</span><span class="x">()</span>
+    <span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span> <span class="o">=</span> <span class="n">next_batch</span><span class="x">(</span><span class="n">training_data_loader</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span>
+    <span class="nd">@assert</span> <span class="n">size</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span> <span class="o">==</span> <span class="x">(</span><span class="mi">100</span><span class="x">,</span> <span class="mi">784</span><span class="x">)</span>
+    <span class="nd">@assert</span> <span class="n">size</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span> <span class="o">==</span> <span class="x">(</span><span class="mi">100</span><span class="x">,)</span>
+    
+    <span class="c"># &lt; your code here &gt;</span>
+    
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Finally, perform the training:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">scores_unvec</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">digit_model_unvectorized</span><span class="x">,</span> <span class="n">data_generator_unvectorized</span><span class="x">,</span> <span class="n">update_unvec</span><span class="x">;</span>
+    <span class="n">num_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">false</span><span class="x">);</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">scores_unvec</span><span class="x">)</span>
+<span class="n">xlabel</span><span class="x">(</span><span class="s">"iterations of stochastic gradient descent"</span><span class="x">)</span>
+<span class="n">ylabel</span><span class="x">(</span><span class="s">"Estimate of expected conditional log likelihood"</span><span class="x">);</span>
+</code></pre></div></div>
+
+</div>
+
+</main><!-- /.container -->
+
+<!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright: The author(s).
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.min.js"
+			  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+			  crossorigin="anonymous"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS --> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- MathJax -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <title>Scaling with Combinators and the Static Modeling Language</title>
+  </head>
+  <body>
+    
+    <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+  <a class="navbar-brand mr-0 mr-md-2" href="/" aria-label="Gen">
+<svg version="1.1" width="36" height="36" viewBox="0.0 0.0 433.7244094488189 432.76640419947506" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="p.0"><path d="m0 0l433.7244 0l0 432.76642l-433.7244 0l0 -432.76642z" clip-rule="nonzero"/></clipPath><g clip-path="url(#p.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l433.7244 0l0 432.76642l-433.7244 0z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="16.0" stroke-linejoin="round" stroke-linecap="butt" d="m526.3617 215.97453l0 0c0 -112.37038 91.09418 -203.46457 203.4646 -203.46457l0 0c53.96216 0 105.71411 21.436382 143.87115 59.593395c38.156982 38.157005 59.593384 89.90901 59.593384 143.87117l0 0c0 112.37038 -91.09418 203.46455 -203.46454 203.46455l0 0c-112.37042 0 -203.4646 -91.09418 -203.4646 -203.46455z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m95.40751 8.810548l290.11023 0l0 288.18896l-290.11023 0z" fill-rule="evenodd"/><path fill="#ffffff" d="m308.04813 300.89618q-12.859375 15.421875 -36.375 23.921875q-23.5 8.484375 -52.09375 8.484375q-30.03125 0 -52.671875 -13.09375q-22.625 -13.109375 -34.9375 -38.046875q-12.312492 -24.9375 -12.624992 -58.625l0 -15.71875q0 -34.640625 11.671867 -59.96875q11.671875 -25.34375 33.671875 -38.765625q22.0 -13.421875 51.546875 -13.421875q41.140625 0 64.328125 19.625q23.203125 19.609375 27.484375 57.109375l-46.375 0q-3.171875 -19.859375 -14.0625 -29.0625q-10.875 -9.21875 -29.9375 -9.21875q-24.3125 0 -37.015625 18.265625q-12.703125 18.265625 -12.875 54.328125l0 14.765625q0 36.375 13.8125 54.96875q13.828125 18.578125 40.515625 18.578125q26.859375 0 38.296875 -11.4375l0 -39.875l-43.375 0l0 -35.09375l91.015625 0l0 92.28125z" fill-rule="nonzero"/><path fill="#000000" fill-opacity="0.0" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/><path stroke="#ffffff" stroke-width="24.0" stroke-linejoin="round" stroke-linecap="butt" d="m20.661194 84.271866l0 0c0 -36.022438 29.201962 -65.224396 65.2244 -65.224396l260.8898 0l0 0c17.298584 0 33.88864 6.8718376 46.120605 19.103786c12.231934 12.231945 19.10379 28.82203 19.10379 46.120613l0 260.88977c0 36.02243 -29.201965 65.224396 -65.224396 65.224396l-260.8898 0c-36.02244 0 -65.2244 -29.201965 -65.2244 -65.224396z" fill-rule="evenodd"/></g></svg>
+</a>
+  <div class="navbar-nav-scroll">
+    <ul class="navbar-nav bd-navbar-nav flex-row">
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://www.gen.dev/dev/">Documentation</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/tutorials/">Tutorials</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="https://github.com/probcomp/Gen.jl">Source</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link " href="/ecosystem/">Ecosystem</a>
+      </li>
+    
+    </ul>
+  </div>
+
+</header>
+
+
+
+<main role="main">
+    <br/>
+<div class="container">
+<h1 id="scaling-with-combinators-and-the-static-modeling-language">Scaling with Combinators and the Static Modeling Language</h1>
+
+<p>Up until this point, we have been using <a href="https://www.gen.dev/dev/ref/modeling/">Gen’s generic built-in modeling language</a>, which is a very flexible modeling language that is shallowly embedded in Julia. However, better performance and scaling characteristics can be obtained using specialized modeling languages or modeling constructs. This notebook introduces two built-in features of Gen:</p>
+
+<ul>
+  <li>
+    <p>A more specialized <a href="https://www.gen.dev/dev/ref/modeling/#Static-Modeling-Language-1">Static Modeling Language</a> which is built-in to Gen.</p>
+  </li>
+  <li>
+    <p>A class of modeling constructs called <a href="https://www.gen.dev/dev/ref/combinators/">Generative function combinators</a>.</p>
+  </li>
+</ul>
+
+<p>These features provide both constant-factor speedups, as well as improvements in asymptotic orders of growth, over the generic built-in modeling language.</p>
+
+<h2 id="outline">Outline</h2>
+
+<p><strong>Section 1</strong>: <a href="#scaling">Studying the scaling behavior of an inference algorithm</a></p>
+
+<p><strong>Section 2</strong>: <a href="#map">Introducing the map combinator</a></p>
+
+<p><strong>Section 3</strong>: <a href="#combining">Combining the map combinator with the static modeling language</a></p>
+
+<p><strong>Section 4</strong>: <a href="#constant">Constant-factor performance gains from the static modeling language</a></p>
+
+<p><strong>Section 5</strong>: <a href="#checking">Checking the inference programs</a></p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span>
+</code></pre></div></div>
+
+<h2 id="1-studying-the-scaling-behavior-of-an-inference-program-">1. Studying the scaling behavior of an inference program <a name="studying"></a></h2>
+
+<p>Recall the robust regression model used to introduce iterative inference in <a href="Iterative%20Inference%20In%20Gen.ipynb">an earlier tutorial</a>:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">slope</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">intercept</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">noise</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">prob_outlier</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">n</span><span class="x">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+        <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">is_outlier</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">))</span>
+            <span class="x">(</span><span class="n">mu</span><span class="x">,</span> <span class="n">std</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">10.</span><span class="x">)</span>
+        <span class="k">else</span>
+            <span class="x">(</span><span class="n">mu</span><span class="x">,</span> <span class="n">std</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">xs</span><span class="x">[</span><span class="n">i</span><span class="x">]</span> <span class="o">*</span> <span class="n">slope</span> <span class="o">+</span> <span class="n">intercept</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="k">end</span>
+        <span class="n">ys</span><span class="x">[</span><span class="n">i</span><span class="x">]</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">y</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">mu</span><span class="x">,</span> <span class="n">std</span><span class="x">)</span>
+    <span class="k">end</span>
+    <span class="n">ys</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>We wrote a Markov chain Monte Carlo inference update for this model that performs updates on each of the ‘global’ parameters (noise, slope, intercept, and prob_outlier), as well as the ‘local’ <code class="language-plaintext highlighter-rouge">is_outlier</code> variable associated with each data point. The update takes a trace as input, and returns the new trace as output. We reproduce this here:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> block_resimulation_update</span><span class="x">(</span><span class="n">tr</span><span class="x">)</span>
+    
+    <span class="c"># Block 1: Update the line's parameters</span>
+    <span class="n">line_params</span> <span class="o">=</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">noise</span><span class="x">,</span> <span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">)</span>
+    <span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">line_params</span><span class="x">)</span>
+    
+    <span class="c"># Blocks 2-N+1: Update the outlier classifications</span>
+    <span class="x">(</span><span class="n">xs</span><span class="x">,)</span> <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">tr</span><span class="x">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+        <span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">is_outlier</span><span class="x">))</span>
+    <span class="k">end</span>
+    
+    <span class="c"># Block N+2: Update the prob_outlier parameter</span>
+    <span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">prob_outlier</span><span class="x">))</span>
+    
+    <span class="c"># Return the updated trace</span>
+    <span class="n">tr</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>We write a helper function that takes a vector of y-coordinates and populates a constraints choice map:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> make_constraints</span><span class="x">(</span><span class="n">ys</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span>
+        <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">y</span><span class="x">]</span> <span class="o">=</span> <span class="n">ys</span><span class="x">[</span><span class="n">i</span><span class="x">]</span>
+    <span class="k">end</span>
+    <span class="n">constraints</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Finally, we package this into an inference program that takes the data set of all x- and y-coordinates ,and returns a trace. We will be experimenting with different variants of the model, so we make the model an argument to this function:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> block_resimulation_inference</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">make_constraints</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span>
+    <span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,),</span> <span class="n">observations</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">iter</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">500</span>
+        <span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_update</span><span class="x">(</span><span class="n">tr</span><span class="x">)</span>
+    <span class="k">end</span>
+    <span class="n">tr</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Let’s see how the running time of this inference program changes as we increase the number of data points. We don’t expect the running time to depend too much on the actual values of the data points, so we just construct a random data set for each run:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ns</span> <span class="o">=</span> <span class="x">[</span><span class="mi">1</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="mi">7</span><span class="x">,</span> <span class="mi">10</span><span class="x">,</span> <span class="mi">30</span><span class="x">,</span> <span class="mi">70</span><span class="x">,</span> <span class="mi">100</span><span class="x">]</span>
+<span class="n">times</span> <span class="o">=</span> <span class="x">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">ns</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">times</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">start</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We now plot the running time versus the number of data points:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">times</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"number of data points"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"running time (seconds)"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_16_0.svg" alt="svg" /></p>
+
+<p>The inference program seems to scale quadratically in the number of data points.</p>
+
+<p>To understand why, consider the block of code inside <code class="language-plaintext highlighter-rouge">block_resimulation_update</code> that loops over the data points:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Blocks 2-N+1: Update the outlier classifications</span>
+<span class="x">(</span><span class="n">xs</span><span class="x">,)</span> <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">tr</span><span class="x">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+    <span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">is_outlier</span><span class="x">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The reason for the quadratic scaling is that the running time of the call to <code class="language-plaintext highlighter-rouge">mh</code> inside this loop also grows in proportion to the number of data points. This is because the updates to a trace of a model written the generic built-in modeling language always involve re-running <strong>the entire</strong> model generative function.</p>
+
+<p>However, it should be possible for the algorithm to scale linearly in the number of data points. Briefly, deciding whether to update a given <code class="language-plaintext highlighter-rouge">is_outlier</code> variable can be done without referencing the other data points. This is because each <code class="language-plaintext highlighter-rouge">is_outiler</code> variable is conditionally independent of the outlier variables and y-coordinates of the other data points, conditioned on the parameters.</p>
+
+<p>We can make this conditional independence structure explicit using the <a href="https://probcomp.github.io/Gen/dev/ref/combinators/#Map-combinator-1">Map generative function combinator</a>. Combinators like map encapsulate common modeling patterns (e.g., a loop in which each iteration is making independent choices), and when you use them, Gen can take advantage of the restrictions they enforce to implement performance optimizations automatically during inference. The <code class="language-plaintext highlighter-rouge">Map</code> combinator, like the <code class="language-plaintext highlighter-rouge">map</code> function in a functional programming language, helps to execute the same generative code repeatedly.</p>
+
+<h2 id="2-introducing-the-map-combinator-">2. Introducing the map combinator <a name="map"></a></h2>
+
+<p>To use the map combinator to express the conditional independences in our model, we first write a generative function to generate the <code class="language-plaintext highlighter-rouge">is_outlier</code> variable and the y-coordinate for a single data point:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> generate_single_point</span><span class="x">(</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">prob_outlier</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">noise</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span>
+                                    <span class="n">slope</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">intercept</span><span class="o">::</span><span class="kt">Float64</span><span class="x">)</span>
+    <span class="n">is_outlier</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">)</span>
+    <span class="n">mu</span>  <span class="o">=</span> <span class="n">is_outlier</span> <span class="o">?</span> <span class="mf">0.</span> <span class="o">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">slope</span> <span class="o">+</span> <span class="n">intercept</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">is_outlier</span> <span class="o">?</span> <span class="mf">10.</span> <span class="o">:</span> <span class="n">noise</span>
+    <span class="n">y</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">mu</span><span class="x">,</span> <span class="n">std</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>We then apply the <a href="https://probcomp.github.io/Gen/dev/ref/combinators/#Map-combinator-1"><code class="language-plaintext highlighter-rouge">Map</code></a>, which is a Julia function, to this generative function, to obtain a new generative function:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">generate_all_points</span> <span class="o">=</span> <span class="n">Map</span><span class="x">(</span><span class="n">generate_single_point</span><span class="x">);</span>
+</code></pre></div></div>
+
+<p>This new generative function has one argument for each argument of <code class="language-plaintext highlighter-rouge">generate_single_point</code>, except that these arguments are now vector-valued instead of scalar-valued. We can run the generative function on some fake data to test this:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">xs</span> <span class="o">=</span> <span class="kt">Float64</span><span class="x">[</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">2</span><span class="x">,</span> <span class="mi">3</span><span class="x">,</span> <span class="mi">4</span><span class="x">]</span>
+<span class="n">prob_outliers</span> <span class="o">=</span> <span class="n">fill</span><span class="x">(</span><span class="mf">0.5</span><span class="x">,</span> <span class="mi">5</span><span class="x">)</span>
+<span class="n">noises</span> <span class="o">=</span> <span class="n">fill</span><span class="x">(</span><span class="mf">0.2</span><span class="x">,</span> <span class="mi">5</span><span class="x">)</span>
+<span class="n">slopes</span> <span class="o">=</span> <span class="n">fill</span><span class="x">(</span><span class="mf">0.7</span><span class="x">,</span> <span class="mi">5</span><span class="x">)</span>
+<span class="n">intercepts</span> <span class="o">=</span> <span class="n">fill</span><span class="x">(</span><span class="o">-</span><span class="mf">2.0</span><span class="x">,</span> <span class="mi">5</span><span class="x">)</span>
+<span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">generate_all_points</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">prob_outliers</span><span class="x">,</span> <span class="n">noises</span><span class="x">,</span> <span class="n">slopes</span><span class="x">,</span> <span class="n">intercepts</span><span class="x">));</span>
+</code></pre></div></div>
+
+<p>We see that the <code class="language-plaintext highlighter-rouge">generate_all_points</code> function has traced 5 calls to <code class="language-plaintext highlighter-rouge">generate_single_point</code>, under namespaces <code class="language-plaintext highlighter-rouge">1</code> through <code class="language-plaintext highlighter-rouge">5</code>.  The <code class="language-plaintext highlighter-rouge">Map</code> combinator automatically adds these indices to the trace address.</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+├── 1
+│   │
+│   ├── :y : 4.918562272672705
+│   │
+│   └── :is_outlier : true
+│
+├── 2
+│   │
+│   ├── :y : 13.010670341629869
+│   │
+│   └── :is_outlier : true
+│
+├── 3
+│   │
+│   ├── :y : 0.8311069982467794
+│   │
+│   └── :is_outlier : true
+│
+├── 4
+│   │
+│   ├── :y : -3.568822561357999
+│   │
+│   └── :is_outlier : true
+│
+└── 5
+    │
+    ├── :y : -8.650613083601591
+    │
+    └── :is_outlier : true
+</code></pre></div></div>
+
+<p>Now, let’s replace the Julia <code class="language-plaintext highlighter-rouge">for</code> loop in our model with a call to this new function:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> model_with_map</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">slope</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">intercept</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">noise</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">prob_outlier</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="n">data</span> <span class="o">~</span> <span class="n">generate_all_points</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">fill</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">noise</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">slope</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">intercept</span><span class="x">,</span> <span class="n">n</span><span class="x">))</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Note that this new model has the same address structure as our original model had, so our inference code will not need to change. For example, the 5th data point’s $y$ coordinate will be stored at the address <code class="language-plaintext highlighter-rouge">:data =&gt; 5 =&gt; :y</code>, just as before. (The <code class="language-plaintext highlighter-rouge">:data</code> comes from our <code class="language-plaintext highlighter-rouge">data ~ ...</code> invocation in the <code class="language-plaintext highlighter-rouge">better_model</code> definition, and the <code class="language-plaintext highlighter-rouge">:y</code> comes from <code class="language-plaintext highlighter-rouge">generate_point</code>; only the <code class="language-plaintext highlighter-rouge">5</code> has been inserted automatically by <code class="language-plaintext highlighter-rouge">Map</code>.)</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">model_with_map</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,));</span>
+<span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+├── :intercept : -2.735856230318301
+│
+├── :slope : 1.512319232998658
+│
+├── :prob_outlier : 0.39777044157828834
+│
+├── :noise : 0.48090770275846734
+│
+└── :data
+    │
+    ├── 1
+    │   │
+    │   ├── :y : -1.9661654557240609
+    │   │
+    │   └── :is_outlier : false
+    │
+    ├── 2
+    │   │
+    │   ├── :y : -1.519207755785394
+    │   │
+    │   └── :is_outlier : false
+    │
+    ├── 3
+    │   │
+    │   ├── :y : 0.43047649010284866
+    │   │
+    │   └── :is_outlier : false
+    │
+    ├── 4
+    │   │
+    │   ├── :y : 1.6904414612424432
+    │   │
+    │   └── :is_outlier : false
+    │
+    └── 5
+        │
+        ├── :y : 2.980903771704278
+        │
+        └── :is_outlier : false
+</code></pre></div></div>
+
+<p>Let’s test the running time of the inference program, applied to this new model:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">with_map_times</span> <span class="o">=</span> <span class="x">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">ns</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">with_map_times</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">start</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We plot the results and compare them to the original model, which used the Julia <code class="language-plaintext highlighter-rouge">for</code> loop:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"original"</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"number of data points"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"running time (seconds)"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map"</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_34_0.svg" alt="svg" /></p>
+
+<p>We see that the quadratic scaling did not improve. In fact, we actually got a that happed was a constant factor <strong>slowdown</strong>.</p>
+
+<p>We can understand why we still have quadratic scaling, by examining the call to <code class="language-plaintext highlighter-rouge">generate_single_point</code>:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">~</span> <span class="n">generate_all_points</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">fill</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">noise</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">slope</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">intercept</span><span class="x">,</span> <span class="n">n</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p>Even though the function <code class="language-plaintext highlighter-rouge">generate_all_points</code> knows that each of the calls to <code class="language-plaintext highlighter-rouge">generate_single_point</code> is conditionally independent, and even it knows that each update to <code class="language-plaintext highlighter-rouge">is_outlier</code> only involves a single application of <code class="language-plaintext highlighter-rouge">generate_single_point</code>, it does not know that <strong>none of its arguments change</strong> within an update to <code class="language-plaintext highlighter-rouge">is_outlier</code>. Therefore, it needs to visit each call to <code class="language-plaintext highlighter-rouge">generate_single_point</code>. The generic built-in modeling language does not provide this information the generative functions that it invokes.</p>
+
+<h2 id="3combining-the-map-combinator-with-the-static-modeling-language-">3.Combining the map combinator with the static modeling language <a name="combining"></a></h2>
+
+<p>In order to provide <code class="language-plaintext highlighter-rouge">generate_all_points</code> with the knowledge that its arguments do not change during an update to the <code class="language-plaintext highlighter-rouge">is_outlier</code> variable, we need to write the top-level model generative function that calls <code class="language-plaintext highlighter-rouge">generate_all_points</code> in the <a href="https://probcomp.github.io/Gen/dev/ref/modeling/#Static-Modeling-Language-1">Static Modeling Language</a>, which is a restricted variant of the built-in modeling language that uses static analysis of the computation graph to generate specialized trace data structures and specialized implementations of trace operations. We indicate that a function is to be interpreted using the static language using the <code class="language-plaintext highlighter-rouge">static</code> annotation:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="x">(</span><span class="n">static</span><span class="x">)</span> <span class="k">function</span><span class="nf"> static_model_with_map</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">slope</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">intercept</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">noise</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">prob_outlier</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="n">data</span> <span class="o">~</span> <span class="n">generate_all_points</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">fill</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">noise</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">slope</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">intercept</span><span class="x">,</span> <span class="n">n</span><span class="x">))</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>The static language has a number of restrictions that make it more amenable to static analysis than the unrestricted modeling language. For example, we cannot use Julia <code class="language-plaintext highlighter-rouge">for</code> loops, and the return value needs to explicitly use the <code class="language-plaintext highlighter-rouge">return</code> keyword, followed by a symbol (e.g. <code class="language-plaintext highlighter-rouge">data</code>). Also, each symbol used on the left-hand side of an assignment must be unique. A more complete list of restrictions is given in the documentation.</p>
+
+<p>Below, we show the static dependency graph that Gen builds for this function. Arguments are shown as diamonds, Julia computations are shown as squares, random choices are shown as circles, and calls to other generative function are shown as stars. The call that produces the return value of the function is shaded in blue.</p>
+
+<p><img src="graph.png" width="100%" /></p>
+
+<p>Now, consider the update to the <code class="language-plaintext highlighter-rouge">is_outlier</code> variable:</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">is_outlier</span><span class="x">))</span>
+</code></pre></div></div>
+
+<p>Because this update only causes values under address <code class="language-plaintext highlighter-rouge">:data</code> to change, the <code class="language-plaintext highlighter-rouge">static_model_with_map</code> function can use the graph above to infer that none of the arguments to <code class="language-plaintext highlighter-rouge">generate_all_point</code> could have possibly changed. This will allow us to obtain the linear scaling we expected.</p>
+
+<p>However, before we can use a function written in the static modeling language, we need to run the following function (this is required for technical reasons, because functions written in the static modeling language use a staged programming feature of Julia called <em>generated functions</em>).</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="nd">@load_generated_functions</span>
+</code></pre></div></div>
+
+<p>Finally, we can re-run the experiment with our model that combines the map combinator with the static language:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">static_with_map_times</span> <span class="o">=</span> <span class="x">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">ns</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">static_model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">static_with_map_times</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">start</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We compare the results to the results for the earlier models:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"original"</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"number of data points"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"running time (seconds)"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">static_with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map and static outer fn"</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_49_0.svg" alt="svg" /></p>
+
+<p>We see that we now have the linear running time that we expected.</p>
+
+<h2 id="4-constant-factor-performance-gains-from-the-static-modeling-language-">4. Constant-factor performance gains from the static modeling language <a name="constant"></a></h2>
+
+<p><strong>Note:</strong> <em>the following section was drafted using an earlier version of Julia. As of Julia 1.7, the dynamic modeling language is fast enough in some cases that you may not see constant-factor performance gains by switching simple dynamic models, with few choices and no control flow, to use the static modeling language. Based on the experiment below, this model falls into that category.</em></p>
+
+<p>Note that in our latest model above, <code class="language-plaintext highlighter-rouge">generate_single_point</code> was still written in the dynamic modeling language. It is not necessary to write <code class="language-plaintext highlighter-rouge">generate_single_point</code> in the static language, but doing so might provide modest constant-factor performance improvements. Here we rewrite this function in the static language. The static modeling language does not support <code class="language-plaintext highlighter-rouge">if</code> statements, but does support ternary expressions (<code class="language-plaintext highlighter-rouge">a ? b : c</code>):</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="x">(</span><span class="n">static</span><span class="x">)</span> <span class="k">function</span><span class="nf"> static_generate_single_point</span><span class="x">(</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">prob_outlier</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">noise</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span>
+                                    <span class="n">slope</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">intercept</span><span class="o">::</span><span class="kt">Float64</span><span class="x">)</span>
+    <span class="n">is_outlier</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">is_outlier</span> <span class="o">?</span> <span class="mf">0.</span> <span class="o">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">slope</span> <span class="o">+</span> <span class="n">intercept</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">is_outlier</span> <span class="o">?</span> <span class="mf">10.</span> <span class="o">:</span> <span class="n">noise</span>
+    <span class="n">y</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">mu</span><span class="x">,</span> <span class="n">std</span><span class="x">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">static_generate_all_points</span> <span class="o">=</span> <span class="n">Map</span><span class="x">(</span><span class="n">static_generate_single_point</span><span class="x">);</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="x">(</span><span class="n">static</span><span class="x">)</span> <span class="k">function</span><span class="nf"> fully_static_model_with_map</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">slope</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">intercept</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">)</span>
+    <span class="n">noise</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">prob_outlier</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="n">data</span> <span class="o">~</span> <span class="n">static_generate_all_points</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">fill</span><span class="x">(</span><span class="n">prob_outlier</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">noise</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">slope</span><span class="x">,</span> <span class="n">n</span><span class="x">),</span> <span class="n">fill</span><span class="x">(</span><span class="n">intercept</span><span class="x">,</span> <span class="n">n</span><span class="x">))</span>
+    <span class="k">return</span> <span class="n">data</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="nd">@load_generated_functions</span>
+</code></pre></div></div>
+
+<p>Now, we re-run the experiment with our new model:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fully_static_with_map_times</span> <span class="o">=</span> <span class="x">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="k">in</span> <span class="n">ns</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="n">n</span><span class="x">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">fully_static_model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">fully_static_with_map_times</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">start</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In earlier versions of Julia, we saw a modest improvement in running time, but here (running Julia 1.7.1) we see it makes little to no difference:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"original"</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"number of data points"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"running time (seconds)"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">static_with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map and static outer fn"</span><span class="x">)</span>
+<span class="n">plot!</span><span class="x">(</span><span class="n">ns</span><span class="x">,</span> <span class="n">fully_static_with_map_times</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"with map and static outer and inner fns"</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_61_0.svg" alt="svg" /></p>
+
+<h2 id="5-checking-the-inference-programs-">5. Checking the inference programs <a name="checking"></a></h2>
+
+<p>Before wrapping up, let’s confirm that all of our models are giving good results:</p>
+
+<p>Let’s use a synthetic data set:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">true_inlier_noise</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">true_outlier_noise</span> <span class="o">=</span> <span class="mf">10.</span>
+<span class="n">prob_outlier</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">true_slope</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">true_intercept</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="o">-</span><span class="mi">5</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">5</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="x">))</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="kt">Float64</span><span class="x">[]</span>
+<span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
+    <span class="k">if</span> <span class="n">rand</span><span class="x">()</span> <span class="o">&lt;</span> <span class="n">prob_outlier</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">+</span> <span class="n">randn</span><span class="x">()</span> <span class="o">*</span> <span class="n">true_outlier_noise</span>
+    <span class="k">else</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">true_slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">true_intercept</span> <span class="o">+</span> <span class="n">randn</span><span class="x">()</span> <span class="o">*</span> <span class="n">true_inlier_noise</span> 
+    <span class="k">end</span>
+    <span class="n">push!</span><span class="x">(</span><span class="n">ys</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span>
+<span class="k">end</span>
+<span class="n">ys</span><span class="x">[</span><span class="k">end</span><span class="o">-</span><span class="mi">3</span><span class="x">]</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">ys</span><span class="x">[</span><span class="k">end</span><span class="o">-</span><span class="mi">5</span><span class="x">]</span> <span class="o">=</span> <span class="mi">13</span><span class="x">;</span>
+</code></pre></div></div>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">xlim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">7</span><span class="x">,</span><span class="mi">7</span><span class="x">),</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">7</span><span class="x">,</span><span class="mi">15</span><span class="x">),</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_66_0.svg" alt="svg" /></p>
+
+<p>We write a trace rendering function that shows the inferred line on top of the observed data set:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">title</span><span class="x">)</span>
+    <span class="n">xs</span><span class="x">,</span>  <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="x">[</span><span class="o">-</span><span class="mi">5</span><span class="x">,</span> <span class="mi">5</span><span class="x">]</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">]</span>
+    <span class="n">intercept</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">intercept</span><span class="x">]</span>
+    <span class="n">plot</span><span class="x">(</span><span class="n">xlim</span><span class="x">,</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">xlim</span> <span class="o">.+</span> <span class="n">intercept</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">xlim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">7</span><span class="x">,</span><span class="mi">7</span><span class="x">),</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">7</span><span class="x">,</span><span class="mi">15</span><span class="x">),</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">data</span> <span class="o">=&gt;</span> <span class="n">i</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">y</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)]</span>
+    <span class="n">scatter!</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+<span class="k">end</span><span class="x">;</span>
+</code></pre></div></div>
+
+<p>Finally, we run the experiment. We will visualize just one trace produced by applying our inference program to each of the four variants of our model:</p>
+
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+<span class="n">fig1</span> <span class="o">=</span> <span class="n">render_trace</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="s">"model"</span><span class="x">)</span>
+
+<span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+<span class="n">fig2</span> <span class="o">=</span> <span class="n">render_trace</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="s">"model with map"</span><span class="x">)</span>
+
+<span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">static_model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+<span class="n">fig3</span> <span class="o">=</span> <span class="n">render_trace</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="s">"static model with map"</span><span class="x">)</span>
+
+<span class="n">tr</span> <span class="o">=</span> <span class="n">block_resimulation_inference</span><span class="x">(</span><span class="n">fully_static_model_with_map</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span>
+<span class="n">fig4</span> <span class="o">=</span> <span class="n">render_trace</span><span class="x">(</span><span class="n">tr</span><span class="x">,</span> <span class="s">"fully static model with map"</span><span class="x">)</span>
+
+<span class="n">plot</span><span class="x">(</span><span class="n">fig1</span><span class="x">,</span> <span class="n">fig2</span><span class="x">,</span> <span class="n">fig3</span><span class="x">,</span> <span class="n">fig4</span><span class="x">)</span>
+</code></pre></div></div>
+
+<p><img src="output_70_0.svg" alt="svg" /></p>
+
+<p>It looks like inference in all the models seems to be working reasonably.</p>
+
+</div>
+
+</main><!-- /.container -->
+
+<!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright: The author(s).
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.min.js"
+			  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+			  crossorigin="anonymous"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  </body>
+</html>

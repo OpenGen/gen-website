@@ -1,0 +1,6 @@
+docs/make.jl
+docs/src/index.md
+docs/src/ref/gfi.md
+docs/src/ref/internals/parameter_optimization.md
+docs/src/ref/learning.md
+docs/src/ref/selections.md
