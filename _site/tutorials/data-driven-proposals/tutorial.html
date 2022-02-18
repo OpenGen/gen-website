@@ -111,7 +111,7 @@ a custom proposal for the destination of the agent.</p>
 <p><strong>Section 4.</strong> <a href="#training">Training the parameters of a data-driven proposal</a></p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># This cell will take a few seconds to run.</span>
-<span class="k">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">Distributions</span>
+<span class="n">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">Distributions</span>
 </code></pre></div></div>
 
 <h2 id="1-a-generative-model-of-an-autonomous-agent---">1: A generative model of an autonomous agent   <a name="model"></a></h2>
@@ -128,25 +128,25 @@ implemented these already in an auxiliary Julia file:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span><span class="x">(</span><span class="s">"../inverse-planning/geometric_primitives.jl"</span><span class="x">);</span>
 </code></pre></div></div>
 
-<p>This file imports a two-dimensional <code class="language-plaintext highlighter-rouge">Point</code> data type with fields <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>:</p>
+<p>This file imports a two-dimensional <code class="highlighter-rouge">Point</code> data type with fields <code class="highlighter-rouge">x</code> and <code class="highlighter-rouge">y</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="x">(</span><span class="mf">1.0</span><span class="x">,</span> <span class="mf">2.0</span><span class="x">)</span>
 <span class="n">println</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="x">)</span>
 <span class="n">println</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.0
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.0
 2.0
 </code></pre></div></div>
 
-<p>The file also defines an <code class="language-plaintext highlighter-rouge">Obstacle</code> data type, which represents a polygonal
+<p>The file also defines an <code class="highlighter-rouge">Obstacle</code> data type, which represents a polygonal
 obstacle in a two-dimensional scene, that is constructed from a list of
 vertices. Here, we construct a square:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">obstacle</span> <span class="o">=</span> <span class="n">Obstacle</span><span class="x">([</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">),</span> <span class="n">Point</span><span class="x">(</span><span class="mf">1.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">),</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">),</span> <span class="n">Point</span><span class="x">(</span><span class="mf">1.0</span><span class="x">,</span> <span class="mf">1.0</span><span class="x">)]);</span>
 </code></pre></div></div>
 
-<p>Next, we load the definition of a <code class="language-plaintext highlighter-rouge">Scene</code> data type that represents a
+<p>Next, we load the definition of a <code class="highlighter-rouge">Scene</code> data type that represents a
 two-dimensional scene.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span><span class="x">(</span><span class="s">"../inverse-planning/scene.jl"</span><span class="x">);</span>
@@ -158,34 +158,34 @@ a list of obstacles, which is initially empty:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scene</span> <span class="o">=</span> <span class="n">Scene</span><span class="x">(</span><span class="n">xmin</span><span class="o">=</span><span class="mi">0</span><span class="x">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="x">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mi">1</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scene(0.0, 1.0, 0.0, 1.0, Obstacle[])
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scene(0.0, 1.0, 0.0, 1.0, Obstacle[])
 </code></pre></div></div>
 
-<p>Obstacles are added to the scene with the <code class="language-plaintext highlighter-rouge">add_obstacle!</code> function:</p>
+<p>Obstacles are added to the scene with the <code class="highlighter-rouge">add_obstacle!</code> function:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">obstacle</span><span class="x">);</span>
 </code></pre></div></div>
 
 <p>The file also defines functions that simplify the construction of obstacles:</p>
 
-<p><code class="language-plaintext highlighter-rouge">make_square(center::Point, size::Float64)</code> constructs a square-shaped
+<p><code class="highlighter-rouge">make_square(center::Point, size::Float64)</code> constructs a square-shaped
 obstacle centered at the given point with the given side length:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">obstacle</span> <span class="o">=</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.30</span><span class="x">,</span> <span class="mf">0.20</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Obstacle(Point[Point(0.25, 0.15000000000000002), Point(0.35, 0.15000000000000002), Point(0.35, 0.25), Point(0.25, 0.25)])
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Obstacle(Point[Point(0.25, 0.15000000000000002), Point(0.35, 0.15000000000000002), Point(0.35, 0.25), Point(0.25, 0.25)])
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">make_line(vertical::Bool, start::Point, length::Float64,
+<p><code class="highlighter-rouge">make_line(vertical::Bool, start::Point, length::Float64,
 thickness::Float64)</code> constructs an axis-aligned line (either vertical or
 horizontal) with given thickness that extends from a given strating point for
 a certain length:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">obstacle</span> <span class="o">=</span> <span class="n">make_line</span><span class="x">(</span><span class="nb">false</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.20</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="mf">0.02</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">obstacle</span> <span class="o">=</span> <span class="n">make_line</span><span class="x">(</span><span class="n">false</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.20</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="mf">0.02</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Obstacle(Point[Point(0.2, 0.4), Point(0.6000000000000001, 0.4), Point(0.6000000000000001, 0.42000000000000004), Point(0.2, 0.42000000000000004)])
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Obstacle(Point[Point(0.2, 0.4), Point(0.6000000000000001, 0.4), Point(0.6000000000000001, 0.42000000000000004), Point(0.2, 0.42000000000000004)])
 </code></pre></div></div>
 
 <p>We now construct a scene value that we will use in the rest of the notebook:</p>
@@ -194,8 +194,8 @@ a certain length:</p>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.30</span><span class="x">,</span> <span class="mf">0.20</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.83</span><span class="x">,</span> <span class="mf">0.80</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.80</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
-<span class="n">horizontal</span> <span class="o">=</span> <span class="nb">false</span>
-<span class="n">vertical</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="n">horizontal</span> <span class="o">=</span> <span class="n">false</span>
+<span class="n">vertical</span> <span class="o">=</span> <span class="n">true</span>
 <span class="n">wall_thickness</span> <span class="o">=</span> <span class="mf">0.02</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">horizontal</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.20</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">vertical</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.60</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
@@ -206,22 +206,22 @@ a certain length:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># We visualize the scene below.</span>
 <span class="n">include</span><span class="x">(</span><span class="s">"../inverse-planning/viz.jl"</span><span class="x">)</span>
-<span class="n">visualize</span><span class="x">()</span> <span class="k">do</span> 
+<span class="n">visualize</span><span class="x">()</span> <span class="n">do</span> 
     <span class="n">draw_scene</span><span class="x">(</span><span class="n">scene</span><span class="x">)</span> 
 <span class="k">end</span>
 </code></pre></div></div>
 
 <p><img src="output_31_0.png" alt="png" /></p>
 
-<p>Next, we load a file that defines a <code class="language-plaintext highlighter-rouge">Path</code> data type (a sequence of
-<code class="language-plaintext highlighter-rouge">Point</code>s), and a <code class="language-plaintext highlighter-rouge">plan_path</code> method, which  uses a path planning algorithm
+<p>Next, we load a file that defines a <code class="highlighter-rouge">Path</code> data type (a sequence of
+<code class="highlighter-rouge">Point</code>s), and a <code class="highlighter-rouge">plan_path</code> method, which  uses a path planning algorithm
 based on rapidly exploring random tree (RRT, [1]) to find a sequence of
-<code class="language-plaintext highlighter-rouge">Point</code>s beginning with <code class="language-plaintext highlighter-rouge">start</code> and ending in <code class="language-plaintext highlighter-rouge">dest</code> such that the line
+<code class="highlighter-rouge">Point</code>s beginning with <code class="highlighter-rouge">start</code> and ending in <code class="highlighter-rouge">dest</code> such that the line
 segment between each consecutive pair of points does not intersect any
 obstacles in the scene. The planning algorithm may fail to find a valid path,
-in which case it will return a value of type <code class="language-plaintext highlighter-rouge">Nothing</code>.</p>
+in which case it will return a value of type <code class="highlighter-rouge">Nothing</code>.</p>
 
-<p><code class="language-plaintext highlighter-rouge">path::Union{Path,Nothing} = plan_path(start::Point, dest::Point,
+<p><code class="highlighter-rouge">path::Union{Path,Nothing} = plan_path(start::Point, dest::Point,
 scene::Scene, planner_params::PlannerParams)</code></p>
 
 <p>[1] <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.35.1853&amp;rep=rep1&amp;type=pdf"><em>Rapidly-exploring random trees: A new tool for path planning.</em></a>
@@ -230,7 +230,7 @@ S. M. LaValle. TR 98-11, Computer Science Dept., Iowa State University, October 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span><span class="x">(</span><span class="s">"../inverse-planning/planning.jl"</span><span class="x">);</span>
 </code></pre></div></div>
 
-<p>Let’s use <code class="language-plaintext highlighter-rouge">plan_path</code> to plan a path from the lower-left corner of the scene
+<p>Let’s use <code class="highlighter-rouge">plan_path</code> to plan a path from the lower-left corner of the scene
 into the interior of the box.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">start</span> <span class="o">=</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.1</span><span class="x">,</span> <span class="mf">0.1</span><span class="x">)</span>
@@ -240,16 +240,16 @@ into the interior of the box.</p>
 <span class="n">path</span> <span class="o">=</span> <span class="n">plan_path</span><span class="x">(</span><span class="n">start</span><span class="x">,</span> <span class="n">dest</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Path(Point[Point(0.1, 0.1), Point(0.1253515594394693, 0.5164009936873899), Point(0.11095631971418911, 0.796900695279408), Point(0.30941512351219613, 0.8730219251057317), Point(0.3710285496975634, 0.8112721899208615), Point(0.5, 0.5)])
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Path(Point[Point(0.1, 0.1), Point(0.1253515594394693, 0.5164009936873899), Point(0.11095631971418911, 0.796900695279408), Point(0.30941512351219613, 0.8730219251057317), Point(0.3710285496975634, 0.8112721899208615), Point(0.5, 0.5)])
 </code></pre></div></div>
 
 <p>We visualize the path below. The start location is shown in blue, the
 destination in red, and the path in orange. Run the cell above followed by
 the cell below a few times to see the variability in the paths generated by
-<code class="language-plaintext highlighter-rouge">plan_path</code> for these inputs.</p>
+<code class="highlighter-rouge">plan_path</code> for these inputs.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">visualize</span><span class="x">()</span> <span class="k">do</span> 
-    <span class="n">draw_trace</span><span class="x">(</span><span class="kt">Dict</span><span class="x">(</span><span class="o">:</span><span class="n">start</span> <span class="o">=&gt;</span> <span class="n">start</span><span class="x">,</span> <span class="o">:</span><span class="n">dest</span> <span class="o">=&gt;</span> <span class="n">dest</span><span class="x">,</span> <span class="o">:</span><span class="n">scene</span> <span class="o">=&gt;</span> <span class="n">scene</span><span class="x">,</span> <span class="o">:</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="n">path</span><span class="o">.</span><span class="n">points</span><span class="x">);</span> <span class="n">should_draw_measurements</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">visualize</span><span class="x">()</span> <span class="n">do</span> 
+    <span class="n">draw_trace</span><span class="x">(</span><span class="n">Dict</span><span class="x">(:</span><span class="n">start</span> <span class="o">=&gt;</span> <span class="n">start</span><span class="x">,</span> <span class="x">:</span><span class="n">dest</span> <span class="o">=&gt;</span> <span class="n">dest</span><span class="x">,</span> <span class="x">:</span><span class="n">scene</span> <span class="o">=&gt;</span> <span class="n">scene</span><span class="x">,</span> <span class="x">:</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="n">path</span><span class="o">.</span><span class="n">points</span><span class="x">);</span> <span class="n">should_draw_measurements</span><span class="o">=</span><span class="n">false</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
@@ -257,11 +257,11 @@ the cell below a few times to see the variability in the paths generated by
 
 <p>We also need a model for how the agent moves along its path.
 We will assume that the agent moves along its path a constant speed. The file
-loaded above also defines a method (<code class="language-plaintext highlighter-rouge">walk_path</code>) that computes the locations
-of the agent at a set of timepoints (sampled at time intervals of <code class="language-plaintext highlighter-rouge">dt</code>
-starting at time <code class="language-plaintext highlighter-rouge">0.</code>), given the path and the speed of the agent:</p>
+loaded above also defines a method (<code class="highlighter-rouge">walk_path</code>) that computes the locations
+of the agent at a set of timepoints (sampled at time intervals of <code class="highlighter-rouge">dt</code>
+starting at time <code class="highlighter-rouge">0.</code>), given the path and the speed of the agent:</p>
 
-<p><code class="language-plaintext highlighter-rouge">locations::Vector{Point} =  walk_path(path::Path, speed::Float64,
+<p><code class="highlighter-rouge">locations::Vector{Point} =  walk_path(path::Path, speed::Float64,
 dt::Float64, num_ticks::Int)</code></p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">speed</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -271,7 +271,7 @@ dt::Float64, num_ticks::Int)</code></p>
 <span class="n">println</span><span class="x">(</span><span class="n">locations</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Point[Point(0.1, 0.1), Point(0.10607700387369604, 0.19981517932618803), Point(0.11215400774739206, 0.29963035865237614), Point(0.1182310116210881, 0.39944553797856425), Point(0.12430801549478411, 0.4992607173047523), Point(0.12110641528138277, 0.5991201211408362), Point(0.11598116190558816, 0.6989886936640975), Point(0.11278552471025023, 0.7976023085676063), Point(0.20615300301971937, 0.8334145131092261), Point(0.2995204813291885, 0.8692267176508457)]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Point[Point(0.1, 0.1), Point(0.10607700387369604, 0.19981517932618803), Point(0.11215400774739206, 0.29963035865237614), Point(0.1182310116210881, 0.39944553797856425), Point(0.12430801549478411, 0.4992607173047523), Point(0.12110641528138277, 0.5991201211408362), Point(0.11598116190558816, 0.6989886936640975), Point(0.11278552471025023, 0.7976023085676063), Point(0.20615300301971937, 0.8334145131092261), Point(0.2995204813291885, 0.8692267176508457)]
 </code></pre></div></div>
 
 <p>Now, we are prepated to write our generative model for the motion of the agent.</p>
@@ -292,7 +292,7 @@ dt::Float64, num_ticks::Int)</code></p>
 
     <span class="c"># plan a path that avoids obstacles in the scene</span>
     <span class="n">maybe_path</span> <span class="o">=</span> <span class="n">plan_path</span><span class="x">(</span><span class="n">start</span><span class="x">,</span> <span class="n">dest</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">)</span>
-    <span class="n">planning_failed</span> <span class="o">=</span> <span class="n">maybe_path</span> <span class="o">===</span> <span class="nb">nothing</span>
+    <span class="n">planning_failed</span> <span class="o">=</span> <span class="n">maybe_path</span> <span class="o">===</span> <span class="n">nothing</span>
     
     <span class="c"># sample the speed from the prior</span>
     <span class="n">speed</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mf">0.3</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
@@ -308,22 +308,22 @@ dt::Float64, num_ticks::Int)</code></p>
     <span class="c"># generate noisy measurements of the agent's location at each time point</span>
     <span class="n">noise</span> <span class="o">=</span> <span class="mf">0.01</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">point</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">locations</span><span class="x">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="x">{:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="x">{:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
     <span class="k">end</span>
 
     <span class="k">return</span> <span class="x">(</span><span class="n">planning_failed</span><span class="x">,</span> <span class="n">maybe_path</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We can now perform a traced execution of <code class="language-plaintext highlighter-rouge">agent_model</code> and print out the
+<p>We can now perform a traced execution of <code class="highlighter-rouge">agent_model</code> and print out the
 random choices it made:</p>
 
 <h3 id="exercise">Exercise</h3>
 
-<p>Using <code class="language-plaintext highlighter-rouge">simulate</code> (or <code class="language-plaintext highlighter-rouge">generate</code>, without any constraints) to sample a trace,
+<p>Using <code class="highlighter-rouge">simulate</code> (or <code class="highlighter-rouge">generate</code>, without any constraints) to sample a trace,
 print the random choices made by this model. Parameterize the planner using
-<code class="language-plaintext highlighter-rouge">PlannerParams</code> with the same parameters as above.</p>
+<code class="highlighter-rouge">PlannerParams</code> with the same parameters as above.</p>
 
 <!-- # BEGIN ANSWER KEY 2A.1
 
@@ -343,12 +343,12 @@ for traces of this generative function:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Let's visualize several traces of the function, with the start location fixed to</span>
 <span class="c"># a point in the lower-left corner:</span>
 <span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
-<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="k">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span>
-    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="x">)</span>
+<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
+<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="n">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span>
+    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
@@ -377,15 +377,15 @@ finish walking their planned path.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># &lt; put your code here&gt;</span>
 <span class="n">traces_constrained</span> <span class="o">=</span> <span class="x">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">12</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">12</span>
     <span class="c"># Modify the following line:</span>
     <span class="x">(</span><span class="n">trace_constrained</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))</span>
     <span class="n">push!</span><span class="x">(</span><span class="n">traces_constrained</span><span class="x">,</span> <span class="n">trace_constrained</span><span class="x">)</span>
 <span class="k">end</span>
 
 <span class="c"># Visualize:</span>
-<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces_constrained</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="k">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span>
-    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="nb">true</span><span class="x">)</span>
+<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces_constrained</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="n">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span>
+    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="n">true</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
@@ -416,10 +416,10 @@ end
 <hr />
 
 <h3 id="exercise-2">Exercise</h3>
-<p>The <code class="language-plaintext highlighter-rouge">rrt_iters</code> field of <code class="language-plaintext highlighter-rouge">PlannerParams</code> is the number of iterations of the RRT
-algorithm to use. The <code class="language-plaintext highlighter-rouge">refine_iters</code> field of <code class="language-plaintext highlighter-rouge">PlannerParams</code> is the number of
+<p>The <code class="highlighter-rouge">rrt_iters</code> field of <code class="highlighter-rouge">PlannerParams</code> is the number of iterations of the RRT
+algorithm to use. The <code class="highlighter-rouge">refine_iters</code> field of <code class="highlighter-rouge">PlannerParams</code> is the number of
 iterations of path refinement. These parameters affect the distribution on
-paths of the agent. Visualize traces of the <code class="language-plaintext highlighter-rouge">agent_model</code> with a couple of
+paths of the agent. Visualize traces of the <code class="highlighter-rouge">agent_model</code> with a couple of
 different settings of these two parameters to the path planning algorithm for
 fixed starting point and destination point. Try setting them to smaller
 values. Discuss.</p>
@@ -427,17 +427,17 @@ values. Discuss.</p>
 <p>We have provided starter code.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.1</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>Modify the <code class="language-plaintext highlighter-rouge">PlannerParams</code> in the cell below.</p>
+<p>Modify the <code class="highlighter-rouge">PlannerParams</code> in the cell below.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">planner_params</span> <span class="o">=</span> <span class="n">PlannerParams</span><span class="x">(</span><span class="n">rrt_iters</span><span class="o">=</span><span class="mi">300</span><span class="x">,</span> <span class="n">rrt_dt</span><span class="o">=</span><span class="mf">3.0</span><span class="x">,</span> <span class="n">refine_iters</span><span class="o">=</span><span class="mi">2000</span><span class="x">,</span> <span class="n">refine_std</span><span class="o">=</span><span class="mf">1.</span><span class="x">)</span> <span class="c"># &lt; change this line&gt;</span>
 
-<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
-<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="k">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span> 
-    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="nb">true</span><span class="x">)</span>
+<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
+<span class="n">visualize_grid</span><span class="x">(</span><span class="n">traces</span><span class="x">,</span> <span class="mi">4</span><span class="x">,</span> <span class="mi">600</span><span class="x">;</span> <span class="n">separators</span><span class="o">=</span><span class="s">"gray"</span><span class="x">)</span> <span class="n">do</span> <span class="n">trace</span><span class="x">,</span> <span class="n">frame</span> 
+    <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">frame</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="n">true</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
@@ -474,10 +474,10 @@ values. Discuss.</p>
 <h3 id="exercise-3">Exercise</h3>
 
 <p>Run inference using Gen’s built-in importance resampling implementation. Use
-50 importance samples (<code class="language-plaintext highlighter-rouge">amt_computation</code>).</p>
+50 importance samples (<code class="highlighter-rouge">amt_computation</code>).</p>
 
 <p>To see how to use the built-in importance resampling function, run
-<code class="language-plaintext highlighter-rouge">?Gen.importance_resampling</code> or check out the
+<code class="highlighter-rouge">?Gen.importance_resampling</code> or check out the
 <a href="https://www.gen.dev/dev/ref/importance/#Gen.importance_resampling">documentation</a>.</p>
 
 <p>We have provided some starter code.</p>
@@ -485,15 +485,15 @@ values. Discuss.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> do_inference</span><span class="x">(</span>
         <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">,</span> <span class="n">dt</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">num_ticks</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> 
         <span class="n">planner_params</span><span class="o">::</span><span class="n">PlannerParams</span><span class="x">,</span> 
-        <span class="n">start</span><span class="o">::</span><span class="n">Point</span><span class="x">,</span> <span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">amount_of_computation</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+        <span class="n">start</span><span class="o">::</span><span class="n">Point</span><span class="x">,</span> <span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">amount_of_computation</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
     
     <span class="c"># Constrain the observed measurements.</span>
     <span class="n">observations</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-    <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">observations</span><span class="x">[:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">observations</span><span class="x">[:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">m</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">measurements</span><span class="x">)</span>
-        <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">observations</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">observations</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">y</span>
     <span class="k">end</span>
     
     <span class="c"># &lt; put your code here&gt;</span>
@@ -535,10 +535,10 @@ should appear as red dots on the map. First, we abstract this into a
 function.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> visualize_inference</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">start</span><span class="x">;</span> <span class="n">computation_amt</span><span class="o">=</span><span class="mi">50</span><span class="x">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">1000</span><span class="x">)</span>
-    <span class="n">visualize</span><span class="x">()</span> <span class="k">do</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">samples</span>
+    <span class="n">visualize</span><span class="x">()</span> <span class="n">do</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="n">samples</span>
             <span class="n">trace</span> <span class="o">=</span> <span class="n">do_inference</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">measurements</span><span class="x">,</span> <span class="n">computation_amt</span><span class="x">)</span>
-            <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">draw_path</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span>
+            <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">draw_measurements</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">draw_path</span><span class="o">=</span><span class="n">false</span><span class="x">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
 <span class="k">end</span><span class="x">;</span>
@@ -597,8 +597,8 @@ than in the one-door scene?)</li>
 <span class="c"># one of these lines (the one that constructs the bottom wall of the room) and add one new line</span>
 <span class="c"># (because in order to create the "door", you will actually need to represent the bottom wall</span>
 <span class="c"># as two separate rectangular obstacles -- as the sample code already does for the top wall).</span>
-<span class="n">horizontal</span> <span class="o">=</span> <span class="nb">false</span>
-<span class="n">vertical</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="n">horizontal</span> <span class="o">=</span> <span class="n">false</span>
+<span class="n">vertical</span> <span class="o">=</span> <span class="n">true</span>
 <span class="n">wall_thickness</span> <span class="o">=</span> <span class="mf">0.02</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene_2doors</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">horizontal</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.20</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene_2doors</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">vertical</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.60</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
@@ -654,7 +654,7 @@ visualize_inference(measurements, scene_2doors, start, computation_amt=50, sampl
 <h2 id="2-writing-a-data-driven-proposal-as-a-generative-function-">2. Writing a data-driven proposal as a generative function <a name="custom-proposal"></a></h2>
 
 <p>The inference algorithm above used a variant of
-<a href="https://probcomp.github.io/Gen/dev/ref/importance/#Gen.importance_resampling"><code class="language-plaintext highlighter-rouge">Gen.importance_resampling</code></a>
+<a href="https://probcomp.github.io/Gen/dev/ref/importance/#Gen.importance_resampling"><code class="highlighter-rouge">Gen.importance_resampling</code></a>
 that does not take a custom proposal distribution. It uses the default
 proposal distribution associated with the generative model. For generative
 functions defined using the built-in modeling DSL, the default proposal
@@ -663,20 +663,20 @@ unconstrained random choices from the distributions specified in the
 generative model. Put more simply, each “guess” the inference algorithm
 makes about the possible destination of the agent is totally uninformed
 by the observed measurements; it is sampled using the prior generative
-model’s <code class="language-plaintext highlighter-rouge">dest_x</code> and <code class="language-plaintext highlighter-rouge">dest_y</code> sampling statements.</p>
+model’s <code class="highlighter-rouge">dest_x</code> and <code class="highlighter-rouge">dest_y</code> sampling statements.</p>
 
 <p>We can visualize this default proposal distribution by sampling from it, 
-using <code class="language-plaintext highlighter-rouge">Gen.generate</code> (note, we also could use <code class="language-plaintext highlighter-rouge">Gen.simulate</code> for the same purpose, since we are not passing any constraints). The cell below shows samples of the agent’s destination 
+using <code class="highlighter-rouge">Gen.generate</code> (note, we also could use <code class="highlighter-rouge">Gen.simulate</code> for the same purpose, since we are not passing any constraints). The cell below shows samples of the agent’s destination 
 drawn from this distribution.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">include</span><span class="x">(</span><span class="s">"../inverse-planning/viz.jl"</span><span class="x">);</span>
 
-<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="x">]</span>
-<span class="n">visualize</span><span class="x">()</span> <span class="k">do</span>
+<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))[</span><span class="mi">1</span><span class="x">]</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">1000</span><span class="x">]</span>
+<span class="n">visualize</span><span class="x">()</span> <span class="n">do</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">1000</span>
         <span class="n">trace</span><span class="x">,</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))</span>
-        <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]))</span>
+        <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]))</span>
     <span class="k">end</span>
 
     <span class="n">draw_scene</span><span class="x">(</span><span class="n">scene</span><span class="x">)</span>
@@ -698,13 +698,13 @@ of the destination using just the first measurement and the last measurement mig
   <li>
     <p>If the x-coordinate of the last measurement is greater than the
 x-coordinate of the first measurement, we think the agent is probably
-headed generally to the right. Make values <code class="language-plaintext highlighter-rouge">:dest_x</code> that are greater than
+headed generally to the right. Make values <code class="highlighter-rouge">:dest_x</code> that are greater than
 the x-coordinate of the last measurement more probable.</p>
   </li>
   <li>
     <p>If the x-coordinate of the last measurment is less than the x-coordinate of
 the first measurement, we think the agent is probably headed generally to
-the left. Make values  <code class="language-plaintext highlighter-rouge">:dest_x</code> that are smaller than the x-coordinate of
+the left. Make values  <code class="highlighter-rouge">:dest_x</code> that are smaller than the x-coordinate of
 the last measurement more probable.</p>
   </li>
 </ul>
@@ -722,13 +722,13 @@ bins:</p>
 <a href="https://www.gen.dev/dev/ref/distributions/#Gen.piecewise_uniform">piecewise_uniform</a>
 distribution, where we set higher probability for certain bins based on the
 heuristic described above and use a uniform continuous distribution for the
-coordinate within a bin. The <code class="language-plaintext highlighter-rouge">compute_bin_probs</code> function below computes the
-probability for each bin. The bounds of the scene are given by <code class="language-plaintext highlighter-rouge">min</code> and
-<code class="language-plaintext highlighter-rouge">max</code>. The coordinates of the first and last measured points respectively are
-given by <code class="language-plaintext highlighter-rouge">first</code> and <code class="language-plaintext highlighter-rouge">last</code>. We compute the probability by assigning a
+coordinate within a bin. The <code class="highlighter-rouge">compute_bin_probs</code> function below computes the
+probability for each bin. The bounds of the scene are given by <code class="highlighter-rouge">min</code> and
+<code class="highlighter-rouge">max</code>. The coordinates of the first and last measured points respectively are
+given by <code class="highlighter-rouge">first</code> and <code class="highlighter-rouge">last</code>. We compute the probability by assigning a
 “score” to each bin based on the heuristic above — if the bin should
 receive lower probability, it gets a score of 1., and if it should receive
-higher probability, it gets a bin of <code class="language-plaintext highlighter-rouge">score_high</code>, where <code class="language-plaintext highlighter-rouge">score_high</code> is some
+higher probability, it gets a bin of <code class="highlighter-rouge">score_high</code>, where <code class="highlighter-rouge">score_high</code> is some
 value greater than 1.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> compute_bin_prob</span><span class="x">(</span><span class="n">first</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">last</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">bin</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">last_bin</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">score_high</span><span class="x">)</span>
@@ -740,13 +740,13 @@ value greater than 1.</p>
 <span class="k">function</span><span class="nf"> compute_bin_probs</span><span class="x">(</span><span class="n">num_bins</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">min</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">max</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">first</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">last</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">score_high</span><span class="x">)</span>
     <span class="n">bin_len</span> <span class="o">=</span> <span class="x">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="x">)</span> <span class="o">/</span> <span class="n">num_bins</span>
     <span class="n">last_bin</span> <span class="o">=</span> <span class="kt">Int</span><span class="x">(</span><span class="n">floor</span><span class="x">(</span><span class="n">last</span> <span class="o">/</span> <span class="n">bin_len</span><span class="x">))</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">probs</span> <span class="o">=</span> <span class="x">[</span><span class="n">compute_bin_prob</span><span class="x">(</span><span class="n">first</span><span class="x">,</span> <span class="n">last</span><span class="x">,</span> <span class="n">bin</span><span class="x">,</span> <span class="n">last_bin</span><span class="x">,</span> <span class="n">score_high</span><span class="x">)</span> <span class="k">for</span> <span class="n">bin</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_bins</span><span class="x">]</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="x">[</span><span class="n">compute_bin_prob</span><span class="x">(</span><span class="n">first</span><span class="x">,</span> <span class="n">last</span><span class="x">,</span> <span class="n">bin</span><span class="x">,</span> <span class="n">last_bin</span><span class="x">,</span> <span class="n">score_high</span><span class="x">)</span> <span class="k">for</span> <span class="n">bin</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_bins</span><span class="x">]</span>
     <span class="n">total</span> <span class="o">=</span> <span class="n">sum</span><span class="x">(</span><span class="n">probs</span><span class="x">)</span>
     <span class="k">return</span> <span class="x">[</span><span class="n">p</span> <span class="o">/</span> <span class="n">total</span> <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">probs</span><span class="x">]</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We will see how to automatically tune the value of <code class="language-plaintext highlighter-rouge">score_high</code> shortly. For
+<p>We will see how to automatically tune the value of <code class="highlighter-rouge">score_high</code> shortly. For
 now, we will use a value of 5. Below, we see that for the data set of
 measurements, shown above the probabilities of higher bins are indeed 5x
 larger than those of lower bins, becuase the agent seems to be headed up.</p>
@@ -754,7 +754,7 @@ larger than those of lower bins, becuase the agent seems to be headed up.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">compute_bin_probs</span><span class="x">(</span><span class="n">num_y_bins</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">ymin</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">ymax</span><span class="x">,</span> <span class="n">measurements</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="n">measurements</span><span class="x">[</span><span class="k">end</span><span class="x">]</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="mf">5.</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
  0.058823529411764705
  0.058823529411764705
  0.29411764705882354
@@ -764,9 +764,9 @@ larger than those of lower bins, becuase the agent seems to be headed up.</p>
 
 <p>Next, we write a generative function that applies this heuristic for both the
 x-coordinate and y-coordinate, and samples the destination coordinates at
-addresses <code class="language-plaintext highlighter-rouge">:dest_x</code> and <code class="language-plaintext highlighter-rouge">:dest_y</code>.</p>
+addresses <code class="highlighter-rouge">:dest_x</code> and <code class="highlighter-rouge">:dest_y</code>.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
 
     <span class="n">score_high</span> <span class="o">=</span> <span class="mf">5.</span>
     
@@ -785,15 +785,15 @@ addresses <code class="language-plaintext highlighter-rouge">:dest_x</code> and 
     <span class="n">y_bounds</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="n">scene</span><span class="o">.</span><span class="n">ymin</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">ymax</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="n">num_y_bins</span><span class="o">+</span><span class="mi">1</span><span class="x">))</span>
     <span class="n">dest_y</span> <span class="o">~</span> <span class="n">piecewise_uniform</span><span class="x">(</span><span class="n">y_bounds</span><span class="x">,</span> <span class="n">y_probs</span><span class="x">)</span>
     
-    <span class="k">return</span> <span class="nb">nothing</span>
+    <span class="k">return</span> <span class="n">nothing</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
 <p>We can propose values of random choices from the proposal function using
-<a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.propose"><code class="language-plaintext highlighter-rouge">Gen.propose</code></a>.
+<a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.propose"><code class="highlighter-rouge">Gen.propose</code></a>.
 This method returns the choices, as well as some other information, which we
-won’t need for our purposes. For now, you can think of <code class="language-plaintext highlighter-rouge">Gen.propose</code> as
-similar to <code class="language-plaintext highlighter-rouge">Gen.generate</code> except that it does not produce a full execution
+won’t need for our purposes. For now, you can think of <code class="highlighter-rouge">Gen.propose</code> as
+similar to <code class="highlighter-rouge">Gen.generate</code> except that it does not produce a full execution
 trace (only the choices), and it does not accept constraints. We can see the
 random choices for one run of the proposal on our data set:</p>
 
@@ -801,27 +801,27 @@ random choices for one run of the proposal on our data set:</p>
 <span class="n">proposed_choices</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :dest_y : 0.5004991033166655
 │
 └── :dest_x : 0.9394799919113345
 </code></pre></div></div>
 
 <p>The function below runs the proposal 1000 times. For each run, it generates a
-trace of the model where the <code class="language-plaintext highlighter-rouge">:dest_x</code> and <code class="language-plaintext highlighter-rouge">:dest_y</code> choices are constrained
+trace of the model where the <code class="highlighter-rouge">:dest_x</code> and <code class="highlighter-rouge">:dest_y</code> choices are constrained
 to the proposed values, and then visualizes the resulting traces. We make the
 proposal a parameter of the function because we will be visualizing the
 output distribution of various proposals later in the notebook.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> visualize_custom_destination_proposal</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">dest_proposal</span><span class="x">;</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="x">)</span>
-    <span class="n">visualize</span><span class="x">()</span> <span class="k">do</span> 
-        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_samples</span>
+    <span class="n">visualize</span><span class="x">()</span> <span class="n">do</span> 
+        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_samples</span>
             <span class="x">(</span><span class="n">proposed_choices</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">propose</span><span class="x">(</span><span class="n">dest_proposal</span><span class="x">,</span> <span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">))</span>
             <span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">(</span><span class="n">proposed_choices</span><span class="x">)</span>
-            <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
-            <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">constraints</span><span class="x">[:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">constraints</span><span class="x">[:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
             <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)</span>
-            <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]))</span>
+            <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]))</span>
         <span class="k">end</span>
         <span class="n">draw_scene</span><span class="x">(</span><span class="n">scene</span><span class="x">)</span>
         <span class="n">draw_start</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">start</span><span class="x">)</span>
@@ -830,7 +830,7 @@ output distribution of various proposals later in the notebook.</p>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>Let’s visualize the output distribution of <code class="language-plaintext highlighter-rouge">custom_dest_proposal</code> for our
+<p>Let’s visualize the output distribution of <code class="highlighter-rouge">custom_dest_proposal</code> for our
 data set:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">visualize_custom_destination_proposal</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">custom_dest_proposal</span><span class="x">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1000</span><span class="x">)</span>
@@ -848,11 +848,11 @@ half.</p>
 
 <p>We now use our data-driven proposal within an inference algorithm. There is a
 second variant of
-<a href="https://probcomp.github.io/Gen/dev/ref/importance/#Gen.importance_resampling"><code class="language-plaintext highlighter-rouge">Gen.importance_resampling</code></a>
+<a href="https://probcomp.github.io/Gen/dev/ref/importance/#Gen.importance_resampling"><code class="highlighter-rouge">Gen.importance_resampling</code></a>
 that accepts a generative function representing a custom proposal. This
 proposal generative function makes traced random choices at the addresses of
 a subset of the unobserved random choices made by the generative model. In
-our case, these addresses are <code class="language-plaintext highlighter-rouge">:dest_x</code> and <code class="language-plaintext highlighter-rouge">:dest_y</code>.</p>
+our case, these addresses are <code class="highlighter-rouge">:dest_x</code> and <code class="highlighter-rouge">:dest_y</code>.</p>
 
 <hr />
 
@@ -862,10 +862,10 @@ our case, these addresses are <code class="language-plaintext highlighter-rouge"
 
 <p>Because we will experiment with different data-driven proposals, we make the
 proposal into an agument of our inference program. We assume that the
-proposal accepts arguments <code class="language-plaintext highlighter-rouge">(measurements, scene)</code>.</p>
+proposal accepts arguments <code class="highlighter-rouge">(measurements, scene)</code>.</p>
 
-<p>This time, use only 5 importance samples (<code class="language-plaintext highlighter-rouge">amt_computation</code>). You can run
-<code class="language-plaintext highlighter-rouge">?Gen.importance_resampling</code> or check out the
+<p>This time, use only 5 importance samples (<code class="highlighter-rouge">amt_computation</code>). You can run
+<code class="highlighter-rouge">?Gen.importance_resampling</code> or check out the
 <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Importance-Sampling-1">documentation</a>
 to understand how to supply the arguments to invoke this second version of of
 importance resampling.</p>
@@ -876,13 +876,13 @@ importance resampling.</p>
         <span class="n">dest_proposal</span><span class="o">::</span><span class="n">GenerativeFunction</span><span class="x">,</span>
         <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">,</span> <span class="n">dt</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span>
         <span class="n">num_ticks</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">planner_params</span><span class="o">::</span><span class="n">PlannerParams</span><span class="x">,</span>
-        <span class="n">start</span><span class="o">::</span><span class="n">Point</span><span class="x">,</span> <span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> 
+        <span class="n">start</span><span class="o">::</span><span class="n">Point</span><span class="x">,</span> <span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> 
         <span class="n">amount_of_computation</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
     
-    <span class="n">observations</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">start_x</span><span class="x">,</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">start_y</span><span class="x">,</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span><span class="x">))</span>
+    <span class="n">observations</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">start_x</span><span class="x">,</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span><span class="x">),</span> <span class="x">(:</span><span class="n">start_y</span><span class="x">,</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span><span class="x">))</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">m</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">measurements</span><span class="x">)</span>
-        <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">observations</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">observations</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">observations</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">y</span>
     <span class="k">end</span>
     
     <span class="c"># &lt; put your code here&gt;</span>
@@ -891,11 +891,11 @@ importance resampling.</p>
 <span class="k">end</span><span class="x">;</span>
 
 <span class="k">function</span><span class="nf"> visualize_data_driven_inference</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">proposal</span><span class="x">;</span> <span class="n">amt_computation</span><span class="o">=</span><span class="mi">50</span><span class="x">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">1000</span><span class="x">)</span>
-    <span class="n">visualize</span><span class="x">()</span> <span class="k">do</span> 
-      <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">samples</span>
+    <span class="n">visualize</span><span class="x">()</span> <span class="n">do</span> 
+      <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">samples</span>
           <span class="n">trace</span> <span class="o">=</span> <span class="n">do_inference_data_driven</span><span class="x">(</span><span class="n">proposal</span><span class="x">,</span> 
               <span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">measurements</span><span class="x">,</span> <span class="n">amt_computation</span><span class="x">)</span>
-          <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">draw_path</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span>
+          <span class="n">draw_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">draw_path</span><span class="o">=</span><span class="n">false</span><span class="x">)</span>
       <span class="k">end</span>
     <span class="k">end</span>
 <span class="k">end</span><span class="x">;</span>
@@ -963,18 +963,18 @@ end;
 
 <h2 id="4-training-the-parameters-of-a-data-driven-proposal-">4. Training the parameters of a data-driven proposal <a name="training"></a></h2>
 
-<p>Our choice of the <code class="language-plaintext highlighter-rouge">score_high</code> value of 5. was somewhat arbitrary. To use
-more informed value, we can make <code class="language-plaintext highlighter-rouge">score_high</code> into a <a href="https://www.gen.dev/dev/ref/gfi/#Trainable-parameters-1"><em>trainable
+<p>Our choice of the <code class="highlighter-rouge">score_high</code> value of 5. was somewhat arbitrary. To use
+more informed value, we can make <code class="highlighter-rouge">score_high</code> into a <a href="https://www.gen.dev/dev/ref/gfi/#Trainable-parameters-1"><em>trainable
 parameter</em></a>
 of the generative function. Below, we write a new version of the proposal
-function that makes <code class="language-plaintext highlighter-rouge">score_high</code> trainable. However, the optimization
+function that makes <code class="highlighter-rouge">score_high</code> trainable. However, the optimization
 algorithms we will use for training work best with <em>unconstrained</em> parameters
-(parameters that can take any value on the real line), but <code class="language-plaintext highlighter-rouge">score_high</code> must
+(parameters that can take any value on the real line), but <code class="highlighter-rouge">score_high</code> must
 be positive. Therefore, we introduce an unconstrained trainable parameter
-mamed <code class="language-plaintext highlighter-rouge">log_score_high</code>, and use <code class="language-plaintext highlighter-rouge">exp()</code> to ensure that <code class="language-plaintext highlighter-rouge">score_high</code> is
+mamed <code class="highlighter-rouge">log_score_high</code>, and use <code class="highlighter-rouge">exp()</code> to ensure that <code class="highlighter-rouge">score_high</code> is
 positive:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_trainable</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_trainable</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
 
     <span class="nd">@param</span> <span class="n">log_score_high</span><span class="o">::</span><span class="kt">Float64</span>
     
@@ -993,15 +993,15 @@ positive:</p>
     <span class="n">y_bounds</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="n">scene</span><span class="o">.</span><span class="n">ymin</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">ymax</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="n">num_y_bins</span><span class="o">+</span><span class="mi">1</span><span class="x">))</span>
     <span class="n">dest_y</span> <span class="o">~</span> <span class="n">piecewise_uniform</span><span class="x">(</span><span class="n">y_bounds</span><span class="x">,</span> <span class="n">y_probs</span><span class="x">)</span>
     
-    <span class="k">return</span> <span class="nb">nothing</span>
+    <span class="k">return</span> <span class="n">nothing</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We initialize the value of <code class="language-plaintext highlighter-rouge">score_high</code> to 1. For this value, our custom
+<p>We initialize the value of <code class="highlighter-rouge">score_high</code> to 1. For this value, our custom
 proposal gives a uniform distribution, and is the same as the default
 proposal.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_trainable</span><span class="x">,</span> <span class="o">:</span><span class="n">log_score_high</span><span class="x">,</span> <span class="mf">0.</span><span class="x">);</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_trainable</span><span class="x">,</span> <span class="x">:</span><span class="n">log_score_high</span><span class="x">,</span> <span class="mf">0.</span><span class="x">);</span>
 </code></pre></div></div>
 
 <p>Let’s visualize the proposed distribution prior to training to confirm that
@@ -1014,12 +1014,12 @@ it is a uniform distribution.</p>
 
 <p>Now, we train the generative function. First, we will require a
 data-generator that generates the training data. The data-generator is a
-function of no arguments that returns a tuple of the form <code class="language-plaintext highlighter-rouge">(inputs, constraints)</code>. 
-The <code class="language-plaintext highlighter-rouge">inputs</code> are the arguments to the generative function
-being trained, and the <code class="language-plaintext highlighter-rouge">constraints</code> contains the desired values of random
+function of no arguments that returns a tuple of the form <code class="highlighter-rouge">(inputs, constraints)</code>. 
+The <code class="highlighter-rouge">inputs</code> are the arguments to the generative function
+being trained, and the <code class="highlighter-rouge">constraints</code> contains the desired values of random
 choices made by the function for those arguments. For the training
 distribution, we will use the distribution induced by the generative model
-(<code class="language-plaintext highlighter-rouge">agent_model</code>), restricted to cases where planning actually succeeded. When
+(<code class="highlighter-rouge">agent_model</code>), restricted to cases where planning actually succeeded. When
 planning failed, the agent just stays at the same location for all time, and
 we won’t worry about tuning our proposal for that case. The training
 procedure will attempt to maximize the expected conditional log probablity
@@ -1036,7 +1036,7 @@ distribution may perform better on some data sets than others.</p>
     <span class="kd">local</span> <span class="n">choices</span>
     
     <span class="c"># obtain an execution of the model where planning succeeded</span>
-    <span class="n">done</span> <span class="o">=</span> <span class="nb">false</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="n">false</span>
     <span class="k">while</span> <span class="o">!</span><span class="n">done</span>
         <span class="x">(</span><span class="n">choices</span><span class="x">,</span> <span class="n">_</span><span class="x">,</span> <span class="n">retval</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">propose</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))</span>
         <span class="x">(</span><span class="n">planning_failed</span><span class="x">,</span> <span class="n">maybe_path</span><span class="x">)</span> <span class="o">=</span> <span class="n">retval</span>       
@@ -1044,13 +1044,13 @@ distribution may perform better on some data sets than others.</p>
     <span class="k">end</span>
 
     <span class="c"># construct arguments to the proposal function being trained</span>
-    <span class="n">measurements</span> <span class="o">=</span> <span class="x">[</span><span class="n">Point</span><span class="x">(</span><span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)],</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)])</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_ticks</span><span class="x">]</span>
+    <span class="n">measurements</span> <span class="o">=</span> <span class="x">[</span><span class="n">Point</span><span class="x">(</span><span class="n">choices</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)],</span> <span class="n">choices</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)])</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_ticks</span><span class="x">]</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">)</span>
     
     <span class="c"># construct constraints for the proposal function being trained</span>
     <span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-    <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">]</span>
-    <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]</span>
+    <span class="n">constraints</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">]</span>
+    <span class="n">constraints</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]</span>
     
     <span class="k">return</span> <span class="x">(</span><span class="n">inputs</span><span class="x">,</span> <span class="n">constraints</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
@@ -1066,14 +1066,14 @@ Here we will use gradient descent with a fixed step size of 0.001.</p>
 </code></pre></div></div>
 
 <p>Finally, we use the
-<a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.train!"><code class="language-plaintext highlighter-rouge">Gen.train!</code></a>
+<a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.train!"><code class="highlighter-rouge">Gen.train!</code></a>
 method to actually do the training.</p>
 
-<p>For each epoch, <code class="language-plaintext highlighter-rouge">Gen.train!</code> makes <code class="language-plaintext highlighter-rouge">epoch_size</code> calls to the data-generator
+<p>For each epoch, <code class="highlighter-rouge">Gen.train!</code> makes <code class="highlighter-rouge">epoch_size</code> calls to the data-generator
 to construct a batch of training data for that epoch. Then, it iteratively
-selects <code class="language-plaintext highlighter-rouge">num_minibatch</code> subsets of the epoch training data, each of size
-<code class="language-plaintext highlighter-rouge">100</code>, and applies the update once per minibatch. At the end of the epoch, it
-generates another batch of evaluation data (of size <code class="language-plaintext highlighter-rouge">evaluation_size</code>) which
+selects <code class="highlighter-rouge">num_minibatch</code> subsets of the epoch training data, each of size
+<code class="highlighter-rouge">100</code>, and applies the update once per minibatch. At the end of the epoch, it
+generates another batch of evaluation data (of size <code class="highlighter-rouge">evaluation_size</code>) which
 it uses to estimate the objective function (the expected conditional log
 likelihood under the data-generating distribution).</p>
 
@@ -1082,10 +1082,10 @@ a gradient estimate obtained from 100 training examples. The method prints
 the estimate of the objective function after each epoch.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">custom_dest_proposal_trainable</span><span class="x">,</span> <span class="n">data_generator</span><span class="x">,</span> <span class="n">update</span><span class="x">,</span>
-    <span class="n">num_epoch</span><span class="o">=</span><span class="mi">200</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">true</span><span class="x">);</span>
+    <span class="n">num_epoch</span><span class="o">=</span><span class="mi">200</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">1</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">true</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>epoch 1: generating 100 training examples...
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>epoch 1: generating 100 training examples...
 epoch 1: training using 1 minibatches of size 100...
 epoch 1: evaluating on 100 examples...
 epoch 1: est. objective value: 0.05785100924257531
@@ -1888,18 +1888,18 @@ epoch 200: est. objective value: 0.48226875566596256
  31.070067 seconds (46.10 M allocations: 2.840 GiB, 0.96% gc time, 4.32% compilation time)
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span>
-<span class="n">plot</span><span class="x">(</span><span class="n">scores</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"Iterations of stochastic gradient descent"</span><span class="x">,</span> <span class="n">labelfontsize</span><span class="o">=</span><span class="mi">8</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Estimate of expected conditional log probability density"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Plots</span>
+<span class="n">plot</span><span class="x">(</span><span class="n">scores</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"Iterations of stochastic gradient descent"</span><span class="x">,</span> <span class="n">labelfontsize</span><span class="o">=</span><span class="mi">8</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Estimate of expected conditional log probability density"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_123_0.svg" alt="svg" /></p>
 
-<p>We can read out the new value for <code class="language-plaintext highlighter-rouge">score_high</code>:</p>
+<p>We can read out the new value for <code class="highlighter-rouge">score_high</code>:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">println</span><span class="x">(</span><span class="n">exp</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">get_param</span><span class="x">(</span><span class="n">custom_dest_proposal_trainable</span><span class="x">,</span> <span class="o">:</span><span class="n">log_score_high</span><span class="x">)))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">println</span><span class="x">(</span><span class="n">exp</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">get_param</span><span class="x">(</span><span class="n">custom_dest_proposal_trainable</span><span class="x">,</span> <span class="x">:</span><span class="n">log_score_high</span><span class="x">)))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9.434368409103923
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9.434368409103923
 </code></pre></div></div>
 
 <p>We see that the optimal value of the parameter is indeed larger than our
@@ -1953,9 +1953,9 @@ shows how to use PyTorch to make this process a lot easier.</p>
 <p>We will use a deep neural network with two hidden layers that takes as input
 x- and y- coordinates of the first and last measurement (4 values) and
 produces as output a vector of un-normalized probabilities, one for each bin
-of the x-dimension. We will later sample <code class="language-plaintext highlighter-rouge">:dest_x</code> from this distribution.</p>
+of the x-dimension. We will later sample <code class="highlighter-rouge">:dest_x</code> from this distribution.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> dest_x_neural_net</span><span class="x">(</span><span class="n">nn_params</span><span class="x">,</span> <span class="n">x_first</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">y_first</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">x_last</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">y_last</span><span class="o">::</span><span class="kt">Real</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> dest_x_neural_net</span><span class="x">(</span><span class="n">nn_params</span><span class="x">,</span> <span class="n">x_first</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">y_first</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">x_last</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">y_last</span><span class="o">::</span><span class="n">Real</span><span class="x">)</span>
     <span class="x">(</span><span class="n">W1</span><span class="x">,</span> <span class="n">b1</span><span class="x">,</span> <span class="n">W2</span><span class="x">,</span> <span class="n">b2</span><span class="x">,</span> <span class="n">W3</span><span class="x">,</span> <span class="n">b3</span><span class="x">)</span> <span class="o">=</span> <span class="n">nn_params</span>
     <span class="n">input_layer</span> <span class="o">=</span> <span class="x">[</span><span class="n">x_first</span><span class="x">,</span> <span class="n">y_first</span><span class="x">,</span> <span class="n">x_last</span><span class="x">,</span> <span class="n">y_last</span><span class="x">]</span>
     <span class="n">hidden_layer_1</span> <span class="o">=</span> <span class="n">nonlinearity</span><span class="x">(</span><span class="n">W1</span> <span class="o">*</span> <span class="n">input_layer</span> <span class="o">.+</span> <span class="n">b1</span><span class="x">)</span>
@@ -1965,10 +1965,10 @@ of the x-dimension. We will later sample <code class="language-plaintext highlig
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>After sampling the value of <code class="language-plaintext highlighter-rouge">:dest_x</code>, we will use a second deep neural
-network with the same structure to sample <code class="language-plaintext highlighter-rouge">:dest_y</code>.</p>
+<p>After sampling the value of <code class="highlighter-rouge">:dest_x</code>, we will use a second deep neural
+network with the same structure to sample <code class="highlighter-rouge">:dest_y</code>.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> dest_y_neural_net</span><span class="x">(</span><span class="n">nn_params</span><span class="x">,</span> <span class="n">x_first</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">y_first</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">x_last</span><span class="o">::</span><span class="kt">Real</span><span class="x">,</span> <span class="n">y_last</span><span class="o">::</span><span class="kt">Real</span><span class="x">)</span><span class="c">#, dest_x::Real)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> dest_y_neural_net</span><span class="x">(</span><span class="n">nn_params</span><span class="x">,</span> <span class="n">x_first</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">y_first</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">x_last</span><span class="o">::</span><span class="n">Real</span><span class="x">,</span> <span class="n">y_last</span><span class="o">::</span><span class="n">Real</span><span class="x">)</span><span class="c">#, dest_x::Real)</span>
     <span class="x">(</span><span class="n">W1</span><span class="x">,</span> <span class="n">b1</span><span class="x">,</span> <span class="n">W2</span><span class="x">,</span> <span class="n">b2</span><span class="x">,</span> <span class="n">W3</span><span class="x">,</span> <span class="n">b3</span><span class="x">)</span> <span class="o">=</span> <span class="n">nn_params</span>
     <span class="n">input_layer</span> <span class="o">=</span> <span class="x">[</span><span class="n">x_first</span><span class="x">,</span> <span class="n">y_first</span><span class="x">,</span> <span class="n">x_last</span><span class="x">,</span> <span class="n">y_last</span><span class="x">]</span>
     <span class="n">hidden_layer_1</span> <span class="o">=</span> <span class="n">nonlinearity</span><span class="x">(</span><span class="n">W1</span> <span class="o">*</span> <span class="n">input_layer</span> <span class="o">.+</span> <span class="n">b1</span><span class="x">)</span>
@@ -1983,20 +1983,20 @@ This generative function has a number of parameters.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scale_coord</span><span class="x">(</span><span class="n">coord</span><span class="x">,</span> <span class="n">min</span><span class="x">,</span> <span class="n">max</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">coord</span> <span class="o">/</span> <span class="x">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="x">))</span> <span class="o">-</span> <span class="mf">0.5</span>
 
-<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_neural</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
-    <span class="nd">@param</span> <span class="n">x_W1</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">x_b1</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">x_W2</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">x_b2</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">x_W3</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">x_b3</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_neural</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
+    <span class="nd">@param</span> <span class="n">x_W1</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">x_b1</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">x_W2</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">x_b2</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">x_W3</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">x_b3</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
     
-    <span class="nd">@param</span> <span class="n">y_W1</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">y_b1</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">y_W2</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">y_b2</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">y_W3</span><span class="o">::</span><span class="kt">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
-    <span class="nd">@param</span> <span class="n">y_b3</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_W1</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_b1</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_W2</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_b2</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_W3</span><span class="o">::</span><span class="n">Matrix</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
+    <span class="nd">@param</span> <span class="n">y_b3</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}</span>
     
     <span class="n">num_x_bins</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">x_b3</span><span class="x">)</span>
     <span class="n">num_y_bins</span> <span class="o">=</span> <span class="n">length</span><span class="x">(</span><span class="n">y_b3</span><span class="x">)</span>
@@ -2017,7 +2017,7 @@ This generative function has a number of parameters.</p>
     <span class="n">y_probs</span> <span class="o">=</span> <span class="n">dest_y_neural_net</span><span class="x">((</span><span class="n">y_W1</span><span class="x">,</span> <span class="n">y_b1</span><span class="x">,</span> <span class="n">y_W2</span><span class="x">,</span> <span class="n">y_b2</span><span class="x">,</span> <span class="n">y_W3</span><span class="x">,</span> <span class="n">y_b3</span><span class="x">),</span> <span class="n">x_first</span><span class="x">,</span> <span class="n">y_first</span><span class="x">,</span> <span class="n">x_last</span><span class="x">,</span> <span class="n">y_last</span><span class="x">)</span>
     <span class="n">dest_y</span> <span class="o">~</span> <span class="n">Gen</span><span class="o">.</span><span class="n">piecewise_uniform</span><span class="x">(</span><span class="n">y_bounds</span><span class="x">,</span> <span class="n">y_probs</span> <span class="o">/</span> <span class="n">sum</span><span class="x">(</span><span class="n">y_probs</span><span class="x">))</span>
     
-    <span class="k">return</span> <span class="nb">nothing</span>
+    <span class="k">return</span> <span class="n">nothing</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
@@ -2039,24 +2039,24 @@ This generative function has a number of parameters.</p>
 <span class="n">init_x_W3</span> <span class="o">=</span> <span class="n">init_weight</span><span class="x">(</span><span class="n">num_x_bins</span><span class="x">,</span> <span class="n">num_hidden_2</span><span class="x">)</span>
 
 <span class="c"># set parameters for dest_x_neural_net predictor network</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W1</span><span class="x">,</span> <span class="n">init_x_W1</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_1</span><span class="x">))</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="n">init_x_W2</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_2</span><span class="x">))</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="n">init_x_W3</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_x_bins</span><span class="x">))</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W1</span><span class="x">,</span> <span class="n">init_x_W1</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_1</span><span class="x">))</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="n">init_x_W2</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_2</span><span class="x">))</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="n">init_x_W3</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_x_bins</span><span class="x">))</span>
 
 <span class="n">init_y_W1</span> <span class="o">=</span> <span class="n">init_weight</span><span class="x">(</span><span class="n">num_hidden_1</span><span class="x">,</span> <span class="mi">4</span><span class="x">)</span>
 <span class="n">init_y_W2</span> <span class="o">=</span> <span class="n">init_weight</span><span class="x">(</span><span class="n">num_hidden_2</span><span class="x">,</span> <span class="n">num_hidden_1</span><span class="x">)</span>
 <span class="n">init_y_W3</span> <span class="o">=</span> <span class="n">init_weight</span><span class="x">(</span><span class="n">num_x_bins</span><span class="x">,</span> <span class="n">num_hidden_2</span><span class="x">)</span>
 
 <span class="c"># set parameters for dest_y_neural_net predictor network</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="n">init_y_W1</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_1</span><span class="x">))</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="n">init_y_W2</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_2</span><span class="x">))</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="n">init_y_W3</span><span class="x">)</span>
-<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b3</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_y_bins</span><span class="x">));</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="n">init_y_W1</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_1</span><span class="x">))</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="n">init_y_W2</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_hidden_2</span><span class="x">))</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="n">init_y_W3</span><span class="x">)</span>
+<span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b3</span><span class="x">,</span> <span class="n">zeros</span><span class="x">(</span><span class="n">num_y_bins</span><span class="x">));</span>
 </code></pre></div></div>
 
 <p>Now, we visualize the proposal distribution prior to training:</p>
@@ -2082,35 +2082,35 @@ examples. At the end of each epoch, we estimate the objective function value
 using 10000 freshly sampled examples. This process takes about 10 minutes to
 run on a typical laptop CPU, so we have precomputed the results for you.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">JLD2</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">JLD2</span>
 <span class="nd">@time</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="n">data_generator</span><span class="x">,</span> <span class="n">update</span><span class="x">,</span>
     <span class="n">num_epoch</span><span class="o">=</span><span class="mi">50</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span>
-    <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">1000</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">true</span><span class="x">);</span>
+    <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">1000</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">true</span><span class="x">);</span>
     
-<span class="n">let</span> <span class="n">data</span> <span class="o">=</span> <span class="kt">Dict</span><span class="x">()</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="x">[</span><span class="o">:</span><span class="n">x_W1</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b3</span><span class="x">]</span>
-        <span class="n">data</span><span class="x">[(</span><span class="o">:</span><span class="n">param</span><span class="x">,</span> <span class="n">name</span><span class="x">)]</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_param</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="n">name</span><span class="x">)</span>
+<span class="n">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Dict</span><span class="x">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="x">[:</span><span class="n">x_W1</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b3</span><span class="x">]</span>
+        <span class="n">data</span><span class="x">[(:</span><span class="n">param</span><span class="x">,</span> <span class="n">name</span><span class="x">)]</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_param</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="n">name</span><span class="x">)</span>
     <span class="k">end</span>
-    <span class="n">data</span><span class="x">[</span><span class="o">:</span><span class="n">scores</span><span class="x">]</span> <span class="o">=</span> <span class="n">scores</span>
+    <span class="n">data</span><span class="x">[:</span><span class="n">scores</span><span class="x">]</span> <span class="o">=</span> <span class="n">scores</span>
     <span class="n">save</span><span class="x">(</span><span class="s">"params/custom_dest_proposal_neural_trained.jld2"</span><span class="x">,</span> <span class="s">"data"</span><span class="x">,</span> <span class="n">data</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
 <p>We load the results here:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">JLD2</span>
-<span class="n">scores</span> <span class="o">=</span> <span class="n">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">JLD2</span><span class="o">.</span><span class="n">load</span><span class="x">(</span><span class="s">"params/custom_dest_proposal_neural_trained.jld2"</span><span class="x">,</span> <span class="s">"data"</span><span class="x">)</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="x">[</span><span class="o">:</span><span class="n">x_W1</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="o">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="o">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="o">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="o">:</span><span class="n">y_b3</span><span class="x">]</span>
-        <span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="n">name</span><span class="x">,</span> <span class="n">data</span><span class="x">[(</span><span class="o">:</span><span class="n">param</span><span class="x">,</span> <span class="n">name</span><span class="x">)])</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">JLD2</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">let</span> <span class="n">data</span> <span class="o">=</span> <span class="n">JLD2</span><span class="o">.</span><span class="nb">load</span><span class="x">(</span><span class="s">"params/custom_dest_proposal_neural_trained.jld2"</span><span class="x">,</span> <span class="s">"data"</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="x">[:</span><span class="n">x_W1</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b1</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W2</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b2</span><span class="x">,</span> <span class="x">:</span><span class="n">x_W3</span><span class="x">,</span> <span class="x">:</span><span class="n">x_b3</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W1</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b1</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W2</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b2</span><span class="x">,</span> <span class="x">:</span><span class="n">y_W3</span><span class="x">,</span> <span class="x">:</span><span class="n">y_b3</span><span class="x">]</span>
+        <span class="n">Gen</span><span class="o">.</span><span class="n">init_param!</span><span class="x">(</span><span class="n">custom_dest_proposal_neural</span><span class="x">,</span> <span class="n">name</span><span class="x">,</span> <span class="n">data</span><span class="x">[(:</span><span class="n">param</span><span class="x">,</span> <span class="n">name</span><span class="x">)])</span>
     <span class="k">end</span>
-    <span class="n">data</span><span class="x">[</span><span class="o">:</span><span class="n">scores</span><span class="x">]</span>
+    <span class="n">data</span><span class="x">[:</span><span class="n">scores</span><span class="x">]</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
 <p>We plot the estimate of the objective function over epochs:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">scores</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"Epochs"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Estimate of expected conditional log probability density"</span><span class="x">,</span> 
-    <span class="n">labelfontsize</span><span class="o">=</span><span class="mi">8</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">labelfontsize</span><span class="o">=</span><span class="mi">8</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_158_0.svg" alt="svg" /></p>
@@ -2122,7 +2122,7 @@ run on a typical laptop CPU, so we have precomputed the results for you.</p>
 
 <p><img src="output_160_0.png" alt="png" /></p>
 
-<p>If we run inference with <code class="language-plaintext highlighter-rouge">amt_computation</code> set to 5, we see that the inferred distribution reflects the bias of the proposal:</p>
+<p>If we run inference with <code class="highlighter-rouge">amt_computation</code> set to 5, we see that the inferred distribution reflects the bias of the proposal:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">visualize_data_driven_inference</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">custom_dest_proposal_neural</span><span class="x">,</span>
     <span class="n">amt_computation</span><span class="o">=</span><span class="mi">5</span><span class="x">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">1000</span><span class="x">)</span>

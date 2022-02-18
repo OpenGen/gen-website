@@ -65,102 +65,104 @@ MathJax = {
 <div class="container">
 <h1 id="reasoning-about-regenerate">Reasoning About Regenerate</h1>
 
-<p>Gen provides a primitive called <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Regenerate-1"><code class="language-plaintext highlighter-rouge">regenerate</code></a> that allows users to ask for certain random choices in a trace to be re-generated from scratch. <code class="language-plaintext highlighter-rouge">regenerate</code> is the basis of one variant of the <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.metropolis_hastings"><code class="language-plaintext highlighter-rouge">metropolis_hastings</code></a> operator in Gen’s inference library.</p>
+<p>Gen provides a primitive called <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Regenerate-1"><code class="highlighter-rouge">regenerate</code></a> that allows users to ask for certain random choices in a trace to be re-generated from scratch. <code class="highlighter-rouge">regenerate</code> is the basis of one variant of the <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.metropolis_hastings"><code class="highlighter-rouge">metropolis_hastings</code></a> operator in Gen’s inference library.</p>
 
-<p>This notebook aims to help you understand the computation that <code class="language-plaintext highlighter-rouge">regenerate</code> is performing.</p>
+<p>This notebook aims to help you understand the computation that <code class="highlighter-rouge">regenerate</code> is performing.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">bernoulli</span><span class="x">,</span> <span class="nd">@gen</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">bernoulli</span><span class="x">,</span> <span class="nd">@gen</span>
 </code></pre></div></div>
 
 <p>Let’s start by defining a simple generative function:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> foo</span><span class="x">(</span><span class="n">prob_a</span><span class="x">)</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="nb">true</span>
-    <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_a</span><span class="x">))</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">b</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.6</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">true</span>
+    <span class="k">if</span> <span class="x">({:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_a</span><span class="x">))</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="x">({:</span><span class="n">b</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.6</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
     <span class="k">end</span>
-    <span class="n">prob_c</span> <span class="o">=</span> <span class="n">val</span> <span class="o">?</span> <span class="mf">0.9</span> <span class="o">:</span> <span class="mf">0.2</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">c</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_c</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
+    <span class="n">prob_c</span> <span class="o">=</span> <span class="n">val</span> <span class="o">?</span> <span class="mf">0.9</span> <span class="x">:</span> <span class="mf">0.2</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="x">({:</span><span class="n">c</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_c</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
     <span class="k">return</span> <span class="n">val</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
 <p>Recall the distribution on choice maps for this generative function:</p>
 
-\[\begin{array}{l|l|l}
-\mbox{Random choice map } t &amp; \mbox{Probability } p(t; x) &amp; \mbox{Return value } f(x, t) \\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l|l}
+\mbox{Random choice map } t & \mbox{Probability } p(t; x) & \mbox{Return value } f(x, t) \\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} &amp; \mbox{prob_a} \cdot 0.6\cdot 0.9 &amp; \mbox{true}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} &amp; \mbox{prob_a} \cdot 0.6 \cdot 0.1 &amp; \mbox{false}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; \mbox{prob_a} \cdot 0.4 \cdot 0.2 &amp; \mbox{false}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; \mbox{prob_a} \cdot 0.4 \cdot 0.8 &amp; \mbox{false}\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; (1-\mbox{prob_a}) \cdot 0.9 &amp; \mbox{true}\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; (1-\mbox{prob_a}) \cdot 0.1 &amp; \mbox{false}
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} & \mbox{prob_a} \cdot 0.6\cdot 0.9 & \mbox{true}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} & \mbox{prob_a} \cdot 0.6 \cdot 0.1 & \mbox{false}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & \mbox{prob_a} \cdot 0.4 \cdot 0.2 & \mbox{false}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} & \mbox{prob_a} \cdot 0.4 \cdot 0.8 & \mbox{false}\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & (1-\mbox{prob_a}) \cdot 0.9 & \mbox{true}\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} & (1-\mbox{prob_a}) \cdot 0.1 & \mbox{false}
+\end{array} %]]></script>
 
-<p>Let’s first obtain an initial trace with ${a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$, using <code class="language-plaintext highlighter-rouge">generate</code>:</p>
+<p>Let’s first obtain an initial trace with ${a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$, using <code class="highlighter-rouge">generate</code>:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">generate</span><span class="x">,</span> <span class="n">choicemap</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">generate</span><span class="x">,</span> <span class="n">choicemap</span>
 
-<span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">b</span><span class="x">,</span> <span class="nb">false</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">true</span><span class="x">)));</span>
+<span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">b</span><span class="x">,</span> <span class="n">false</span><span class="x">),</span> <span class="x">(:</span><span class="n">c</span><span class="x">,</span> <span class="n">true</span><span class="x">)));</span>
 </code></pre></div></div>
 
-<p>Now, we ask for the value at address <code class="language-plaintext highlighter-rouge">:a</code> to be re-generated:</p>
+<p>Now, we ask for the value at address <code class="highlighter-rouge">:a</code> to be re-generated:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">regenerate</span><span class="x">,</span> <span class="n">select</span><span class="x">,</span> <span class="n">NoChange</span>
-<span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">a</span><span class="x">));</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">regenerate</span><span class="x">,</span> <span class="n">select</span><span class="x">,</span> <span class="n">NoChange</span>
+<span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">select</span><span class="x">(:</span><span class="n">a</span><span class="x">));</span>
 </code></pre></div></div>
 
-<p>Note that unlike <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.update"><code class="language-plaintext highlighter-rouge">update</code></a>, we do not provide the new values for the random choices that we want to change. Instead, we simply pass in a <a href="https://probcomp.github.io/Gen/dev/ref/selections/#Selections-1">selection</a> indicating the addresses that we want to propose new values for.</p>
+<p>Note that unlike <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.update"><code class="highlighter-rouge">update</code></a>, we do not provide the new values for the random choices that we want to change. Instead, we simply pass in a <a href="https://probcomp.github.io/Gen/dev/ref/selections/#Selections-1">selection</a> indicating the addresses that we want to propose new values for.</p>
 
-<p>Note that <code class="language-plaintext highlighter-rouge">select(:a)</code> is equivalent to:</p>
+<p>Note that <code class="highlighter-rouge">select(:a)</code> is equivalent to:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">selection</span> <span class="o">=</span> <span class="n">DynamicAddressSet</span><span class="x">()</span>
-<span class="n">push!</span><span class="x">(</span><span class="n">selection</span><span class="x">,</span> <span class="o">:</span><span class="n">a</span><span class="x">)</span>
+<span class="n">push!</span><span class="x">(</span><span class="n">selection</span><span class="x">,</span> <span class="x">:</span><span class="n">a</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p>We print the choices in the new trace:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">get_choices</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">get_choices</span>
 
 <span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : false
 │
 └── :c : true
 </code></pre></div></div>
 
-<p>Re-run the regenerate command until you get a trace where <code class="language-plaintext highlighter-rouge">a</code> is <code class="language-plaintext highlighter-rouge">false</code>. Note that the address <code class="language-plaintext highlighter-rouge">b</code> doesn’t appear in the resulting trace. Then, run the command again until you get a trace where <code class="language-plaintext highlighter-rouge">a</code> is <code class="language-plaintext highlighter-rouge">true</code>. Note that now there is a value for <code class="language-plaintext highlighter-rouge">b</code>. This value of <code class="language-plaintext highlighter-rouge">b</code> was sampled along with the new value for <code class="language-plaintext highlighter-rouge">a</code>—<code class="language-plaintext highlighter-rouge">regenerate</code> will regenerate new values for the selected adddresses, but also any new addresses that may be introduced as a consequence of stochastic control flow.</p>
+<p>Re-run the regenerate command until you get a trace where <code class="highlighter-rouge">a</code> is <code class="highlighter-rouge">false</code>. Note that the address <code class="highlighter-rouge">b</code> doesn’t appear in the resulting trace. Then, run the command again until you get a trace where <code class="highlighter-rouge">a</code> is <code class="highlighter-rouge">true</code>. Note that now there is a value for <code class="highlighter-rouge">b</code>. This value of <code class="highlighter-rouge">b</code> was sampled along with the new value for <code class="highlighter-rouge">a</code>—<code class="highlighter-rouge">regenerate</code> will regenerate new values for the selected adddresses, but also any new addresses that may be introduced as a consequence of stochastic control flow.</p>
 
-<p>What distribution is <code class="language-plaintext highlighter-rouge">regenerate</code> sampling the selected values from? It turns out that <code class="language-plaintext highlighter-rouge">regenerate</code> is using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#.-Internal-proposal-distribution-family-1"><em>internal proposal distribution family</em></a> $q(t; x, u)$, just like like <code class="language-plaintext highlighter-rouge">generate</code>. Recall that for <code class="language-plaintext highlighter-rouge">@gen</code> functions, the internal proposal distribution is based on <em>ancestral sampling</em>.  But whereas <code class="language-plaintext highlighter-rouge">generate</code> was given the expicit choice map of constraints ($u$) as an argument, <code class="language-plaintext highlighter-rouge">regenerate</code> constructs $u$ by starting with the previous trace $t$ and then removing any selected addresses. In other words, <code class="language-plaintext highlighter-rouge">regenerate</code> is like <code class="language-plaintext highlighter-rouge">generate</code>, but where the constraints are the choices made in the previous trace less the selected choices.</p>
+<p>What distribution is <code class="highlighter-rouge">regenerate</code> sampling the selected values from? It turns out that <code class="highlighter-rouge">regenerate</code> is using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#.-Internal-proposal-distribution-family-1"><em>internal proposal distribution family</em></a> $q(t; x, u)$, just like like <code class="highlighter-rouge">generate</code>. Recall that for <code class="highlighter-rouge">@gen</code> functions, the internal proposal distribution is based on <em>ancestral sampling</em>.  But whereas <code class="highlighter-rouge">generate</code> was given the expicit choice map of constraints ($u$) as an argument, <code class="highlighter-rouge">regenerate</code> constructs $u$ by starting with the previous trace $t$ and then removing any selected addresses. In other words, <code class="highlighter-rouge">regenerate</code> is like <code class="highlighter-rouge">generate</code>, but where the constraints are the choices made in the previous trace less the selected choices.</p>
 
 <p>We can make this concrete. Let us start with a deterministic trace again:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">b</span><span class="x">,</span> <span class="nb">false</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">true</span><span class="x">)));</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">b</span><span class="x">,</span> <span class="n">false</span><span class="x">),</span> <span class="x">(:</span><span class="n">c</span><span class="x">,</span> <span class="n">true</span><span class="x">)));</span>
 </code></pre></div></div>
 
 <h3 id="understanding-how-regenerate-constructs-the-internal-proposal-distribution-family">Understanding how regenerate constructs the internal proposal distribution family</h3>
 
-<p>We will run <code class="language-plaintext highlighter-rouge">regenerate</code> with a selection of just <code class="language-plaintext highlighter-rouge">:a</code>. Let’s analyze the internal proposal distribution in this case:</p>
+<p>We will run <code class="highlighter-rouge">regenerate</code> with a selection of just <code class="highlighter-rouge">:a</code>. Let’s analyze the internal proposal distribution in this case:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">noargdiff</span><span class="x">,</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">a</span><span class="x">));</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">noargdiff</span><span class="x">,</span> <span class="n">select</span><span class="x">(:</span><span class="n">a</span><span class="x">));</span>
 </code></pre></div></div>
 
 <p>Since the current trace is $t = {a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$, the constraints $u$ that will be passed to the internal proposal are $u = {b \mapsto \mbox{false}, c \mapsto \mbox{true}}$ (everything in $t$ but with the mapping for any selected addresses removed).</p>
 
 <p>To compute the internal proposal distribution, we first write down the list of all choice maps $t’$ where $p(t’; x) &gt; 0$, with the probability $p(t’; x)$ listed.</p>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map } t' &amp; \mbox{Probability } p(t'; x)\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map } t' & \mbox{Probability } p(t'; x)\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} &amp; 0.3 \cdot 0.6\cdot 0.9\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} &amp; 0.3 \cdot 0.6 \cdot 0.1\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.3 \cdot 0.4 \cdot 0.2\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; 0.3 \cdot 0.4 \cdot 0.8\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.7 \cdot 0.9\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; 0.7 \cdot 0.1
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} & 0.3 \cdot 0.6\cdot 0.9\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} & 0.3 \cdot 0.6 \cdot 0.1\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.3 \cdot 0.4 \cdot 0.2\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} & 0.3 \cdot 0.4 \cdot 0.8\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.7 \cdot 0.9\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} & 0.7 \cdot 0.1
+\end{array} %]]></script>
 
 <p>Then, we eliminate any choice maps $t’$ such that $t’(i) \ne u(i)$ for some address $i$ that is contained in both maps $u$ and $t’$.</p>
 
@@ -183,19 +185,20 @@ MathJax = {
 
 <p>For the remaining choice maps $t’$ we require that $q(t’; x, u) &gt; 0$. The remaining two choice maps are:</p>
 
-\[\begin{array}{l}
+<script type="math/tex; mode=display">\begin{array}{l}
 t' = \{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\}\\
 t' = \{a \mapsto \mbox{false}, c \mapsto \mbox{true}\}
-\end{array}\]
+\end{array}</script>
 
-<p>The ancestral sampling algorithm has two possible results, depending on whether the new value for <code class="language-plaintext highlighter-rouge">a</code> was <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code>. It will sample <code class="language-plaintext highlighter-rouge">a = true</code> with probability 0.3 and <code class="language-plaintext highlighter-rouge">a = false</code> with probability 0.7. If <code class="language-plaintext highlighter-rouge">a</code> is sampled to be <code class="language-plaintext highlighter-rouge">true</code>, then the existing value of <code class="language-plaintext highlighter-rouge">b = false</code> will always be kept. In both cases, the previous value of <code class="language-plaintext highlighter-rouge">c = true</code> is kept. Therefore, the internal proposal distribution is:</p>
+<p>The ancestral sampling algorithm has two possible results, depending on whether the new value for <code class="highlighter-rouge">a</code> was <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>. It will sample <code class="highlighter-rouge">a = true</code> with probability 0.3 and <code class="highlighter-rouge">a = false</code> with probability 0.7. If <code class="highlighter-rouge">a</code> is sampled to be <code class="highlighter-rouge">true</code>, then the existing value of <code class="highlighter-rouge">b = false</code> will always be kept. In both cases, the previous value of <code class="highlighter-rouge">c = true</code> is kept. Therefore, the internal proposal distribution is:</p>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map } t' &amp; q(t'; x, u)\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map } t' & q(t'; x, u)\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.3\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.7
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.3\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.7
+\end{array} %]]></script>
 
 <h3 id="reversibility-of-regenerate">Reversibility of regenerate</h3>
 
@@ -205,9 +208,9 @@ t' = \{a \mapsto \mbox{false}, c \mapsto \mbox{true}\}
 
 <h3 id="understanding-the-weight-returned-by-regenerate">Understanding the weight returned by regenerate</h3>
 
-<p>The weight returned by <code class="language-plaintext highlighter-rouge">regenerate</code>, for selected addresses $I$ is:</p>
+<p>The weight returned by <code class="highlighter-rouge">regenerate</code>, for selected addresses $I$ is:</p>
 
-\[\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}\]
+<script type="math/tex; mode=display">\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}</script>
 
 <p>where $u$ is the restriction of $t$ to the complement of $I$, and where $u’$ is the restriction of $t’$ to the complement of $I$.</p>
 
@@ -215,52 +218,54 @@ t' = \{a \mapsto \mbox{false}, c \mapsto \mbox{true}\}
 
 <p>First, consider $t’ = {a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$. In this case, $u’ = {b \mapsto \mbox{false}, c \mapsto \mbox{true}}$. The internal proposal distribution in this case is:</p>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map }t &amp; q(t; x, u')\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map }t & q(t; x, u')\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.3\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.7
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.3\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.7
+\end{array} %]]></script>
 
 <p>Therefore, the weight for the transition from $t = {a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$ to $t’ = {a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$ is:</p>
 
-\[\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}
+<script type="math/tex; mode=display">\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}
 = \log \frac{q(t; u', x)}{q(t'; u, x')}
-= \log \frac{0.3}{0.3} = 0\]
+= \log \frac{0.3}{0.3} = 0</script>
 
 <p>Next, we consider $t’ = {a \mapsto \mbox{false}, c \mapsto \mbox{true}}$. In this case $u’ = {c \mapsto \mbox{true}}$. The internal proposal distribution in this case is:</p>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map } t &amp; q(t; x, u')\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map } t & q(t; x, u')\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} &amp; 0.3 \cdot 0.6\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.3 \cdot 0.4\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0.7\\
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} & 0.3 \cdot 0.6\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.3 \cdot 0.4\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0.7\\
+\end{array} %]]></script>
 
 <p>The weight for the transition from $t = {a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}}$ to $t’ = {a \mapsto \mbox{false}, c \mapsto \mbox{true}}$ is:</p>
 
-\[\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}
+<script type="math/tex; mode=display">\log \frac{p(t'; x')q(t; u', x)}{p(t; x) q(t'; u, x')}
 = \log \frac{p(t'; x')}{p(t; x)} + \log \frac{q(t; u', x)}{q(t'; u, x')}
-= \log \frac{0.7 \cdot 0.9}{0.3 \cdot 0.4 \cdot 0.2} + \log \frac{0.3 \cdot 0.4}{0.7}\]
+= \log \frac{0.7 \cdot 0.9}{0.3 \cdot 0.4 \cdot 0.2} + \log \frac{0.3 \cdot 0.4}{0.7}</script>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log</span><span class="x">((</span><span class="mf">0.7</span> <span class="o">*</span> <span class="mf">0.9</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="mf">0.2</span><span class="x">))</span> <span class="o">+</span> <span class="n">log</span><span class="x">((</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.4</span><span class="x">)</span><span class="o">/</span><span class="x">(</span><span class="mf">0.7</span><span class="x">))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.504077396776274
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.504077396776274
 </code></pre></div></div>
 
 <p>Now that we’ve done all this work, let’s check it against Gen.</p>
 
 <p>Run the cell enough times to sample both of the transitions, and confirm that the weights match with our calculations:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">b</span><span class="x">,</span> <span class="nb">false</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">true</span><span class="x">)));</span>
-<span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">a</span><span class="x">));</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">b</span><span class="x">,</span> <span class="n">false</span><span class="x">),</span> <span class="x">(:</span><span class="n">c</span><span class="x">,</span> <span class="n">true</span><span class="x">)));</span>
+<span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">regenerate</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">select</span><span class="x">(:</span><span class="n">a</span><span class="x">));</span>
 <span class="n">display</span><span class="x">(</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">))</span>
 <span class="n">println</span><span class="x">(</span><span class="s">"weight: </span><span class="si">$</span><span class="s">weight"</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : false
 │
 └── :c : true
@@ -274,7 +279,7 @@ weight: 1.504077396776274
 
 <h3 id="approaching-irreducibility">Approaching irreducibility</h3>
 
-<p>Exercise: Draw a graph in which each random choice map $t$ where $p(t; x) &gt; 0$ is a node, and where there are directed edges from $t$ to $t’$ if applying <code class="language-plaintext highlighter-rouge">regenerate</code> to $t$ with selection ${a}$ can produce trace $t’$. Do the same for selections ${b}$ and ${c}$. What about selection ${a,b,c}$?</p>
+<p>Exercise: Draw a graph in which each random choice map $t$ where $p(t; x) &gt; 0$ is a node, and where there are directed edges from $t$ to $t’$ if applying <code class="highlighter-rouge">regenerate</code> to $t$ with selection ${a}$ can produce trace $t’$. Do the same for selections ${b}$ and ${c}$. What about selection ${a,b,c}$?</p>
 
 </div>
 

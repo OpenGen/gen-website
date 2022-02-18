@@ -71,57 +71,57 @@ MathJax = {
 
 <p>Consider the following Julia code:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">uniform_discrete</span><span class="x">,</span> <span class="n">bernoulli</span><span class="x">,</span> <span class="n">categorical</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">uniform_discrete</span><span class="x">,</span> <span class="n">bernoulli</span><span class="x">,</span> <span class="n">categorical</span>
 
 <span class="k">function</span><span class="nf"> f</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
     <span class="k">if</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">])</span>
+    <span class="k">return</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">])</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>The function <code class="language-plaintext highlighter-rouge">f</code> calls three functions provided by Gen, each of which returns a random value, sampled from a certain probability distribution:</p>
+<p>The function <code class="highlighter-rouge">f</code> calls three functions provided by Gen, each of which returns a random value, sampled from a certain probability distribution:</p>
 
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">uniform_discrete(a, b)</code> returns an integer uniformly sampled from the set <code class="language-plaintext highlighter-rouge">{a, .., b}</code></p>
+    <p><code class="highlighter-rouge">uniform_discrete(a, b)</code> returns an integer uniformly sampled from the set <code class="highlighter-rouge">{a, .., b}</code></p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">bernoulli(p)</code> returns <code class="language-plaintext highlighter-rouge">true</code> with probability <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">false</code> with probability <code class="language-plaintext highlighter-rouge">1-p</code>.</p>
+    <p><code class="highlighter-rouge">bernoulli(p)</code> returns <code class="highlighter-rouge">true</code> with probability <code class="highlighter-rouge">p</code> and <code class="highlighter-rouge">false</code> with probability <code class="highlighter-rouge">1-p</code>.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">categorical(probs)</code> returns the integer <code class="language-plaintext highlighter-rouge">i</code> with probability <code class="language-plaintext highlighter-rouge">probs[i]</code> for <code class="language-plaintext highlighter-rouge">i</code> in the set <code class="language-plaintext highlighter-rouge">{1, .., length(probs)}</code>.</p>
+    <p><code class="highlighter-rouge">categorical(probs)</code> returns the integer <code class="highlighter-rouge">i</code> with probability <code class="highlighter-rouge">probs[i]</code> for <code class="highlighter-rouge">i</code> in the set <code class="highlighter-rouge">{1, .., length(probs)}</code>.</p>
   </li>
 </ul>
 
 <p>These are three of the many probability distributions that are provided by Gen.</p>
 
-<p>The function <code class="language-plaintext highlighter-rouge">f</code> first sets the initial value of <code class="language-plaintext highlighter-rouge">n</code> to a random value drawn from the set of integers <code class="language-plaintext highlighter-rouge">{1, .., 10}</code>:</p>
+<p>The function <code class="highlighter-rouge">f</code> first sets the initial value of <code class="highlighter-rouge">n</code> to a random value drawn from the set of integers <code class="highlighter-rouge">{1, .., 10}</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">n</span> <span class="o">=</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
 </code></pre></div></div>
 
-<p>Then, with probability <code class="language-plaintext highlighter-rouge">p</code>, it multiplies <code class="language-plaintext highlighter-rouge">n</code> by two:</p>
+<p>Then, with probability <code class="highlighter-rouge">p</code>, it multiplies <code class="highlighter-rouge">n</code> by two:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">if</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
 </code></pre></div></div>
 
-<p>Then, it samples an integer in the set <code class="language-plaintext highlighter-rouge">{1, ..., 20}</code>. With probability <code class="language-plaintext highlighter-rouge">0.5</code> the integer is <code class="language-plaintext highlighter-rouge">n</code>, and with probability <code class="language-plaintext highlighter-rouge">0.5</code> it is uniformly chosen from the remaining <code class="language-plaintext highlighter-rouge">19</code> integers. It returns this sampled integer:</p>
+<p>Then, it samples an integer in the set <code class="highlighter-rouge">{1, ..., 20}</code>. With probability <code class="highlighter-rouge">0.5</code> the integer is <code class="highlighter-rouge">n</code>, and with probability <code class="highlighter-rouge">0.5</code> it is uniformly chosen from the remaining <code class="highlighter-rouge">19</code> integers. It returns this sampled integer:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">return</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">])</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">return</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">])</span>
 </code></pre></div></div>
 
-<p>If we run this function many times, we can see the probability distribution on its return values. The distribution depends on the argument <code class="language-plaintext highlighter-rouge">p</code> to the function:</p>
+<p>If we run this function many times, we can see the probability distribution on its return values. The distribution depends on the argument <code class="highlighter-rouge">p</code> to the function:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Plots</span>
 
 <span class="n">bins</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">21</span><span class="x">))</span>
 
 <span class="k">function</span><span class="nf"> plot_histogram</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-    <span class="n">histogram</span><span class="x">([</span><span class="n">f</span><span class="x">(</span><span class="n">p</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100000</span><span class="x">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">histogram</span><span class="x">([</span><span class="n">f</span><span class="x">(</span><span class="n">p</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">100000</span><span class="x">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 <span class="k">end</span>
 
 <span class="n">plot</span><span class="x">(</span><span class="n">map</span><span class="x">(</span><span class="n">plot_histogram</span><span class="x">,</span> <span class="x">[</span><span class="mf">0.1</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.9</span><span class="x">])</span><span class="o">...</span><span class="x">)</span>
@@ -129,7 +129,7 @@ MathJax = {
 
 <p><img src="output_7_0.svg" alt="svg" /></p>
 
-<p>Suppose we wanted to see what the distribution on return values would be if the initial value of <code class="language-plaintext highlighter-rouge">n</code> was <code class="language-plaintext highlighter-rouge">2</code>. Because we don’t know what random values were sampled during a given execution, we can’t use simulations of <code class="language-plaintext highlighter-rouge">f</code> to answer this question. We would have to modify <code class="language-plaintext highlighter-rouge">f</code> first, to return the initial value of <code class="language-plaintext highlighter-rouge">n</code>:</p>
+<p>Suppose we wanted to see what the distribution on return values would be if the initial value of <code class="highlighter-rouge">n</code> was <code class="highlighter-rouge">2</code>. Because we don’t know what random values were sampled during a given execution, we can’t use simulations of <code class="highlighter-rouge">f</code> to answer this question. We would have to modify <code class="highlighter-rouge">f</code> first, to return the initial value of <code class="highlighter-rouge">n</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> f_with_initial_n</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
     <span class="n">initial_n</span> <span class="o">=</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
@@ -137,7 +137,7 @@ MathJax = {
     <span class="k">if</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">])</span>
     <span class="k">return</span> <span class="x">(</span><span class="n">result</span><span class="x">,</span> <span class="n">initial_n</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
@@ -154,7 +154,7 @@ MathJax = {
             <span class="n">executions</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">end</span>
     <span class="k">end</span>
-    <span class="n">histogram</span><span class="x">(</span><span class="n">results</span><span class="x">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">histogram</span><span class="x">(</span><span class="n">results</span><span class="x">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
 <span class="n">plot</span><span class="x">(</span><span class="n">map</span><span class="x">(</span><span class="n">plot_histogram_filtered</span><span class="x">,</span> <span class="x">[</span><span class="mf">0.1</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.9</span><span class="x">])</span><span class="o">...</span><span class="x">)</span>
 </code></pre></div></div>
@@ -165,25 +165,25 @@ MathJax = {
 
 <p>Note that if the function always returned the value of <em>every random choice</em>, then these values are sufficient to answer any question using executions of the function, because all states in the execution of the function are deterministic given the random choices. We will call the record of all the random choies a <strong>trace</strong>. In order to store all the random choices in the trace, we need to come up with a unique name or <strong>address</strong> for each random choice.</p>
 
-<p>Below, we implement the trace as a dictionary that maps addresses of random choices to their values. We use a unique Julia <code class="language-plaintext highlighter-rouge">Symbol</code> for each address:</p>
+<p>Below, we implement the trace as a dictionary that maps addresses of random choices to their values. We use a unique Julia <code class="highlighter-rouge">Symbol</code> for each address:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> f_with_trace</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-    <span class="n">trace</span> <span class="o">=</span> <span class="kt">Dict</span><span class="x">()</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">Dict</span><span class="x">()</span>
     
     <span class="n">initial_n</span> <span class="o">=</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
-    <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">initial_n</span><span class="x">]</span> <span class="o">=</span> <span class="n">initial_n</span>
+    <span class="n">trace</span><span class="x">[:</span><span class="n">initial_n</span><span class="x">]</span> <span class="o">=</span> <span class="n">initial_n</span>
     
     <span class="n">n</span> <span class="o">=</span> <span class="n">initial_n</span>
     
     <span class="n">do_branch</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-    <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">do_branch</span><span class="x">]</span> <span class="o">=</span> <span class="n">do_branch</span>
+    <span class="n">trace</span><span class="x">[:</span><span class="n">do_branch</span><span class="x">]</span> <span class="o">=</span> <span class="n">do_branch</span>
     
     <span class="k">if</span> <span class="n">do_branch</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
     
-    <span class="n">result</span> <span class="o">=</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">])</span>
-    <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">result</span><span class="x">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">])</span>
+    <span class="n">trace</span><span class="x">[:</span><span class="n">result</span><span class="x">]</span> <span class="o">=</span> <span class="n">result</span>
     
     <span class="k">return</span> <span class="x">(</span><span class="n">result</span><span class="x">,</span> <span class="n">trace</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
@@ -194,23 +194,23 @@ MathJax = {
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f_with_trace</span><span class="x">(</span><span class="mf">0.3</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(14, Dict{Any, Any}(:result =&gt; 14, :do_branch =&gt; false, :initial_n =&gt; 4))
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(14, Dict{Any, Any}(:result =&gt; 14, :do_branch =&gt; false, :initial_n =&gt; 4))
 </code></pre></div></div>
 
 <p>However, this program looks more complicated than the original program. We could make the syntax for tracing more concise:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">value</span><span class="x">,</span> <span class="n">address</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> add_to_trace</span><span class="o">!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">value</span><span class="x">,</span> <span class="n">address</span><span class="x">)</span>
     <span class="n">trace</span><span class="x">[</span><span class="n">address</span><span class="x">]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">return</span> <span class="n">value</span>
 <span class="k">end</span>
 
 <span class="k">function</span><span class="nf"> f_with_trace_improved</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-    <span class="n">trace</span> <span class="o">=</span> <span class="kt">Dict</span><span class="x">()</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">),</span> <span class="o">:</span><span class="n">initial_n</span><span class="x">)</span>
-    <span class="k">if</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">),</span> <span class="o">:</span><span class="n">do_branch</span><span class="x">)</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">Dict</span><span class="x">()</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">),</span> <span class="x">:</span><span class="n">initial_n</span><span class="x">)</span>
+    <span class="k">if</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">),</span> <span class="x">:</span><span class="n">do_branch</span><span class="x">)</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">]),</span> <span class="o">:</span><span class="n">result</span><span class="x">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">add_to_trace!</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">]),</span> <span class="x">:</span><span class="n">result</span><span class="x">)</span>
     <span class="k">return</span> <span class="x">(</span><span class="n">result</span><span class="x">,</span> <span class="n">trace</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
@@ -220,7 +220,7 @@ MathJax = {
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f_with_trace_improved</span><span class="x">(</span><span class="mf">0.3</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(19, Dict{Any, Any}(:result =&gt; 19, :do_branch =&gt; false, :initial_n =&gt; 5))
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(19, Dict{Any, Any}(:result =&gt; 19, :do_branch =&gt; false, :initial_n =&gt; 5))
 </code></pre></div></div>
 
 <p>Now that we have instrumented the function, we can answer the following different question without needing to modify the function:</p>
@@ -232,13 +232,13 @@ MathJax = {
     <span class="n">do_branch</span> <span class="o">=</span> <span class="x">[]</span>
     <span class="k">while</span> <span class="n">executions</span> <span class="o">&lt;</span> <span class="mi">100000</span>
         <span class="x">(</span><span class="n">result</span><span class="x">,</span> <span class="n">trace</span><span class="x">)</span> <span class="o">=</span> <span class="n">f_with_trace_improved</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-        <span class="k">if</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">result</span><span class="x">]</span> <span class="o">==</span> <span class="n">observed_result_value</span>
-            <span class="n">push!</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">do_branch</span><span class="x">])</span>
+        <span class="k">if</span> <span class="n">trace</span><span class="x">[:</span><span class="n">result</span><span class="x">]</span> <span class="o">==</span> <span class="n">observed_result_value</span>
+            <span class="n">push!</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">trace</span><span class="x">[:</span><span class="n">do_branch</span><span class="x">])</span>
             <span class="n">executions</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">end</span>
     <span class="k">end</span>
     <span class="n">histogram</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">bins</span><span class="o">=</span><span class="x">[</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">2</span><span class="x">],</span> <span class="n">align</span><span class="o">=</span><span class="s">"left"</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> 
-        <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">(</span><span class="mi">0</span><span class="o">:</span><span class="mi">1</span><span class="x">,</span> <span class="x">[</span><span class="s">"false"</span><span class="x">,</span> <span class="s">"true"</span><span class="x">]))</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">(</span><span class="mi">0</span><span class="x">:</span><span class="mi">1</span><span class="x">,</span> <span class="x">[</span><span class="s">"false"</span><span class="x">,</span> <span class="s">"true"</span><span class="x">]))</span>
 <span class="c">#    xticks([0, 1], ["false", "true"])</span>
 <span class="c">#    title("p = $p")</span>
 <span class="k">end</span><span class="x">;</span>
@@ -257,53 +257,53 @@ MathJax = {
 
 <h2 id="2-tracing-the-values-of-random-choices-in-generative-functions">2. Tracing the values of random choices in generative functions</h2>
 
-<p>The ability to <em>trace</em> the values of random choices in a probabilistic program (i.e. record the value of each choice in a trace data structure) is one of the basic features of Gen’s built-in modeling language. To write a function in this language we use the <code class="language-plaintext highlighter-rouge">@gen</code> macro provided by Gen. Note that the built-in modeling language is just one way of defining a <a href="https://probcomp.github.io/Gen/dev/ref/distributions/">generative function</a>.</p>
+<p>The ability to <em>trace</em> the values of random choices in a probabilistic program (i.e. record the value of each choice in a trace data structure) is one of the basic features of Gen’s built-in modeling language. To write a function in this language we use the <code class="highlighter-rouge">@gen</code> macro provided by Gen. Note that the built-in modeling language is just one way of defining a <a href="https://probcomp.github.io/Gen/dev/ref/distributions/">generative function</a>.</p>
 
-<p>Below, we write a <code class="language-plaintext highlighter-rouge">@gen function</code> version of the function <code class="language-plaintext highlighter-rouge">f</code> defined above, this time using Gen’s tracing instead of our own:</p>
+<p>Below, we write a <code class="highlighter-rouge">@gen function</code> version of the function <code class="highlighter-rouge">f</code> defined above, this time using Gen’s tracing instead of our own:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="nd">@gen</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="nd">@gen</span>
 
 <span class="nd">@gen</span> <span class="k">function</span><span class="nf"> gen_f</span><span class="x">(</span><span class="n">p</span><span class="x">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">initial_n</span><span class="x">}</span> <span class="o">~</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
-    <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">do_branch</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="x">{:</span><span class="n">initial_n</span><span class="x">}</span> <span class="o">~</span> <span class="n">uniform_discrete</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">)</span>
+    <span class="k">if</span> <span class="x">({:</span><span class="n">do_branch</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">p</span><span class="x">))</span>
         <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="x">{</span><span class="o">:</span><span class="n">result</span><span class="x">}</span> <span class="o">~</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="o">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="x">])</span>
+    <span class="k">return</span> <span class="x">{:</span><span class="n">result</span><span class="x">}</span> <span class="o">~</span> <span class="n">categorical</span><span class="x">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">?</span> <span class="mf">0.5</span> <span class="x">:</span> <span class="mf">0.5</span><span class="o">/</span><span class="mi">19</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">20</span><span class="x">])</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>The <code class="language-plaintext highlighter-rouge">{address} ~ distribution(args...)</code> expression records the value of the given random choice at the given address into an <em>implicit trace data structure</em>. The trace data structure itself is not a variable in the function, and that code in the body of the function cannot read from the trace. It is an error to use this syntax with the same address twice. Addresses can be arbitrary Julia values. In this notebook, all the addresses will be Julia symbols.</p>
+<p>The <code class="highlighter-rouge">{address} ~ distribution(args...)</code> expression records the value of the given random choice at the given address into an <em>implicit trace data structure</em>. The trace data structure itself is not a variable in the function, and that code in the body of the function cannot read from the trace. It is an error to use this syntax with the same address twice. Addresses can be arbitrary Julia values. In this notebook, all the addresses will be Julia symbols.</p>
 
 <p>Also note that the trace is not part of the return value:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gen_f</span><span class="x">(</span><span class="mf">0.3</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
 </code></pre></div></div>
 
-<p>To run a <code class="language-plaintext highlighter-rouge">@gen</code> function and get a trace of the execution, we use the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="language-plaintext highlighter-rouge">simulate</code></a> method:</p>
+<p>To run a <code class="highlighter-rouge">@gen</code> function and get a trace of the execution, we use the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="highlighter-rouge">simulate</code></a> method:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">simulate</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">simulate</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">gen_f</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,));</span>
 </code></pre></div></div>
 
 <p>We can access the values of random choices by indexing into the trace:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">initial_n</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[:</span><span class="n">initial_n</span><span class="x">]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
 </code></pre></div></div>
 
 <p>We can also print the values of all choices made:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">get_choices</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">get_choices</span>
 
 <span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :result : 7
 │
 ├── :do_branch : false
@@ -313,38 +313,38 @@ MathJax = {
 
 <p>Gen also stores the arguments on which the function was called:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">get_args</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">get_args</span>
 
 <span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(0.3,)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(0.3,)
 </code></pre></div></div>
 
 <p>and the return value:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">get_retval</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">get_retval</span>
 
 <span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7
 </code></pre></div></div>
 
-<p>Now, we will answer the same question as above, but this time using our <code class="language-plaintext highlighter-rouge">@gen</code> function:</p>
+<p>Now, we will answer the same question as above, but this time using our <code class="highlighter-rouge">@gen</code> function:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> gen_query</span><span class="x">(</span><span class="n">p</span><span class="x">,</span> <span class="n">observed_result_value</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
     <span class="n">executions</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">do_branch</span> <span class="o">=</span> <span class="x">[]</span>
     <span class="k">while</span> <span class="n">executions</span> <span class="o">&lt;</span> <span class="mi">100000</span>
         <span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">gen_f</span><span class="x">,</span> <span class="x">(</span><span class="n">p</span><span class="x">,))</span>
-        <span class="k">if</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">result</span><span class="x">]</span> <span class="o">==</span> <span class="n">observed_result_value</span>
-            <span class="n">push!</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">do_branch</span><span class="x">])</span>
+        <span class="k">if</span> <span class="n">trace</span><span class="x">[:</span><span class="n">result</span><span class="x">]</span> <span class="o">==</span> <span class="n">observed_result_value</span>
+            <span class="n">push!</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">trace</span><span class="x">[:</span><span class="n">do_branch</span><span class="x">])</span>
             <span class="n">executions</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">end</span>
     <span class="k">end</span>
     <span class="n">histogram</span><span class="x">(</span><span class="n">do_branch</span><span class="x">,</span> <span class="n">bins</span><span class="o">=</span><span class="x">[</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">2</span><span class="x">],</span> <span class="n">align</span><span class="o">=</span><span class="s">"left"</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"p=</span><span class="si">$</span><span class="s">p"</span><span class="x">,</span> 
-        <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">(</span><span class="mi">0</span><span class="o">:</span><span class="mi">1</span><span class="x">,</span> <span class="x">[</span><span class="s">"false"</span><span class="x">,</span> <span class="s">"true"</span><span class="x">]))</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">(</span><span class="mi">0</span><span class="x">:</span><span class="mi">1</span><span class="x">,</span> <span class="x">[</span><span class="s">"false"</span><span class="x">,</span> <span class="s">"true"</span><span class="x">]))</span>
 <span class="k">end</span><span class="x">;</span>
 <span class="n">plot</span><span class="x">(</span><span class="n">map</span><span class="x">(</span><span class="n">p</span> <span class="o">-&gt;</span> <span class="n">gen_query</span><span class="x">(</span><span class="n">p</span><span class="x">,</span> <span class="mi">14</span><span class="x">),</span> <span class="x">[</span><span class="mf">0.1</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.9</span><span class="x">])</span><span class="o">...</span><span class="x">)</span>
 </code></pre></div></div>
@@ -353,33 +353,34 @@ MathJax = {
 
 <h2 id="3-the-probability-distribution-represented-by-a-generative-function">3. The probability distribution represented by a generative function</h2>
 
-<p>A generative function that terminates with probability one has a probability distribution on its executions. We represent an execution of the function as the map from addresses of random choices to their values. We call this map a <strong>choice map</strong> (denoted mathematically by $t$). Then, for given arguments to the function (denoted mathematically by $x$), we can list the possible choice maps, and we can compute the probability of each choice map (denoted $p(t; x)$) by taking the product of the probability of each random choice in the map. We can also compute the return value of the function from the arguments and the choice map (the function that computes the return value is denoted mathematically by $f(x ,t)$). Let’s do this for a simple function <code class="language-plaintext highlighter-rouge">foo</code>:</p>
+<p>A generative function that terminates with probability one has a probability distribution on its executions. We represent an execution of the function as the map from addresses of random choices to their values. We call this map a <strong>choice map</strong> (denoted mathematically by $t$). Then, for given arguments to the function (denoted mathematically by $x$), we can list the possible choice maps, and we can compute the probability of each choice map (denoted $p(t; x)$) by taking the product of the probability of each random choice in the map. We can also compute the return value of the function from the arguments and the choice map (the function that computes the return value is denoted mathematically by $f(x ,t)$). Let’s do this for a simple function <code class="highlighter-rouge">foo</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> foo</span><span class="x">(</span><span class="n">prob_a</span><span class="x">)</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="nb">true</span>
-    <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_a</span><span class="x">))</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">b</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.6</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">true</span>
+    <span class="k">if</span> <span class="x">({:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_a</span><span class="x">))</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="x">({:</span><span class="n">b</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.6</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
     <span class="k">end</span>
-    <span class="n">prob_c</span> <span class="o">=</span> <span class="n">val</span> <span class="o">?</span> <span class="mf">0.9</span> <span class="o">:</span> <span class="mf">0.2</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">c</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_c</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
+    <span class="n">prob_c</span> <span class="o">=</span> <span class="n">val</span> <span class="o">?</span> <span class="mf">0.9</span> <span class="x">:</span> <span class="mf">0.2</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="x">({:</span><span class="n">c</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="n">prob_c</span><span class="x">))</span> <span class="o">&amp;&amp;</span> <span class="n">val</span>
     <span class="k">return</span> <span class="n">val</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-\[\begin{array}{l|l|l}
-\mbox{Random choice map } t &amp; \mbox{Probability } p(t; x) &amp; \mbox{Return value } f(x, t) \\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l|l}
+\mbox{Random choice map } t & \mbox{Probability } p(t; x) & \mbox{Return value } f(x, t) \\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} &amp; \mbox{prob_a} \cdot 0.6\cdot 0.9 &amp; \mbox{true}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} &amp; \mbox{prob_a} \cdot 0.6 \cdot 0.1 &amp; \mbox{false}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; \mbox{prob_a} \cdot 0.4 \cdot 0.2 &amp; \mbox{false}\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; \mbox{prob_a} \cdot 0.4 \cdot 0.8 &amp; \mbox{false}\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; (1-\mbox{prob_a}) \cdot 0.9 &amp; \mbox{true}\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; (1-\mbox{prob_a}) \cdot 0.1 &amp; \mbox{false}
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} & \mbox{prob_a} \cdot 0.6\cdot 0.9 & \mbox{true}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} & \mbox{prob_a} \cdot 0.6 \cdot 0.1 & \mbox{false}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & \mbox{prob_a} \cdot 0.4 \cdot 0.2 & \mbox{false}\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} & \mbox{prob_a} \cdot 0.4 \cdot 0.8 & \mbox{false}\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} & (1-\mbox{prob_a}) \cdot 0.9 & \mbox{true}\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} & (1-\mbox{prob_a}) \cdot 0.1 & \mbox{false}
+\end{array} %]]></script>
 
 <p>Check your understanding by deriving by hand the probability and return value for a few rows of this table.</p>
 
-<p>Based on our table, the probability that <code class="language-plaintext highlighter-rouge">foo</code> returns <code class="language-plaintext highlighter-rouge">true</code> is:</p>
+<p>Based on our table, the probability that <code class="highlighter-rouge">foo</code> returns <code class="highlighter-rouge">true</code> is:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prob_true</span><span class="x">(</span><span class="n">prob_a</span><span class="x">)</span> <span class="o">=</span> <span class="n">prob_a</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="o">+</span> <span class="x">(</span><span class="mi">1</span><span class="o">-</span><span class="n">prob_a</span><span class="x">)</span> <span class="o">*</span> <span class="mf">0.9</span><span class="x">;</span>
 </code></pre></div></div>
@@ -387,27 +388,27 @@ MathJax = {
 <p>Let’s check that using some simulations:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">prob_a</span> <span class="k">in</span> <span class="x">[</span><span class="mf">0.1</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.9</span><span class="x">]</span>
-    <span class="n">actual</span> <span class="o">=</span> <span class="n">sum</span><span class="x">([</span><span class="n">foo</span><span class="x">(</span><span class="n">prob_a</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">10000</span><span class="x">])</span> <span class="o">/</span> <span class="mi">10000</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="n">sum</span><span class="x">([</span><span class="n">foo</span><span class="x">(</span><span class="n">prob_a</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">10000</span><span class="x">])</span> <span class="o">/</span> <span class="mi">10000</span>
     <span class="n">println</span><span class="x">(</span><span class="s">"expected: </span><span class="si">$</span><span class="s">(prob_true(prob_a)), actual: </span><span class="si">$</span><span class="s">actual"</span><span class="x">)</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expected: 0.8640000000000001, actual: 0.863
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expected: 0.8640000000000001, actual: 0.863
 expected: 0.72, actual: 0.7237
 expected: 0.5760000000000001, actual: 0.5754
 </code></pre></div></div>
 
-<p>We can also get the log probability that an individual trace would be generated by the function ($\log p(t; x)$), using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.get_score"><code class="language-plaintext highlighter-rouge">get_score</code></a> method.</p>
+<p>We can also get the log probability that an individual trace would be generated by the function ($\log p(t; x)$), using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.get_score"><code class="highlighter-rouge">get_score</code></a> method.</p>
 
-<p>Let’s generate a trace below, get its log probability with <code class="language-plaintext highlighter-rouge">get_score</code></p>
+<p>Let’s generate a trace below, get its log probability with <code class="highlighter-rouge">get_score</code></p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">get_score</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">get_score</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,))</span>
 <span class="n">display</span><span class="x">(</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">))</span>
 <span class="n">println</span><span class="x">(</span><span class="s">"log probability: </span><span class="si">$</span><span class="s">(get_score(trace))"</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : false
 │
 └── :c : true
@@ -431,35 +432,35 @@ log probability: -0.46203545959655873
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="language-plaintext highlighter-rouge">simulate</code></a> method:</p>
+    <p>Using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="highlighter-rouge">simulate</code></a> method:</p>
 
     <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">gen_f</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,))</span>
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>We can also generate a trace that satisfies a set of constraints on the valus of random choices using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.generate"><code class="language-plaintext highlighter-rouge">generate</code></a> method. Suppose that we want a trace where <code class="language-plaintext highlighter-rouge">:a</code> is always <code class="language-plaintext highlighter-rouge">true</code> and <code class="language-plaintext highlighter-rouge">:c</code> is always <code class="language-plaintext highlighter-rouge">false</code>. We first construct a choice map containing these constraints:</p>
+<p>We can also generate a trace that satisfies a set of constraints on the valus of random choices using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.generate"><code class="highlighter-rouge">generate</code></a> method. Suppose that we want a trace where <code class="highlighter-rouge">:a</code> is always <code class="highlighter-rouge">true</code> and <code class="highlighter-rouge">:c</code> is always <code class="highlighter-rouge">false</code>. We first construct a choice map containing these constraints:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">choicemap</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">choicemap</span>
 
-<span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">false</span><span class="x">))</span>
+<span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">c</span><span class="x">,</span> <span class="n">false</span><span class="x">))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 └── :c : false
 </code></pre></div></div>
 
-<p>The <code class="language-plaintext highlighter-rouge">choicemap</code> constructor above took two elements of the form <code class="language-plaintext highlighter-rouge">(address, value</code>). This is equivalent to constructing an empty choice map and then populating it:</p>
+<p>The <code class="highlighter-rouge">choicemap</code> constructor above took two elements of the form <code class="highlighter-rouge">(address, value</code>). This is equivalent to constructing an empty choice map and then populating it:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">choices</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">()</span>
-<span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">a</span><span class="x">]</span> <span class="o">=</span> <span class="nb">true</span>
-<span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">c</span><span class="x">]</span> <span class="o">=</span> <span class="nb">false</span>
+<span class="n">choices</span><span class="x">[:</span><span class="n">a</span><span class="x">]</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">choices</span><span class="x">[:</span><span class="n">c</span><span class="x">]</span> <span class="o">=</span> <span class="n">false</span>
 </code></pre></div></div>
 
-<p>Then, we pass the constraints as the third argument to <code class="language-plaintext highlighter-rouge">generate</code>, after the function itself and the arguments:</p>
+<p>Then, we pass the constraints as the third argument to <code class="highlighter-rouge">generate</code>, after the function itself and the arguments:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">generate</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">generate</span>
 
 <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">)</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">);</span>
 </code></pre></div></div>
@@ -471,7 +472,7 @@ log probability: -0.46203545959655873
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 ├── :b : true
@@ -484,35 +485,36 @@ log probability: -0.46203545959655873
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>false
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>false
 </code></pre></div></div>
 
-<p>When we invoke <code class="language-plaintext highlighter-rouge">generate</code>, the choice map is clearly not being sampled from $p(t; x)$, because $p(t; x)$ can generate 6 possible choice maps, whereas our call to <code class="language-plaintext highlighter-rouge">generate</code> can only generate 2 possible choice maps. Instead, the generative function employs an <strong>internal proposal distribution</strong> on choice maps $t$, denoted mathematically by $q(t; x, u)$, where $u$ is the choice map for the constraints.</p>
+<p>When we invoke <code class="highlighter-rouge">generate</code>, the choice map is clearly not being sampled from $p(t; x)$, because $p(t; x)$ can generate 6 possible choice maps, whereas our call to <code class="highlighter-rouge">generate</code> can only generate 2 possible choice maps. Instead, the generative function employs an <strong>internal proposal distribution</strong> on choice maps $t$, denoted mathematically by $q(t; x, u)$, where $u$ is the choice map for the constraints.</p>
 
 <p>The internal proposal distribution cannot generate a choice map that disagrees with the constraints, and it can only generate choice maps that could possibly be sampled from $p(t; x)$. Furthermore, we also require the internal proposal distribution to have <em>some probability</em> of sampling <em>any</em> choice map $t$ that agrees with the constraints, and that could be possibly be sampled from $p(t; x)$. These requirements can be summarized by the following:</p>
 
-\[q(t; x, u) &gt; 0 \iff p(t; x) &gt; 0 \land u(a) = t(a) \;\; \forall a \in \mbox{dom}(u) \cap \mbox{dom}(t)\]
+<script type="math/tex; mode=display">q(t; x, u) > 0 \iff p(t; x) > 0 \land u(a) = t(a) \;\; \forall a \in \mbox{dom}(u) \cap \mbox{dom}(t)</script>
 
 <p>where $\mbox{dom}$ stands for ‘domain’, and gives the set of addresses in a choice map.</p>
 
-<p>The specific internal proposal distribution used by <code class="language-plaintext highlighter-rouge">@gen</code> functions is based on <strong>ancestral sampling</strong>, which operates as follows: We run the function. To evaluate a <code class="language-plaintext highlighter-rouge">~</code> expression, we look up the address in the constraints choice map. If the address is present in the constraints choice map, we deterministically return the value stored in the constraints for that address. If the address is not present in the constraints, we sample the value from the distribution in the <code class="language-plaintext highlighter-rouge">~</code> expression. For the function <code class="language-plaintext highlighter-rouge">foo</code>, with constraints $u = {a \mapsto \mbox{true}, c \mapsto \mbox{false}}$, the internal proposal distribution is:</p>
+<p>The specific internal proposal distribution used by <code class="highlighter-rouge">@gen</code> functions is based on <strong>ancestral sampling</strong>, which operates as follows: We run the function. To evaluate a <code class="highlighter-rouge">~</code> expression, we look up the address in the constraints choice map. If the address is present in the constraints choice map, we deterministically return the value stored in the constraints for that address. If the address is not present in the constraints, we sample the value from the distribution in the <code class="highlighter-rouge">~</code> expression. For the function <code class="highlighter-rouge">foo</code>, with constraints $u = {a \mapsto \mbox{true}, c \mapsto \mbox{false}}$, the internal proposal distribution is:</p>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map } t &amp; q(t; x, u)\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map } t & q(t; x, u)\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} &amp; 0.6\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; 0.4
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} & 0.6\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} & 0.4
+\end{array} %]]></script>
 
 <p>Check your understanding by deriving this distribution by hand.</p>
 
-<p>The weight returned by <code class="language-plaintext highlighter-rouge">generate</code> is:</p>
+<p>The weight returned by <code class="highlighter-rouge">generate</code> is:</p>
 
-\[\log \frac{p(t; x)}{q(t; x, u)}\]
+<script type="math/tex; mode=display">\log \frac{p(t; x)}{q(t; x, u)}</script>
 
-<p>Let’s confirm this using our trace and weight sampled above. Note that we ran <code class="language-plaintext highlighter-rouge">generate</code> with <code class="language-plaintext highlighter-rouge">prob_a = 0.3</code>:</p>
+<p>Let’s confirm this using our trace and weight sampled above. Note that we ran <code class="highlighter-rouge">generate</code> with <code class="highlighter-rouge">prob_a = 0.3</code>:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">b</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">trace</span><span class="x">[:</span><span class="n">b</span><span class="x">]</span>
     <span class="c"># choice map is {a -&gt; true, b -&gt; true, c -&gt; false}</span>
     <span class="n">expected_weight</span> <span class="o">=</span> <span class="n">log</span><span class="x">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">/</span> <span class="mf">0.6</span><span class="x">)</span>
 <span class="k">else</span>
@@ -522,7 +524,7 @@ log probability: -0.46203545959655873
 <span class="n">println</span><span class="x">(</span><span class="s">"expected_weight: </span><span class="si">$</span><span class="s">expected_weight, actual_weight: </span><span class="si">$</span><span class="s">weight"</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expected_weight: -3.506557897319982, actual_weight: -3.506557897319982
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expected_weight: -3.506557897319982, actual_weight: -3.506557897319982
 </code></pre></div></div>
 
 <p>The ability to generate a trace that satisfies constraints, along with the weight, is a useful primitive operation for implementing a class of approximate inference algorithms called <strong>importance resampling</strong>. We can implement importance resampling by (i) generating a collection of traces satisfying the constraints, and associated weights, and (ii) returning one of these traces with probability in proportion to its weight:</p>
@@ -530,7 +532,7 @@ log probability: -0.46203545959655873
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> my_importance_sampler</span><span class="x">(</span><span class="n">gen_fn</span><span class="x">,</span> <span class="n">args</span><span class="x">,</span> <span class="n">constraints</span><span class="x">,</span> <span class="n">num_traces</span><span class="x">)</span>
     <span class="n">traces</span> <span class="o">=</span> <span class="x">[]</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="x">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_traces</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_traces</span>
         <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">)</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">gen_fn</span><span class="x">,</span> <span class="n">args</span><span class="x">,</span> <span class="n">constraints</span><span class="x">)</span>
         <span class="n">push!</span><span class="x">(</span><span class="n">traces</span><span class="x">,</span> <span class="n">trace</span><span class="x">)</span>
         <span class="n">push!</span><span class="x">(</span><span class="n">weights</span><span class="x">,</span> <span class="n">weight</span><span class="x">)</span>
@@ -543,13 +545,13 @@ log probability: -0.46203545959655873
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>A more efficient and numerically robust implementation of importance resampling is provided in Gen’s inference library (see <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.importance_resampling"><code class="language-plaintext highlighter-rouge">importance_resampling</code></a>).</p>
+<p>A more efficient and numerically robust implementation of importance resampling is provided in Gen’s inference library (see <a href="https://probcomp.github.io/Gen/dev/ref/inference/#Gen.importance_resampling"><code class="highlighter-rouge">importance_resampling</code></a>).</p>
 
-<p>Suppose our goal is to sample <code class="language-plaintext highlighter-rouge">:a</code> and <code class="language-plaintext highlighter-rouge">:b</code> from the conditional distribution given that we have observed <code class="language-plaintext highlighter-rouge">:c</code> is <code class="language-plaintext highlighter-rouge">false</code>. That is, we want to sample choice map $t$ with probability $0$ if $t(c) = \mbox{false}$ and otherwise probability:</p>
+<p>Suppose our goal is to sample <code class="highlighter-rouge">:a</code> and <code class="highlighter-rouge">:b</code> from the conditional distribution given that we have observed <code class="highlighter-rouge">:c</code> is <code class="highlighter-rouge">false</code>. That is, we want to sample choice map $t$ with probability $0$ if $t(c) = \mbox{false}$ and otherwise probability:</p>
 
-\[\frac{p(t; x)}{\displaystyle \sum_{t' : t'(c) = \mbox{true}} p(t'; x)}\]
+<script type="math/tex; mode=display">\frac{p(t; x)}{\displaystyle \sum_{t' : t'(c) = \mbox{true}} p(t'; x)}</script>
 
-<p>In this simple case, we can compute the probability by hand (assuming <code class="language-plaintext highlighter-rouge">prob_a = 0.3</code>). There are three choice maps with nonzero probability:</p>
+<p>In this simple case, we can compute the probability by hand (assuming <code class="highlighter-rouge">prob_a = 0.3</code>). There are three choice maps with nonzero probability:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">p1</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">0.1</span>
 <span class="n">p2</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="mf">0.8</span>
@@ -560,39 +562,40 @@ log probability: -0.46203545959655873
 <span class="n">println</span><span class="x">(</span><span class="n">p3</span> <span class="o">/</span> <span class="x">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">+</span> <span class="n">p3</span><span class="x">))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.09782608695652173
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.09782608695652173
 0.5217391304347826
 0.3804347826086956
 </code></pre></div></div>
 
-\[\begin{array}{l|l}
-\mbox{Random choice map } t &amp; \mbox{Conditional probability }\\
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{l|l}
+\mbox{Random choice map } t & \mbox{Conditional probability }\\
 \hline
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} &amp; 0\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} &amp; 0.0978\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp; 0\\
-\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; 0.5217\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &amp;  0\\
-\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} &amp; 0.3804
-\end{array}\]
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{true}\} & 0\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{true}, c \mapsto \mbox{false}\} & 0.0978\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{true}\} & 0\\
+\{a \mapsto \mbox{true}, b \mapsto \mbox{false}, c \mapsto \mbox{false}\} & 0.5217\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{true}\} &  0\\
+\{a \mapsto \mbox{false}, c \mapsto \mbox{false}\} & 0.3804
+\end{array} %]]></script>
 
-<p>In particular, the probability that <code class="language-plaintext highlighter-rouge">a</code> is <code class="language-plaintext highlighter-rouge">true</code> given our condition, is:</p>
+<p>In particular, the probability that <code class="highlighter-rouge">a</code> is <code class="highlighter-rouge">true</code> given our condition, is:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prob_a_true</span> <span class="o">=</span> <span class="x">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span><span class="x">)</span> <span class="o">/</span> <span class="x">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">+</span> <span class="n">p3</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.6195652173913044
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.6195652173913044
 </code></pre></div></div>
 
 <p>We can sample approximately from this disribution using our importance sampler. As we increase the number of traces, the actual distribution approaches the desired distribution:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">StatsBase</span><span class="o">:</span> <span class="n">mean</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">StatsBase</span><span class="x">:</span> <span class="n">mean</span>
 <span class="k">function</span><span class="nf"> importance_query</span><span class="x">(</span><span class="n">p</span><span class="x">,</span> <span class="n">N</span><span class="x">)</span>
-    <span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">false</span><span class="x">))</span>
-    <span class="n">as</span> <span class="o">=</span> <span class="x">[</span><span class="n">my_importance_sampler</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="n">p</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">,</span> <span class="n">N</span><span class="x">)[</span><span class="o">:</span><span class="n">a</span><span class="x">]</span> <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">10000</span><span class="x">]</span>
+    <span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">c</span><span class="x">,</span> <span class="n">false</span><span class="x">))</span>
+    <span class="n">as</span> <span class="o">=</span> <span class="x">[</span><span class="n">my_importance_sampler</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="n">p</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">,</span> <span class="n">N</span><span class="x">)[:</span><span class="n">a</span><span class="x">]</span> <span class="k">for</span> <span class="n">_</span> <span class="k">in</span> <span class="mi">1</span><span class="x">:</span><span class="mi">10000</span><span class="x">]</span>
     <span class="n">est_prob_a_true</span> <span class="o">=</span> <span class="n">mean</span><span class="x">(</span><span class="n">as</span><span class="x">)</span>
     <span class="n">histogram</span><span class="x">(</span><span class="n">as</span><span class="x">,</span> <span class="n">bins</span><span class="o">=</span><span class="x">[</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">2</span><span class="x">],</span> <span class="n">align</span><span class="o">=</span><span class="s">"left"</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"using </span><span class="si">$</span><span class="s">N particle(s), estimate: </span><span class="si">$</span><span class="s">est_prob_a_true"</span><span class="x">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">([</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">],</span> <span class="x">[</span><span class="s">"a = false"</span><span class="x">,</span> <span class="s">"a = true"</span><span class="x">]),</span> <span class="n">titlefontsize</span><span class="o">=</span><span class="mi">10</span><span class="x">)</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">xticks</span><span class="o">=</span><span class="x">([</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">],</span> <span class="x">[</span><span class="s">"a = false"</span><span class="x">,</span> <span class="s">"a = true"</span><span class="x">]),</span> <span class="n">titlefontsize</span><span class="o">=</span><span class="mi">10</span><span class="x">)</span>
 <span class="k">end</span>
     
 <span class="n">plot</span><span class="x">(</span><span class="n">map</span><span class="x">(</span><span class="n">N</span> <span class="o">-&gt;</span> <span class="n">importance_query</span><span class="x">(</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">N</span><span class="x">),</span> <span class="x">[</span><span class="mi">1</span><span class="x">,</span> <span class="mi">10</span><span class="x">,</span> <span class="mi">100</span><span class="x">])</span><span class="o">...</span><span class="x">)</span>
@@ -600,19 +603,19 @@ log probability: -0.46203545959655873
 
 <p><img src="output_79_0.svg" alt="svg" /></p>
 
-<p>Indeed, the estimated probability that <code class="language-plaintext highlighter-rouge">a = true</code> is approaching the true probability that we manually computed.</p>
+<p>Indeed, the estimated probability that <code class="highlighter-rouge">a = true</code> is approaching the true probability that we manually computed.</p>
 
 <h2 id="5-updating-a-trace">5. Updating a trace</h2>
 
 <p>Gen also provides a primitive for updating a trace to conform with new constraints on its choice map. We can use this to implement iterative inference and local optimization algorithms.</p>
 
-<p>Consider the function <code class="language-plaintext highlighter-rouge">foo</code> from above. Let’s obtain an initial trace:</p>
+<p>Consider the function <code class="highlighter-rouge">foo</code> from above. Let’s obtain an initial trace:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">)</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">b</span><span class="x">,</span> <span class="nb">true</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">true</span><span class="x">)));</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">)</span> <span class="o">=</span> <span class="n">generate</span><span class="x">(</span><span class="n">foo</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">b</span><span class="x">,</span> <span class="n">true</span><span class="x">),</span> <span class="x">(:</span><span class="n">c</span><span class="x">,</span> <span class="n">true</span><span class="x">)));</span>
 <span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 ├── :b : true
@@ -620,16 +623,16 @@ log probability: -0.46203545959655873
 └── :c : true
 </code></pre></div></div>
 
-<p>Now, we use the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.update"><code class="language-plaintext highlighter-rouge">update</code></a> method, to change the value of <code class="language-plaintext highlighter-rouge">:c</code> from <code class="language-plaintext highlighter-rouge">true</code> to <code class="language-plaintext highlighter-rouge">false</code>:</p>
+<p>Now, we use the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.update"><code class="highlighter-rouge">update</code></a> method, to change the value of <code class="highlighter-rouge">:c</code> from <code class="highlighter-rouge">true</code> to <code class="highlighter-rouge">false</code>:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="o">:</span> <span class="n">update</span><span class="x">,</span> <span class="n">NoChange</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">:</span> <span class="n">update</span><span class="x">,</span> <span class="n">NoChange</span>
 
-<span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">c</span><span class="x">,</span> <span class="nb">false</span><span class="x">))</span>
+<span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">c</span><span class="x">,</span> <span class="n">false</span><span class="x">))</span>
 <span class="x">(</span><span class="n">new_trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">discard</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">)</span> <span class="o">=</span> <span class="n">update</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">constraints</span><span class="x">)</span>
 <span class="n">get_choices</span><span class="x">(</span><span class="n">new_trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 ├── :b : true
@@ -637,44 +640,44 @@ log probability: -0.46203545959655873
 └── :c : false
 </code></pre></div></div>
 
-<p>The <code class="language-plaintext highlighter-rouge">update</code> method returns the new trace, as well as a weight, which the log ratio of probabilities of the new choice map ($t’$) and the old choice map ($t$):</p>
+<p>The <code class="highlighter-rouge">update</code> method returns the new trace, as well as a weight, which the log ratio of probabilities of the new choice map ($t’$) and the old choice map ($t$):</p>
 
-\[\log \frac{p(t'; x')}{p(t; x)}\]
+<script type="math/tex; mode=display">\log \frac{p(t'; x')}{p(t; x)}</script>
 
-<p>The <code class="language-plaintext highlighter-rouge">update</code> method also allows you to change the arguments to the function (from $x$ to $x’$), but we will not discuss that in this tutorial.</p>
+<p>The <code class="highlighter-rouge">update</code> method also allows you to change the arguments to the function (from $x$ to $x’$), but we will not discuss that in this tutorial.</p>
 
 <p>Let’s confirm that the weight matches a manual calculation:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expected_weight</span> <span class="o">=</span> <span class="n">log</span><span class="x">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">0.1</span><span class="x">)</span> <span class="o">-</span> <span class="n">log</span><span class="x">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="mf">0.9</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-2.197224577336219
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-2.197224577336219
 </code></pre></div></div>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">weight</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-2.1972245773362196
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-2.1972245773362196
 </code></pre></div></div>
 
-<p>Doing an update can also cause some addresses to leave the choice map altogether. For example, if we set <code class="language-plaintext highlighter-rouge">:a</code> to <code class="language-plaintext highlighter-rouge">false</code>, then choice at address <code class="language-plaintext highlighter-rouge">:b</code> is no longer include in the choice map.</p>
+<p>Doing an update can also cause some addresses to leave the choice map altogether. For example, if we set <code class="highlighter-rouge">:a</code> to <code class="highlighter-rouge">false</code>, then choice at address <code class="highlighter-rouge">:b</code> is no longer include in the choice map.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">,</span> <span class="n">discard</span><span class="x">)</span> <span class="o">=</span> <span class="n">update</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="nb">false</span><span class="x">)))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">weight</span><span class="x">,</span> <span class="n">retdiff</span><span class="x">,</span> <span class="n">discard</span><span class="x">)</span> <span class="o">=</span> <span class="n">update</span><span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.3</span><span class="x">,),</span> <span class="x">(</span><span class="n">NoChange</span><span class="x">(),),</span> <span class="n">choicemap</span><span class="x">((:</span><span class="n">a</span><span class="x">,</span> <span class="n">false</span><span class="x">)))</span>
 <span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : false
 │
 └── :c : true
 </code></pre></div></div>
 
-<p>The <em>discard</em> choice map that is returned by <code class="language-plaintext highlighter-rouge">update</code> contains the valus for any addresses that were removed from the choice map, as well as any the previous values for any addresses that were constrained:</p>
+<p>The <em>discard</em> choice map that is returned by <code class="highlighter-rouge">update</code> contains the valus for any addresses that were removed from the choice map, as well as any the previous values for any addresses that were constrained:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">discard</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 └── :b : true
@@ -688,7 +691,7 @@ log probability: -0.46203545959655873
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :a : true
 │
 ├── :b : true
@@ -701,11 +704,11 @@ log probability: -0.46203545959655873
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">discard</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 └── :a : false
 </code></pre></div></div>
 
-<p>This illustrates a useful notion of <strong>reversibility</strong> of the <code class="language-plaintext highlighter-rouge">update</code> method, which will be important when using it as a primitive in Metropolis-Hastings algorithms.</p>
+<p>This illustrates a useful notion of <strong>reversibility</strong> of the <code class="highlighter-rouge">update</code> method, which will be important when using it as a primitive in Metropolis-Hastings algorithms.</p>
 
 </div>
 

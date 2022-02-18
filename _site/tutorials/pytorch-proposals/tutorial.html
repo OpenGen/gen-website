@@ -70,7 +70,7 @@ which shows how to use PyTorch for easier specification of the proposal.</p>
 
 <p>For this tutorial, you’ll need to ensure that you have PyCall installed, and pointing to a Python that has Torch installed.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">GenPyTorch</span><span class="x">,</span> <span class="n">PyCall</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">GenPyTorch</span><span class="x">,</span> <span class="n">PyCall</span>
 </code></pre></div></div>
 
 <p>We recreate the relevant parts of the model from the Data-Driven Proposals in Gen tutorial:</p>
@@ -84,8 +84,8 @@ which shows how to use PyTorch for easier specification of the proposal.</p>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.30</span><span class="x">,</span> <span class="mf">0.20</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.83</span><span class="x">,</span> <span class="mf">0.80</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_square</span><span class="x">(</span><span class="n">Point</span><span class="x">(</span><span class="mf">0.80</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
-<span class="n">horizontal</span> <span class="o">=</span> <span class="nb">false</span>
-<span class="n">vertical</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="n">horizontal</span> <span class="o">=</span> <span class="n">false</span>
+<span class="n">vertical</span> <span class="o">=</span> <span class="n">true</span>
 <span class="n">wall_thickness</span> <span class="o">=</span> <span class="mf">0.02</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">horizontal</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.20</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
 <span class="n">add_obstacle!</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">make_line</span><span class="x">(</span><span class="n">vertical</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="mf">0.60</span><span class="x">,</span> <span class="mf">0.40</span><span class="x">),</span> <span class="mf">0.40</span><span class="x">,</span> <span class="n">wall_thickness</span><span class="x">))</span>
@@ -115,7 +115,7 @@ which shows how to use PyTorch for easier specification of the proposal.</p>
 
     <span class="c"># plan a path that avoids obstacles in the scene</span>
     <span class="n">maybe_path</span> <span class="o">=</span> <span class="n">plan_path</span><span class="x">(</span><span class="n">start</span><span class="x">,</span> <span class="n">dest</span><span class="x">,</span> <span class="n">scene</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">)</span>
-    <span class="n">planning_failed</span> <span class="o">=</span> <span class="n">maybe_path</span> <span class="o">===</span> <span class="nb">nothing</span>
+    <span class="n">planning_failed</span> <span class="o">=</span> <span class="n">maybe_path</span> <span class="o">===</span> <span class="n">nothing</span>
     
     <span class="c"># sample the speed from the prior</span>
     <span class="n">speed</span> <span class="o">~</span> <span class="n">uniform</span><span class="x">(</span><span class="mf">0.3</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
@@ -131,8 +131,8 @@ which shows how to use PyTorch for easier specification of the proposal.</p>
     <span class="c"># generate noisy measurements of the agent's location at each time point</span>
     <span class="n">noise</span> <span class="o">=</span> <span class="mf">0.01</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">point</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">locations</span><span class="x">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="x">{:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="x">{:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
     <span class="k">end</span>
 
     <span class="k">return</span> <span class="x">(</span><span class="n">planning_failed</span><span class="x">,</span> <span class="n">maybe_path</span><span class="x">)</span>
@@ -158,36 +158,36 @@ which shows how to use PyTorch for easier specification of the proposal.</p>
 <span class="n">F</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PyObject &lt;module 'torch.nn.functional' from '/Users/alexlew/gen-quickstart/tutorials/pytorch/venv/lib/python3.9/site-packages/torch/nn/functional.py'&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PyObject &lt;module 'torch.nn.functional' from '/Users/alexlew/gen-quickstart/tutorials/pytorch/venv/lib/python3.9/site-packages/torch/nn/functional.py'&gt;
 </code></pre></div></div>
 
-<p>It also provides the <code class="language-plaintext highlighter-rouge">@pydef</code> macro, which we can use to define Python classes using Julia code.
+<p>It also provides the <code class="highlighter-rouge">@pydef</code> macro, which we can use to define Python classes using Julia code.
 In PyTorch, new neural network architectures are defined as subclasses
-of the <code class="language-plaintext highlighter-rouge">nn.Module</code> class. We create our own neural network class here, 
-called <code class="language-plaintext highlighter-rouge">NeuralProposal</code>.</p>
+of the <code class="highlighter-rouge">nn.Module</code> class. We create our own neural network class here, 
+called <code class="highlighter-rouge">NeuralProposal</code>.</p>
 
-<p>Every module needs to define two methods: <code class="language-plaintext highlighter-rouge">__init__</code> and <code class="language-plaintext highlighter-rouge">forward</code>.</p>
+<p>Every module needs to define two methods: <code class="highlighter-rouge">__init__</code> and <code class="highlighter-rouge">forward</code>.</p>
 
-<p>In <code class="language-plaintext highlighter-rouge">__init__</code>, we create any layers we will use later. The expression 
-<code class="language-plaintext highlighter-rouge">nn.Linear(input_dim, output_dim)</code> creates a fully-connected layer mapping
+<p>In <code class="highlighter-rouge">__init__</code>, we create any layers we will use later. The expression 
+<code class="highlighter-rouge">nn.Linear(input_dim, output_dim)</code> creates a fully-connected layer mapping
 a given number of input dimensions to a given number of output dimensions.
-Here, we construct three such layers: <code class="language-plaintext highlighter-rouge">fc1</code> maps our four inputs to 50 hidden
-units, <code class="language-plaintext highlighter-rouge">fc2</code> transforms the 50 hidden units, and <code class="language-plaintext highlighter-rouge">fc3</code> maps the 50 hidden
+Here, we construct three such layers: <code class="highlighter-rouge">fc1</code> maps our four inputs to 50 hidden
+units, <code class="highlighter-rouge">fc2</code> transforms the 50 hidden units, and <code class="highlighter-rouge">fc3</code> maps the 50 hidden
 units to 5 output neurons, which will later be normalized into the 5
-bin probabilities for <code class="language-plaintext highlighter-rouge">dest_x</code> or <code class="language-plaintext highlighter-rouge">dest_y</code>. (PyTorch also comes with helpers
+bin probabilities for <code class="highlighter-rouge">dest_x</code> or <code class="highlighter-rouge">dest_y</code>. (PyTorch also comes with helpers
 for constructing more complex layers, including convolutional layers and RNN
 cells, but we do not cover that here.)</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">forward</code> function actually implements the neural network’s computation,
-making use of any layers created in <code class="language-plaintext highlighter-rouge">__init__</code>. Here, we use <code class="language-plaintext highlighter-rouge">ReLU</code> activation
-functions, instead of the <code class="language-plaintext highlighter-rouge">tanh</code>-based activation used in the previous section.</p>
+<p>The <code class="highlighter-rouge">forward</code> function actually implements the neural network’s computation,
+making use of any layers created in <code class="highlighter-rouge">__init__</code>. Here, we use <code class="highlighter-rouge">ReLU</code> activation
+functions, instead of the <code class="highlighter-rouge">tanh</code>-based activation used in the previous section.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@pydef</span> <span class="k">mutable struct</span><span class="nc"> NeuralProposal</span> <span class="o">&lt;:</span> <span class="n">nn</span><span class="o">.</span><span class="kt">Module</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@pydef</span> <span class="n">mutable</span> <span class="n">struct</span> <span class="n">NeuralProposal</span> <span class="o">&lt;:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span>
     <span class="k">function</span><span class="nf"> __init__</span><span class="x">(</span><span class="n">self</span><span class="x">,</span> <span class="n">num_in</span><span class="x">)</span>
         <span class="c"># Note the use of pybuiltin(:super): built in Python functions</span>
         <span class="c"># like `super` or `str` or `slice` are all accessed using</span>
         <span class="c"># `pybuiltin`.</span>
-        <span class="n">pybuiltin</span><span class="x">(</span><span class="o">:</span><span class="n">super</span><span class="x">)(</span><span class="n">NeuralProposal</span><span class="x">,</span> <span class="n">self</span><span class="x">)</span><span class="o">.</span><span class="n">__init__</span><span class="x">()</span>
+        <span class="n">pybuiltin</span><span class="x">(:</span><span class="k">super</span><span class="x">)(</span><span class="n">NeuralProposal</span><span class="x">,</span> <span class="n">self</span><span class="x">)</span><span class="o">.</span><span class="n">__init__</span><span class="x">()</span>
         <span class="n">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="x">(</span><span class="n">num_in</span><span class="x">,</span> <span class="mi">50</span><span class="x">)</span>
         <span class="n">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="x">(</span><span class="mi">50</span><span class="x">,</span> <span class="mi">50</span><span class="x">)</span>
         <span class="n">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="x">(</span><span class="mi">50</span><span class="x">,</span> <span class="mi">5</span><span class="x">)</span>
@@ -202,31 +202,31 @@ functions, instead of the <code class="language-plaintext highlighter-rouge">tan
 <span class="k">end</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PyObject &lt;class 'NeuralProposal'&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PyObject &lt;class 'NeuralProposal'&gt;
 </code></pre></div></div>
 
-<p>Once we’ve defined a <code class="language-plaintext highlighter-rouge">nn.Module</code>, we can create a generative function out of it
-using the <code class="language-plaintext highlighter-rouge">TorchGenerativeFunction</code> constructor. The first argument is an
-instantiated Torch model, in our case, <code class="language-plaintext highlighter-rouge">NeuralProposal(4)</code>. Here, <code class="language-plaintext highlighter-rouge">4</code> is the
-value we are passing into <code class="language-plaintext highlighter-rouge">NeuralProposal</code>’s <code class="language-plaintext highlighter-rouge">__init__</code> method, which expects
-us to provide <code class="language-plaintext highlighter-rouge">num_in</code>, the number of input units. The second argument to
-<code class="language-plaintext highlighter-rouge">TorchGenerativeFunction</code> is a list of <code class="language-plaintext highlighter-rouge">TorchArg</code> objects, describing the 
-arguments to the <code class="language-plaintext highlighter-rouge">forward</code> function. We have only one argument, <code class="language-plaintext highlighter-rouge">x</code>, so we pass
-in a list of one element. A <code class="language-plaintext highlighter-rouge">TorchArg</code> object specifies the argument’s <code class="language-plaintext highlighter-rouge">dtype</code> 
-(<code class="language-plaintext highlighter-rouge">torch.float</code> in this case, for 32-bit floating-point numbers), and a Boolean
-for whether gradients should flow through this argument (almost always <code class="language-plaintext highlighter-rouge">true</code>, unless
+<p>Once we’ve defined a <code class="highlighter-rouge">nn.Module</code>, we can create a generative function out of it
+using the <code class="highlighter-rouge">TorchGenerativeFunction</code> constructor. The first argument is an
+instantiated Torch model, in our case, <code class="highlighter-rouge">NeuralProposal(4)</code>. Here, <code class="highlighter-rouge">4</code> is the
+value we are passing into <code class="highlighter-rouge">NeuralProposal</code>’s <code class="highlighter-rouge">__init__</code> method, which expects
+us to provide <code class="highlighter-rouge">num_in</code>, the number of input units. The second argument to
+<code class="highlighter-rouge">TorchGenerativeFunction</code> is a list of <code class="highlighter-rouge">TorchArg</code> objects, describing the 
+arguments to the <code class="highlighter-rouge">forward</code> function. We have only one argument, <code class="highlighter-rouge">x</code>, so we pass
+in a list of one element. A <code class="highlighter-rouge">TorchArg</code> object specifies the argument’s <code class="highlighter-rouge">dtype</code> 
+(<code class="highlighter-rouge">torch.float</code> in this case, for 32-bit floating-point numbers), and a Boolean
+for whether gradients should flow through this argument (almost always <code class="highlighter-rouge">true</code>, unless
 the argument is some discrete value, e.g., a Boolean flag). Finally, we pass in
-the number of output tensors to expect from calling <code class="language-plaintext highlighter-rouge">forward</code> – in this case, just one.</p>
+the number of output tensors to expect from calling <code class="highlighter-rouge">forward</code> – in this case, just one.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_nn</span> <span class="o">=</span> <span class="n">TorchGenerativeFunction</span><span class="x">(</span><span class="n">NeuralProposal</span><span class="x">(</span><span class="mi">4</span><span class="x">),</span> <span class="x">[</span><span class="n">TorchArg</span><span class="x">(</span><span class="nb">true</span><span class="x">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="x">)],</span> <span class="mi">1</span><span class="x">);</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_nn</span> <span class="o">=</span> <span class="n">TorchGenerativeFunction</span><span class="x">(</span><span class="n">NeuralProposal</span><span class="x">(</span><span class="mi">4</span><span class="x">),</span> <span class="x">[</span><span class="n">TorchArg</span><span class="x">(</span><span class="n">true</span><span class="x">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="x">)],</span> <span class="mi">1</span><span class="x">);</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">x_nn</code> can now be called on inputs:</p>
+<p><code class="highlighter-rouge">x_nn</code> can now be called on inputs:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_nn</span><span class="x">([</span><span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">])</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
  -0.07767701894044876
   0.006771232932806015
  -0.06922771036624908
@@ -234,14 +234,14 @@ the number of output tensors to expect from calling <code class="language-plaint
   0.028574829921126366
 </code></pre></div></div>
 
-<p>To turn these into bin probabilities, we’ll use <code class="language-plaintext highlighter-rouge">softmax</code>:</p>
+<p>To turn these into bin probabilities, we’ll use <code class="highlighter-rouge">softmax</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">softmax</span><span class="x">(</span><span class="n">logits</span><span class="x">)</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="x">(</span><span class="n">logits</span> <span class="o">.-</span> <span class="n">logsumexp</span><span class="x">(</span><span class="n">logits</span><span class="x">))</span>
 
 <span class="n">softmax</span><span class="x">(</span><span class="n">x_nn</span><span class="x">([</span><span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">,</span> <span class="mf">0.0</span><span class="x">]))</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5-element Vector{Float64}:
  0.19319124522982853
  0.21021458830983716
  0.19483049317822299
@@ -250,30 +250,30 @@ the number of output tensors to expect from calling <code class="language-plaint
 </code></pre></div></div>
 
 <p>Our proposal in this section will actually use <em>two</em> neural networks: after 
-generating a <code class="language-plaintext highlighter-rouge">dest_x</code> using the probabilities from <code class="language-plaintext highlighter-rouge">x_nn</code>, it will generate
-a <code class="language-plaintext highlighter-rouge">dest_y</code> from a second network, <code class="language-plaintext highlighter-rouge">y_nn</code>. But <code class="language-plaintext highlighter-rouge">y_nn</code> will take an additional
-argument: the sampled <code class="language-plaintext highlighter-rouge">dest_x</code> value. This way, in theory, the <code class="language-plaintext highlighter-rouge">y</code> neural network
-can propose different <code class="language-plaintext highlighter-rouge">dest_y</code> values depending on the sampled <code class="language-plaintext highlighter-rouge">x</code>.</p>
+generating a <code class="highlighter-rouge">dest_x</code> using the probabilities from <code class="highlighter-rouge">x_nn</code>, it will generate
+a <code class="highlighter-rouge">dest_y</code> from a second network, <code class="highlighter-rouge">y_nn</code>. But <code class="highlighter-rouge">y_nn</code> will take an additional
+argument: the sampled <code class="highlighter-rouge">dest_x</code> value. This way, in theory, the <code class="highlighter-rouge">y</code> neural network
+can propose different <code class="highlighter-rouge">dest_y</code> values depending on the sampled <code class="highlighter-rouge">x</code>.</p>
 
-<p>To this end, we create a <code class="language-plaintext highlighter-rouge">y_nn</code> that accepts 5 inputs, rather than 4. Note that
-every time we call <code class="language-plaintext highlighter-rouge">NeuralProposal(...)</code>, it is calling <code class="language-plaintext highlighter-rouge">__init__</code> to generate a
+<p>To this end, we create a <code class="highlighter-rouge">y_nn</code> that accepts 5 inputs, rather than 4. Note that
+every time we call <code class="highlighter-rouge">NeuralProposal(...)</code>, it is calling <code class="highlighter-rouge">__init__</code> to generate a
 fresh set of layers and their parameters; so the parameters are not shared between
-<code class="language-plaintext highlighter-rouge">x_nn</code> and <code class="language-plaintext highlighter-rouge">y_nn</code>.</p>
+<code class="highlighter-rouge">x_nn</code> and <code class="highlighter-rouge">y_nn</code>.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_nn</span> <span class="o">=</span> <span class="n">TorchGenerativeFunction</span><span class="x">(</span><span class="n">NeuralProposal</span><span class="x">(</span><span class="mi">5</span><span class="x">),</span> <span class="x">[</span><span class="n">TorchArg</span><span class="x">(</span><span class="nb">true</span><span class="x">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="x">)],</span> <span class="mi">1</span><span class="x">);</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_nn</span> <span class="o">=</span> <span class="n">TorchGenerativeFunction</span><span class="x">(</span><span class="n">NeuralProposal</span><span class="x">(</span><span class="mi">5</span><span class="x">),</span> <span class="x">[</span><span class="n">TorchArg</span><span class="x">(</span><span class="n">true</span><span class="x">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="x">)],</span> <span class="mi">1</span><span class="x">);</span>
 </code></pre></div></div>
 
 <p>We are now ready to write our custom proposal, which calls each neural 
-network to generate probabilities, then samples using <code class="language-plaintext highlighter-rouge">piecewise_uniform</code>.
+network to generate probabilities, then samples using <code class="highlighter-rouge">piecewise_uniform</code>.
 Note that because the neural networks are generative functions, we call them
-using <code class="language-plaintext highlighter-rouge">~</code> — even though they make no random choices. This is important for
+using <code class="highlighter-rouge">~</code> — even though they make no random choices. This is important for
 Gen’s gradient-based optimization features to work properly.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scale_coord</span><span class="x">(</span><span class="n">coord</span><span class="x">,</span> <span class="n">min</span><span class="x">,</span> <span class="n">max</span><span class="x">)</span> <span class="o">=</span> <span class="x">(</span><span class="n">coord</span> <span class="o">/</span> <span class="x">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="x">))</span> <span class="o">-</span> <span class="mf">0.5</span>
 <span class="n">num_x_bins</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">num_y_bins</span> <span class="o">=</span> <span class="mi">5</span><span class="x">;</span>
 
-<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_torch</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
+<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> custom_dest_proposal_torch</span><span class="x">(</span><span class="n">measurements</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="n">Point</span><span class="x">},</span> <span class="n">scene</span><span class="o">::</span><span class="n">Scene</span><span class="x">)</span>
     <span class="c"># scale inputs to be in the range [-0.5, 0.5]</span>
     <span class="n">x_first</span> <span class="o">=</span> <span class="n">scale_coord</span><span class="x">(</span><span class="n">measurements</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">xmin</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">xmax</span><span class="x">)</span>
     <span class="n">x_last</span> <span class="o">=</span> <span class="n">scale_coord</span><span class="x">(</span><span class="n">measurements</span><span class="x">[</span><span class="k">end</span><span class="x">]</span><span class="o">.</span><span class="n">x</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">xmin</span><span class="x">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">xmax</span><span class="x">)</span>
@@ -291,11 +291,11 @@ Gen’s gradient-based optimization features to work properly.</p>
     
     <span class="n">dest_y</span> <span class="o">~</span> <span class="n">piecewise_uniform</span><span class="x">(</span><span class="n">y_bounds</span><span class="x">,</span> <span class="n">softmax</span><span class="x">(</span><span class="n">y_probs</span><span class="x">))</span>
     
-    <span class="k">return</span> <span class="nb">nothing</span>
+    <span class="k">return</span> <span class="n">nothing</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>To train the proposal, we construct an update that applies a fixed step size gradient descent move. We indicate that we want the update to apply to all the trainable parameters of <code class="language-plaintext highlighter-rouge">x_nn</code> and all the trainable parameters of <code class="language-plaintext highlighter-rouge">y_nn</code>. Note that <code class="language-plaintext highlighter-rouge">custom_dest_proposal_torch</code> does not have any trainable parameters of its own, unlike <code class="language-plaintext highlighter-rouge">custom_dest_proposal_neural</code>.</p>
+<p>To train the proposal, we construct an update that applies a fixed step size gradient descent move. We indicate that we want the update to apply to all the trainable parameters of <code class="highlighter-rouge">x_nn</code> and all the trainable parameters of <code class="highlighter-rouge">y_nn</code>. Note that <code class="highlighter-rouge">custom_dest_proposal_torch</code> does not have any trainable parameters of its own, unlike <code class="highlighter-rouge">custom_dest_proposal_neural</code>.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">update</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">ParamUpdate</span><span class="x">(</span><span class="n">Gen</span><span class="o">.</span><span class="n">ADAM</span><span class="x">(</span><span class="mf">0.001</span><span class="x">,</span> <span class="mf">0.9</span><span class="x">,</span> <span class="mf">0.999</span><span class="x">,</span> <span class="mf">1e-8</span><span class="x">),</span> 
     <span class="n">x_nn</span> <span class="o">=&gt;</span> <span class="n">collect</span><span class="x">(</span><span class="n">get_params</span><span class="x">(</span><span class="n">x_nn</span><span class="x">)),</span> <span class="n">y_nn</span> <span class="o">=&gt;</span> <span class="n">collect</span><span class="x">(</span><span class="n">get_params</span><span class="x">(</span><span class="n">y_nn</span><span class="x">)));</span>
@@ -314,7 +314,7 @@ If you have a GPU available, GenPyTorch should automatically use it.)</p>
     <span class="kd">local</span> <span class="n">choices</span>
     
     <span class="c"># obtain an execution of the model where planning succeeded</span>
-    <span class="n">done</span> <span class="o">=</span> <span class="nb">false</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="n">false</span>
     <span class="k">while</span> <span class="o">!</span><span class="n">done</span>
         <span class="x">(</span><span class="n">choices</span><span class="x">,</span> <span class="n">_</span><span class="x">,</span> <span class="n">retval</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">propose</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">))</span>
         <span class="x">(</span><span class="n">planning_failed</span><span class="x">,</span> <span class="n">maybe_path</span><span class="x">)</span> <span class="o">=</span> <span class="n">retval</span>       
@@ -322,13 +322,13 @@ If you have a GPU available, GenPyTorch should automatically use it.)</p>
     <span class="k">end</span>
 
     <span class="c"># construct arguments to the proposal function being trained</span>
-    <span class="n">measurements</span> <span class="o">=</span> <span class="x">[</span><span class="n">Point</span><span class="x">(</span><span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">x</span><span class="x">)],</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)])</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_ticks</span><span class="x">]</span>
+    <span class="n">measurements</span> <span class="o">=</span> <span class="x">[</span><span class="n">Point</span><span class="x">(</span><span class="n">choices</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">x</span><span class="x">)],</span> <span class="n">choices</span><span class="x">[:</span><span class="n">meas</span> <span class="o">=&gt;</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)])</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_ticks</span><span class="x">]</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">)</span>
     
     <span class="c"># construct constraints for the proposal function being trained</span>
     <span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-    <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">]</span>
-    <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]</span>
+    <span class="n">constraints</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">]</span>
+    <span class="n">constraints</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]</span>
     
     <span class="k">return</span> <span class="x">(</span><span class="n">inputs</span><span class="x">,</span> <span class="n">constraints</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
@@ -336,10 +336,10 @@ If you have a GPU available, GenPyTorch should automatically use it.)</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">train!</span><span class="x">(</span><span class="n">custom_dest_proposal_torch</span><span class="x">,</span> <span class="n">data_generator</span><span class="x">,</span> <span class="n">update</span><span class="x">,</span>
     <span class="n">num_epoch</span><span class="o">=</span><span class="mi">10</span><span class="x">,</span> <span class="n">epoch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">num_minibatch</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span> <span class="n">minibatch_size</span><span class="o">=</span><span class="mi">100</span><span class="x">,</span>
-    <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">10</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="nb">true</span><span class="x">);</span>
+    <span class="n">evaluation_size</span><span class="o">=</span><span class="mi">10</span><span class="x">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">true</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>epoch 1: generating 100 training examples...
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>epoch 1: generating 100 training examples...
 epoch 1: training using 100 minibatches of size 100...
 epoch 1: evaluating on 10 examples...
 epoch 1: est. objective value: 0.30674785750200567
@@ -385,14 +385,14 @@ epoch 10: est. objective value: 0.6199856166120441
 focuses on the upper left regions of the scene.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> visualize_custom_destination_proposal</span><span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">start</span><span class="x">,</span> <span class="n">dest_proposal</span><span class="x">;</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="x">)</span>
-    <span class="n">visualize</span><span class="x">()</span> <span class="k">do</span> 
-        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_samples</span>
+    <span class="n">visualize</span><span class="x">()</span> <span class="n">do</span> 
+        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_samples</span>
             <span class="x">(</span><span class="n">proposed_choices</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">propose</span><span class="x">(</span><span class="n">dest_proposal</span><span class="x">,</span> <span class="x">(</span><span class="n">measurements</span><span class="x">,</span> <span class="n">scene</span><span class="x">))</span>
             <span class="n">constraints</span> <span class="o">=</span> <span class="n">choicemap</span><span class="x">(</span><span class="n">proposed_choices</span><span class="x">)</span>
-            <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
-            <span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">constraints</span><span class="x">[:</span><span class="n">start_x</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">constraints</span><span class="x">[:</span><span class="n">start_y</span><span class="x">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">y</span>
             <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">agent_model</span><span class="x">,</span> <span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">dt</span><span class="x">,</span> <span class="n">num_ticks</span><span class="x">,</span> <span class="n">planner_params</span><span class="x">),</span> <span class="n">constraints</span><span class="x">)</span>
-            <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">dest_y</span><span class="x">]))</span>
+            <span class="n">draw_dest</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">Point</span><span class="x">(</span><span class="n">trace</span><span class="x">[:</span><span class="n">dest_x</span><span class="x">],</span> <span class="n">trace</span><span class="x">[:</span><span class="n">dest_y</span><span class="x">]))</span>
         <span class="k">end</span>
         <span class="n">draw_scene</span><span class="x">(</span><span class="n">scene</span><span class="x">)</span>
         <span class="n">draw_start</span><span class="x">(</span><span class="n">scene</span><span class="x">,</span> <span class="n">start</span><span class="x">)</span>
@@ -410,14 +410,14 @@ focuses on the upper left regions of the scene.</p>
 
 <ol>
   <li>Do you expect that the neural proposal trained above would work all right for <em>observed agent locations</em> different from the ones we’ve been working with in this notebook? Why or why not?</li>
-  <li>Do you expect that the neural proposal trained above would work all right for <em>scenes</em> different from the one we’ve been working with in this notebook? Why or why not? (For example, would it do well in the <code class="language-plaintext highlighter-rouge">scene_2doors</code> scene from Problem 2.4? If so, can you imagine other scenes where it would fail?)</li>
+  <li>Do you expect that the neural proposal trained above would work all right for <em>scenes</em> different from the one we’ve been working with in this notebook? Why or why not? (For example, would it do well in the <code class="highlighter-rouge">scene_2doors</code> scene from Problem 2.4? If so, can you imagine other scenes where it would fail?)</li>
   <li>If you answered “no” to either of the above questions, can you describe (but not implement!) a modification to the neural network architecture, the training procedure, or both that would allow you to answer “yes”?</li>
 </ol>
 
 <hr />
 <h3 id="exercise-1">Exercise</h3>
 
-<p>The training procedure for the neural networks above was not vectorized across training examples. For fast training on a GPU it is important to vectorize the evaluation of gradients across multiple training examples. Write a vectorized version of the <code class="language-plaintext highlighter-rouge">custom_dest_proposal_torch</code> that takes a scene and a vector of data sets (measurement vectors), and samples a destination point for each of the input data sets. Train it and visualize the proposal distribution, and the results of importance resampling inference that using the proposal for some amount of computation, for our example data set.</p>
+<p>The training procedure for the neural networks above was not vectorized across training examples. For fast training on a GPU it is important to vectorize the evaluation of gradients across multiple training examples. Write a vectorized version of the <code class="highlighter-rouge">custom_dest_proposal_torch</code> that takes a scene and a vector of data sets (measurement vectors), and samples a destination point for each of the input data sets. Train it and visualize the proposal distribution, and the results of importance resampling inference that using the proposal for some amount of computation, for our example data set.</p>
 
 <p>Hint:</p>
 

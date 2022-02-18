@@ -159,7 +159,7 @@ enable improved performance, but are not covered here.</p>
 
 <p>Gen is a package for the Julia language. The package can be loaded with:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span>
 </code></pre></div></div>
 
 <p>Gen programs typically consist of a combination of (i) probabilistic models written in modeling languages and (ii) inference programs written in regular Julia code. Gen provides a built-in modeling language that is itself based on Julia.</p>
@@ -169,7 +169,7 @@ enable improved performance, but are not covered here.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2
 </code></pre></div></div>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="x">;</span>
@@ -177,21 +177,21 @@ enable improved performance, but are not covered here.</p>
 
 <p>This notebook uses the <a href="https://github.com/JuliaPlots/Plots.jl">Plots.jl</a> Julia package for plotting.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Plots</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Plots</span>
 </code></pre></div></div>
 
 <p>This notebook will make use of Julia symbols. Note that a Julia symbol is different from a Julia string:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typeof</span><span class="x">(</span><span class="o">:</span><span class="n">foo</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">typeof</span><span class="x">(:</span><span class="n">foo</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symbol
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Symbol
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">typeof</span><span class="x">(</span><span class="s">"foo"</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">typeof</span><span class="x">(</span><span class="s">"foo"</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String
 </code></pre></div></div>
 
 <h2 id="2-writing-a-probabilistic-model-as-a-generative-function--">2. Writing a probabilistic model as a generative function  <a name="writing-model"></a></h2>
@@ -210,7 +210,7 @@ our data and our problem domain.</p>
 <p>The simplest way to construct a generative function is by using the <a href="https://probcomp.github.io/Gen/dev/ref/modeling/">built-in
 modeling DSL</a>. Generative
 functions written in the built-in modeling DSL are based on Julia function
-definition syntax, but are prefixed with the <code class="language-plaintext highlighter-rouge">@gen</code> macro:</p>
+definition syntax, but are prefixed with the <code class="highlighter-rouge">@gen</code> macro:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> function_name_here</span><span class="x">(</span><span class="n">input_arguments</span><span class="x">)</span>
     <span class="c"># Function body...</span>
@@ -232,35 +232,35 @@ special syntax that annotates them with an <em>address</em>:</p>
 <p>A simple example of such an invocation is a normal distribution parametrized
 with mean 0 and standard deviation 1:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_variable</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">my_variable_address</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_variable</span> <span class="o">=</span> <span class="x">{:</span><span class="n">my_variable_address</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p>Every random choice must be given an <em>address</em>, which can be
 an arbitrary value—but we often use a symbol. 
-(<code class="language-plaintext highlighter-rouge">:my_variable_address</code> is a symbol in the Julia language.)
+(<code class="highlighter-rouge">:my_variable_address</code> is a symbol in the Julia language.)
 Think of the address as the name of a particular random choice, which
 is distinct from the name of the variable. For example, consider
 the following code:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">initial_x</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="x">{:</span><span class="n">initial_x</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
 <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="x">({</span><span class="o">:</span><span class="n">addition_to_x</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="x">({:</span><span class="n">addition_to_x</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>This code manipulates a single variable, <code class="language-plaintext highlighter-rouge">x</code>, but may make up to two random
-choices: <code class="language-plaintext highlighter-rouge">:initial_x</code> and <code class="language-plaintext highlighter-rouge">:addition_to_x</code>.</p>
+<p>This code manipulates a single variable, <code class="highlighter-rouge">x</code>, but may make up to two random
+choices: <code class="highlighter-rouge">:initial_x</code> and <code class="highlighter-rouge">:addition_to_x</code>.</p>
 
-<p>Note that we can only use <code class="language-plaintext highlighter-rouge">~</code> to give addresses to <em>random choices</em>. 
+<p>Note that we can only use <code class="highlighter-rouge">~</code> to give addresses to <em>random choices</em>. 
 The following will <em>not</em> work because the code is trying to trace the
-expression <code class="language-plaintext highlighter-rouge">sin(x)</code> which is an invocation of an ordinary Julia function, not
+expression <code class="highlighter-rouge">sin(x)</code> which is an invocation of an ordinary Julia function, not
 a distribution.</p>
 <pre><code class="language-Julia"># INVALID:
 my_variable = {:not_a_random_choice} ~ sin(x)
 </code></pre>
-<p>(We will see a bit later that it is <em>also</em> possible to use <code class="language-plaintext highlighter-rouge">~</code>
+<p>(We will see a bit later that it is <em>also</em> possible to use <code class="highlighter-rouge">~</code>
 to sample from helper <em>generative functions</em>, not just primitive 
-distributions like <code class="language-plaintext highlighter-rouge">normal</code>. But for now, think of <code class="language-plaintext highlighter-rouge">~</code> as being
+distributions like <code class="highlighter-rouge">normal</code>. But for now, think of <code class="highlighter-rouge">~</code> as being
 for making random choices.)</p>
 
 <h3 id="example-bayesian-linear-regression">Example: Bayesian linear regression</h3>
@@ -279,15 +279,15 @@ that each $(x, y)$ is near the line. We might think of this function as
 modeling house prices as a function of square footage, or the measured volume
 of a gas as a function of its measured temperature.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> line_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> line_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
     <span class="c"># We begin by sampling a slope and intercept for the line.</span>
     <span class="c"># Before we have seen the data, we don't know the values of</span>
     <span class="c"># these parameters, so we treat them as random choices. The</span>
     <span class="c"># distributions they are drawn from represent our prior beliefs</span>
     <span class="c"># about the parameters: in this case, that neither the slope nor the</span>
     <span class="c"># intercept will be more than a couple points away from 0.</span>
-    <span class="n">slope</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">slope</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
-    <span class="n">intercept</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">intercept</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="x">({:</span><span class="n">slope</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="n">intercept</span> <span class="o">=</span> <span class="x">({:</span><span class="n">intercept</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
     
     <span class="c"># We define a function to compute y for a given x</span>
     <span class="k">function</span><span class="nf"> y</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
@@ -301,7 +301,7 @@ of a gas as a function of its measured temperature.</p>
         <span class="c"># slightly differently: the first time through,</span>
         <span class="c"># the name (:y, 1) will be used, then (:y, 2) for</span>
         <span class="c"># the second point, and so on.</span>
-        <span class="x">({(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">y</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
+        <span class="x">({(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">y</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">))</span>
     <span class="k">end</span>
 
     <span class="c"># Most of the time, we don't care about the return</span>
@@ -325,28 +325,28 @@ Bayesian statistics terms, these distributions are the <em>prior distributions</
 of the slope and intercept respectively. Then, the function samples values
 for the y-coordinates corresponding to each of the provided x-coordinates.</p>
 
-<p>This generative function returns a function <code class="language-plaintext highlighter-rouge">y</code> encoding the slope
+<p>This generative function returns a function <code class="highlighter-rouge">y</code> encoding the slope
 and intercept. 
 We can run the model like we run a regular Julia function:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="n">line_model</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
 </code></pre></div></div>
 
 <p>This gives us the return value of the model, but we
 may be more interested in <em>the values of the random choices</em> that
-<code class="language-plaintext highlighter-rouge">line_model</code> makes. <strong>Crucially, each random choice is annotated with a
-unique <em>address</em>.</strong> A random choice is assigned an address using the <code class="language-plaintext highlighter-rouge">{addr} ~ ...</code>
+<code class="highlighter-rouge">line_model</code> makes. <strong>Crucially, each random choice is annotated with a
+unique <em>address</em>.</strong> A random choice is assigned an address using the <code class="highlighter-rouge">{addr} ~ ...</code>
 keyword. Addresses can be any Julia value. In this program, there are two
 types of addresses used – Julia symbols and tuples of symbols and integers.
-Note that within the <code class="language-plaintext highlighter-rouge">for</code> loop, the same line of code is executed multiple
+Note that within the <code class="highlighter-rouge">for</code> loop, the same line of code is executed multiple
 times, but each time, the random choice it makes is given a distinct address.</p>
 
 <p>Although the random choices are not included in the return value, they <em>are</em>
 included in the <em>execution trace</em> of the generative function. We can run the
-generative function and obtain its trace using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="language-plaintext highlighter-rouge">
+generative function and obtain its trace using the <a href="https://probcomp.github.io/Gen/dev/ref/gfi/#Gen.simulate"><code class="highlighter-rouge">
 simulate</code></a> method
 from the Gen API:</p>
 
@@ -358,23 +358,23 @@ from the Gen API:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">println</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gen.DynamicDSLTrace{DynamicDSLFunction{Any}}(DynamicDSLFunction{Any}(Dict{Symbol, Any}(), Dict{Symbol, Any}(), Type[Vector{Float64}], false, Union{Nothing, Some{Any}}[nothing], var"##line_model#274", Bool[0], false), Trie{Any, Gen.ChoiceOrCallRecord}(Dict{Any, Gen.ChoiceOrCallRecord}((:y, 11) =&gt; Gen.ChoiceOrCallRecord{Float64}(9.383490918197065, -0.044423239264899994, NaN, true), (:y, 3) =&gt; Gen.ChoiceOrCallRecord{Float64}(-2.8292929611830555, 1.3417576659518766, NaN, true), :intercept =&gt; Gen.ChoiceOrCallRecord{Float64}(1.8319666784347306, -2.0315984526265156, NaN, true), (:y, 1) =&gt; Gen.ChoiceOrCallRecord{Float64}(-5.959713829773403, 1.1304941689886963, NaN, true), (:y, 8) =&gt; Gen.ChoiceOrCallRecord{Float64}(4.976431986524593, 1.225414500885959, NaN, true), (:y, 7) =&gt; Gen.ChoiceOrCallRecord{Float64}(3.2821949214637147, 0.9430035125891707, NaN, true), (:y, 5) =&gt; Gen.ChoiceOrCallRecord{Float64}(0.2548748434761596, 1.3292402671095034, NaN, true), (:y, 6) =&gt; Gen.ChoiceOrCallRecord{Float64}(1.9173535451258832, 1.0191007096227396, NaN, true), (:y, 10) =&gt; Gen.ChoiceOrCallRecord{Float64}(7.954210096018949, 1.236889673045222, NaN, true), :slope =&gt; Gen.ChoiceOrCallRecord{Float64}(1.5441050822599893, -2.111068785735237, NaN, true), (:y, 4) =&gt; Gen.ChoiceOrCallRecord{Float64}(-1.1305752102234436, 0.5940207818854444, NaN, true), (:y, 2) =&gt; Gen.ChoiceOrCallRecord{Float64}(-4.346401246132024, 1.3834569033725725, NaN, true), (:y, 9) =&gt; Gen.ChoiceOrCallRecord{Float64}(6.53337380525437, 1.1449621654185604, NaN, true)), Dict{Any, Trie{Any, Gen.ChoiceOrCallRecord}}()), false, 7.161249871243092, 0.0, ([-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0],), var"#y#1"{Float64, Float64}(1.8319666784347306, 1.5441050822599893))
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gen.DynamicDSLTrace{DynamicDSLFunction{Any}}(DynamicDSLFunction{Any}(Dict{Symbol, Any}(), Dict{Symbol, Any}(), Type[Vector{Float64}], false, Union{Nothing, Some{Any}}[nothing], var"##line_model#274", Bool[0], false), Trie{Any, Gen.ChoiceOrCallRecord}(Dict{Any, Gen.ChoiceOrCallRecord}((:y, 11) =&gt; Gen.ChoiceOrCallRecord{Float64}(9.383490918197065, -0.044423239264899994, NaN, true), (:y, 3) =&gt; Gen.ChoiceOrCallRecord{Float64}(-2.8292929611830555, 1.3417576659518766, NaN, true), :intercept =&gt; Gen.ChoiceOrCallRecord{Float64}(1.8319666784347306, -2.0315984526265156, NaN, true), (:y, 1) =&gt; Gen.ChoiceOrCallRecord{Float64}(-5.959713829773403, 1.1304941689886963, NaN, true), (:y, 8) =&gt; Gen.ChoiceOrCallRecord{Float64}(4.976431986524593, 1.225414500885959, NaN, true), (:y, 7) =&gt; Gen.ChoiceOrCallRecord{Float64}(3.2821949214637147, 0.9430035125891707, NaN, true), (:y, 5) =&gt; Gen.ChoiceOrCallRecord{Float64}(0.2548748434761596, 1.3292402671095034, NaN, true), (:y, 6) =&gt; Gen.ChoiceOrCallRecord{Float64}(1.9173535451258832, 1.0191007096227396, NaN, true), (:y, 10) =&gt; Gen.ChoiceOrCallRecord{Float64}(7.954210096018949, 1.236889673045222, NaN, true), :slope =&gt; Gen.ChoiceOrCallRecord{Float64}(1.5441050822599893, -2.111068785735237, NaN, true), (:y, 4) =&gt; Gen.ChoiceOrCallRecord{Float64}(-1.1305752102234436, 0.5940207818854444, NaN, true), (:y, 2) =&gt; Gen.ChoiceOrCallRecord{Float64}(-4.346401246132024, 1.3834569033725725, NaN, true), (:y, 9) =&gt; Gen.ChoiceOrCallRecord{Float64}(6.53337380525437, 1.1449621654185604, NaN, true)), Dict{Any, Trie{Any, Gen.ChoiceOrCallRecord}}()), false, 7.161249871243092, 0.0, ([-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0],), var"#y#1"{Float64, Float64}(1.8319666784347306, 1.5441050822599893))
 </code></pre></div></div>
 
-<p>A trace of a generative function contains various information about an execution of the function. For example, it contains the arguments on which the function was run, which are available with the API method <code class="language-plaintext highlighter-rouge">get_args</code>:</p>
+<p>A trace of a generative function contains various information about an execution of the function. For example, it contains the arguments on which the function was run, which are available with the API method <code class="highlighter-rouge">get_args</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>([-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0],)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>([-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0],)
 </code></pre></div></div>
 
-<p>The trace also contains the value of the random choices, stored in a map from address to value called a <em>choice map</em>. This map is available through the API method <a href=""><code class="language-plaintext highlighter-rouge">get_choices</code></a>:</p>
+<p>The trace also contains the value of the random choices, stored in a map from address to value called a <em>choice map</em>. This map is available through the API method <a href=""><code class="highlighter-rouge">get_choices</code></a>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── (:y, 11) : 9.383490918197065
 │
 ├── (:y, 3) : -2.8292929611830555
@@ -402,42 +402,42 @@ from the Gen API:</p>
 └── (:y, 9) : 6.53337380525437
 </code></pre></div></div>
 
-<p>We can pull out individual values from this map using Julia’s subscripting syntax <code class="language-plaintext highlighter-rouge">[...]</code>:</p>
+<p>We can pull out individual values from this map using Julia’s subscripting syntax <code class="highlighter-rouge">[...]</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">choices</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
-<span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">]</span>
+<span class="n">choices</span><span class="x">[:</span><span class="n">slope</span><span class="x">]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.5441050822599893
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.5441050822599893
 </code></pre></div></div>
 
-<p>We can also read the value of a random choice directly from the trace, without having to use <code class="language-plaintext highlighter-rouge">get_choices</code> first:</p>
+<p>We can also read the value of a random choice directly from the trace, without having to use <code class="highlighter-rouge">get_choices</code> first:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[:</span><span class="n">slope</span><span class="x">]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.5441050822599893
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.5441050822599893
 </code></pre></div></div>
 
-<p>The return value is also recorded in the trace, and is accessible with the <code class="language-plaintext highlighter-rouge">get_retval</code> API method:</p>
+<p>The return value is also recorded in the trace, and is accessible with the <code class="highlighter-rouge">get_retval</code> API method:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Gen</span><span class="o">.</span><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
 </code></pre></div></div>
 
-<p>Or we can access the return value directly from the trace via the syntactic sugar <code class="language-plaintext highlighter-rouge">trace[]</code>:</p>
+<p>Or we can access the return value directly from the trace via the syntactic sugar <code class="highlighter-rouge">trace[]</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y (generic function with 1 method)
 </code></pre></div></div>
 
 <p>In order to understand the probabilistic behavior of a generative function, it is helpful to be able to visualize its traces. Below, we define a function that uses PyPlot to render a trace of the generative function above. The rendering shows the x-y data points and the line that is represented by the slope and intercept choices.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">)</span>
     
     <span class="c"># Pull out xs from the trace</span>
     <span class="n">xs</span><span class="x">,</span> <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
@@ -450,14 +450,14 @@ from the Gen API:</p>
     
     <span class="c"># Draw the line</span>
     <span class="n">test_xs</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="o">-</span><span class="mi">5</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">5</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1000</span><span class="x">))</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plot</span><span class="x">(</span><span class="n">test_xs</span><span class="x">,</span> <span class="n">map</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">test_xs</span><span class="x">),</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plot</span><span class="x">(</span><span class="n">test_xs</span><span class="x">,</span> <span class="n">map</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">test_xs</span><span class="x">),</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span>
                 <span class="n">xlim</span><span class="o">=</span><span class="x">(</span><span class="n">xmin</span><span class="x">,</span> <span class="n">xmax</span><span class="x">),</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="n">xmin</span><span class="x">,</span> <span class="n">xmax</span><span class="x">))</span>
 
     <span class="k">if</span> <span class="n">show_data</span>
-        <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">trace</span><span class="x">[(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)]</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">trace</span><span class="x">[(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)]</span>
         
         <span class="c"># Plot the data set</span>
-        <span class="n">scatter!</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">c</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+        <span class="n">scatter!</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">c</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
     <span class="k">end</span>
     
     <span class="k">return</span> <span class="n">fig</span>
@@ -471,12 +471,12 @@ from the Gen API:</p>
 
 <p>Because a generative function is stochastic, we need to visualize many runs in order to understand its behavior. The cell below renders a grid of traces.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> grid</span><span class="x">(</span><span class="n">renderer</span><span class="o">::</span><span class="kt">Function</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> grid</span><span class="x">(</span><span class="n">renderer</span><span class="o">::</span><span class="n">Function</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
     <span class="n">Plots</span><span class="o">.</span><span class="n">plot</span><span class="x">(</span><span class="n">map</span><span class="x">(</span><span class="n">renderer</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span><span class="o">...</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">]</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -493,30 +493,30 @@ from the Gen API:</p>
 <p>Write a model that generates a sine wave with random phase, period and
 amplitude, and then generates y-coordinates from a given vector of
 x-coordinates by adding noise to the value of the wave at each x-coordinate.
-Use a  <code class="language-plaintext highlighter-rouge">gamma(1, 1)</code> prior distribution for the period, and a <code class="language-plaintext highlighter-rouge">gamma(1, 1)</code>
+Use a  <code class="highlighter-rouge">gamma(1, 1)</code> prior distribution for the period, and a <code class="highlighter-rouge">gamma(1, 1)</code>
 prior distribution on the amplitude (see
-<a href="https://probcomp.github.io/Gen/dev/ref/distributions/#Gen.gamma"><code class="language-plaintext highlighter-rouge">Gen.gamma</code></a>).
+<a href="https://probcomp.github.io/Gen/dev/ref/distributions/#Gen.gamma"><code class="highlighter-rouge">Gen.gamma</code></a>).
 Sampling from a Gamma distribution will ensure to give us postive real values.
 Use a uniform distribution between 0 and $2\pi$ for the phase (see
-<a href="https://probcomp.github.io/Gen/dev/ref/distributions/#Gen.uniform"><code class="language-plaintext highlighter-rouge">Gen.uniform</code></a>).</p>
+<a href="https://probcomp.github.io/Gen/dev/ref/distributions/#Gen.uniform"><code class="highlighter-rouge">Gen.uniform</code></a>).</p>
 
 <p>The sine wave should implement:</p>
 
 <p>$ y(x) = a \sin(2\pi \frac{1}{p} x + \varphi)$,</p>
 
 <p>where $a$ is the amplitude, $p$ is the period and $\varphi$ is the phase.  In
-Julia the constant $\pi$ can be expressed as either <code class="language-plaintext highlighter-rouge">pi</code> or <code class="language-plaintext highlighter-rouge">π</code> (unicode).</p>
+Julia the constant $\pi$ can be expressed as either <code class="highlighter-rouge">pi</code> or <code class="highlighter-rouge">π</code> (unicode).</p>
 
-<p>When calling <code class="language-plaintext highlighter-rouge">trace = Gen.simulate(sine_model, (xs,))</code>, the following choices should appear:</p>
+<p>When calling <code class="highlighter-rouge">trace = Gen.simulate(sine_model, (xs,))</code>, the following choices should appear:</p>
 <ul>
-  <li>amplitude: <code class="language-plaintext highlighter-rouge">trace[:amplitude]</code></li>
-  <li>period: <code class="language-plaintext highlighter-rouge">trace[:period]</code></li>
-  <li>phase: <code class="language-plaintext highlighter-rouge">trace[:phase]</code></li>
+  <li>amplitude: <code class="highlighter-rouge">trace[:amplitude]</code></li>
+  <li>period: <code class="highlighter-rouge">trace[:period]</code></li>
+  <li>phase: <code class="highlighter-rouge">trace[:phase]</code></li>
 </ul>
 
 <p>We have provided some starter code for the sine wave model:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> sine_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> sine_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
     
     <span class="c"># &lt; your code here, for sampling a phase, period, and amplitude &gt;</span>
 
@@ -525,14 +525,14 @@ Julia the constant $\pi$ can be expressed as either <code class="language-plaint
     <span class="k">end</span>
     
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">y</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">)</span>
+        <span class="x">{(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">y</span><span class="x">(</span><span class="n">x</span><span class="x">),</span> <span class="mf">0.1</span><span class="x">)</span>
     <span class="k">end</span>
     
     <span class="k">return</span> <span class="n">y</span> <span class="c"># We return the y function so it can be used for plotting, below. </span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">sine_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">sine_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
 </code></pre></div></div>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">grid</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
@@ -574,7 +574,7 @@ set:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="mf">6.75003</span><span class="x">,</span> <span class="mf">6.1568</span><span class="x">,</span> <span class="mf">4.26414</span><span class="x">,</span> <span class="mf">1.84894</span><span class="x">,</span> <span class="mf">3.09686</span><span class="x">,</span> <span class="mf">1.94026</span><span class="x">,</span> <span class="mf">1.36411</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.83959</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.976</span><span class="x">,</span> <span class="o">-</span><span class="mf">1.93363</span><span class="x">,</span> <span class="o">-</span><span class="mf">2.91303</span><span class="x">];</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Observed data (linear)"</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"X"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Y"</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Observed data (linear)"</span><span class="x">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">"X"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Y"</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_53_0.svg" alt="svg" /></p>
@@ -590,11 +590,11 @@ observed data. That is, the inference program will try to find a trace that
 well explains the dataset we created above. We can inspect that trace to find
 estimates of the slope and intercept of a line that fits the data.</p>
 
-<p>Functions like <code class="language-plaintext highlighter-rouge">importance_resampling</code> expect us to provide a <em>model</em> and
+<p>Functions like <code class="highlighter-rouge">importance_resampling</code> expect us to provide a <em>model</em> and
 also an <em>choice map</em> representing our data set and relating it to the model.
 A choice map maps random choice addresses from the model to values from our
-data set. Here, we want to tie model addresses like <code class="language-plaintext highlighter-rouge">(:y, 4)</code> to data set
-values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
+data set. Here, we want to tie model addresses like <code class="highlighter-rouge">(:y, 4)</code> to data set
+values like <code class="highlighter-rouge">ys[4]</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> do_inference</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">amount_of_computation</span><span class="x">)</span>
     
@@ -603,7 +603,7 @@ values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
     <span class="c"># unconstrained, because we want them to be inferred.</span>
     <span class="n">observations</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">ys</span><span class="x">)</span>
-        <span class="n">observations</span><span class="x">[(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">observations</span><span class="x">[(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="o">=</span> <span class="n">y</span>
     <span class="k">end</span>
     
     <span class="c"># Call importance_resampling to obtain a likely trace consistent</span>
@@ -621,9 +621,9 @@ values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
 
 <p><img src="output_57_0.svg" alt="svg" /></p>
 
-<p>We see that <code class="language-plaintext highlighter-rouge">importance_resampling</code> found a reasonable slope and intercept to explain the data. We can also visualize many samples in a grid:</p>
+<p>We see that <code class="highlighter-rouge">importance_resampling</code> found a reasonable slope and intercept to explain the data. We can also visualize many samples in a grid:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">10</span><span class="x">];</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -631,24 +631,24 @@ values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
 
 <p>We can see here that there is some uncertainty: with our limited data, we can’t be 100% sure exactly where the line is. We can get a better sense for the variability in the posterior distribution by visualizing all the traces in one plot, rather than in a grid. Each trace is going to have the same observed data points, so we only plot those once, based on the values in the first trace:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> overlay</span><span class="x">(</span><span class="n">renderer</span><span class="x">,</span> <span class="n">traces</span><span class="x">;</span> <span class="n">same_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> overlay</span><span class="x">(</span><span class="n">renderer</span><span class="x">,</span> <span class="n">traces</span><span class="x">;</span> <span class="n">same_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
     
     <span class="n">xs</span><span class="x">,</span> <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="mi">1</span><span class="x">])</span>
     <span class="n">xmin</span> <span class="o">=</span> <span class="n">minimum</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
     <span class="n">xmax</span> <span class="o">=</span> <span class="n">maximum</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">traces</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">traces</span><span class="x">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">get_retval</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">])</span>
         <span class="n">test_xs</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="o">-</span><span class="mi">5</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">5</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1000</span><span class="x">))</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plot!</span><span class="x">(</span><span class="n">test_xs</span><span class="x">,</span> <span class="n">map</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">test_xs</span><span class="x">),</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plot!</span><span class="x">(</span><span class="n">test_xs</span><span class="x">,</span> <span class="n">map</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">test_xs</span><span class="x">),</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span>
                     <span class="n">xlim</span><span class="o">=</span><span class="x">(</span><span class="n">xmin</span><span class="x">,</span> <span class="n">xmax</span><span class="x">),</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="n">xmin</span><span class="x">,</span> <span class="n">xmax</span><span class="x">))</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">fig</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">100</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">10</span><span class="x">];</span>
 <span class="n">overlay</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -658,7 +658,7 @@ values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
 
 <h3 id="exercise-2">Exercise</h3>
 
-<p>The results above were obtained for <code class="language-plaintext highlighter-rouge">amount_of_computation = 100</code>. Run the algorithm with this value set to <code class="language-plaintext highlighter-rouge">1</code>, <code class="language-plaintext highlighter-rouge">10</code>, and <code class="language-plaintext highlighter-rouge">1000</code>, etc.  Which value seems like a good tradeoff between accuracy and running time? Discuss.</p>
+<p>The results above were obtained for <code class="highlighter-rouge">amount_of_computation = 100</code>. Run the algorithm with this value set to <code class="highlighter-rouge">1</code>, <code class="highlighter-rouge">10</code>, and <code class="highlighter-rouge">1000</code>, etc.  Which value seems like a good tradeoff between accuracy and running time? Discuss.</p>
 
 <hr />
 
@@ -668,19 +668,19 @@ values like <code class="language-plaintext highlighter-rouge">ys[4]</code>:</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ys_sine</span> <span class="o">=</span> <span class="x">[</span><span class="mf">2.89</span><span class="x">,</span> <span class="mf">2.22</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.612</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.522</span><span class="x">,</span> <span class="o">-</span><span class="mf">2.65</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.133</span><span class="x">,</span> <span class="mf">2.70</span><span class="x">,</span> <span class="mf">2.77</span><span class="x">,</span> <span class="mf">0.425</span><span class="x">,</span> <span class="o">-</span><span class="mf">2.11</span><span class="x">,</span> <span class="o">-</span><span class="mf">2.76</span><span class="x">];</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys_sine</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys_sine</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_66_0.svg" alt="svg" /></p>
 
-<p>Write an inference program that generates traces of <code class="language-plaintext highlighter-rouge">sine_model</code> that explain this data set. Visualize the resulting distribution of traces. Temporarily change the prior distribution on the period to be <code class="language-plaintext highlighter-rouge">gamma(1, 1)</code>  (by changing and re-running the cell that defines <code class="language-plaintext highlighter-rouge">sine_model</code> from a previous exercise). Can you explain the difference in inference results when using <code class="language-plaintext highlighter-rouge">gamma(1, 1)</code> vs <code class="language-plaintext highlighter-rouge">gamma(5, 1)</code> prior on the period? How much computation did you need to get good results?</p>
+<p>Write an inference program that generates traces of <code class="highlighter-rouge">sine_model</code> that explain this data set. Visualize the resulting distribution of traces. Temporarily change the prior distribution on the period to be <code class="highlighter-rouge">gamma(1, 1)</code>  (by changing and re-running the cell that defines <code class="highlighter-rouge">sine_model</code> from a previous exercise). Can you explain the difference in inference results when using <code class="highlighter-rouge">gamma(1, 1)</code> vs <code class="highlighter-rouge">gamma(5, 1)</code> prior on the period? How much computation did you need to get good results?</p>
 
 <h2 id="4-predicting-new-data--">4. Predicting new data  <a name="predicting-data"></a></h2>
 
-<p>What if we’d want to predict <code class="language-plaintext highlighter-rouge">ys</code> given <code class="language-plaintext highlighter-rouge">xs</code>?</p>
+<p>What if we’d want to predict <code class="highlighter-rouge">ys</code> given <code class="highlighter-rouge">xs</code>?</p>
 
 <p>Using the API method
-<a href="https://www.gen.dev/dev/ref/gfi/#Gen.generate"><code class="language-plaintext highlighter-rouge">generate</code></a>, we
+<a href="https://www.gen.dev/dev/ref/gfi/#Gen.generate"><code class="highlighter-rouge">generate</code></a>, we
 can generate a trace of a generative function in which the values of certain
 random choices are constrained to given values. The constraints are a choice
 map that maps the addresses of the constrained random choices to their
@@ -689,8 +689,8 @@ desired values.</p>
 <p>For example:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">()</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span>
-<span class="n">constraints</span><span class="x">[</span><span class="o">:</span><span class="n">intercept</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">slope</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">constraints</span><span class="x">[:</span><span class="n">intercept</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span>
 <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">)</span>
 <span class="n">render_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
@@ -703,13 +703,13 @@ desired values.</p>
 function to predict the value of the y-coordinates at new x-coordinates by
 running new executions of the model generative function in which the random
 choices corresponding to the parameters have been constrained to their
-inferred values.  We have provided a function below (<code class="language-plaintext highlighter-rouge">predict_new_data</code>) that
+inferred values.  We have provided a function below (<code class="highlighter-rouge">predict_new_data</code>) that
 takes a trace, and a vector of new x-coordinates, and returns a vector of
-predicted y-coordinates corresponding to the x-coordinates in <code class="language-plaintext highlighter-rouge">new_xs</code>. We
+predicted y-coordinates corresponding to the x-coordinates in <code class="highlighter-rouge">new_xs</code>. We
 have designed this function to work with multiple models, so the set of
-parameter addresses is an argument (<code class="language-plaintext highlighter-rouge">param_addrs</code>):</p>
+parameter addresses is an argument (<code class="highlighter-rouge">param_addrs</code>):</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> predict_new_data</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">trace</span><span class="x">,</span> <span class="n">new_xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">param_addrs</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> predict_new_data</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">trace</span><span class="x">,</span> <span class="n">new_xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">param_addrs</span><span class="x">)</span>
     
     <span class="c"># Copy parameter values from the inferred trace (`trace`)</span>
     <span class="c"># into a fresh set of constraints.</span>
@@ -723,7 +723,7 @@ parameter addresses is an argument (<code class="language-plaintext highlighter-
     <span class="x">(</span><span class="n">new_trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="n">new_xs</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">)</span>
     
     <span class="c"># Pull out the y-values and return them.</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">new_trace</span><span class="x">[(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">new_xs</span><span class="x">)]</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">new_trace</span><span class="x">[(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">new_xs</span><span class="x">)]</span>
     <span class="k">return</span> <span class="n">ys</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
@@ -731,23 +731,23 @@ parameter addresses is an argument (<code class="language-plaintext highlighter-
 <p>To illustrate, we call the function above given the previous trace (which
 constrained slope and intercept to be zero).</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">predict_new_data</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">trace</span><span class="x">,</span> <span class="x">[</span><span class="mf">1.</span><span class="x">,</span> <span class="mf">2.</span><span class="x">,</span> <span class="mf">3.</span><span class="x">],</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">])</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">predict_new_data</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">trace</span><span class="x">,</span> <span class="x">[</span><span class="mf">1.</span><span class="x">,</span> <span class="mf">2.</span><span class="x">,</span> <span class="mf">3.</span><span class="x">],</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">])</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3-element Vector{Float64}:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3-element Vector{Float64}:
   0.02694273341948937
  -0.05578345643577398
   0.0031286541463625053
 </code></pre></div></div>
 
 <p>The cell below defines a function that first performs inference on an
-observed data set <code class="language-plaintext highlighter-rouge">(xs, ys)</code>, and then runs <code class="language-plaintext highlighter-rouge">predict_new_data</code> to generate
-predicted y-coordinates. It repeats this process <code class="language-plaintext highlighter-rouge">num_traces</code> times, and
+observed data set <code class="highlighter-rouge">(xs, ys)</code>, and then runs <code class="highlighter-rouge">predict_new_data</code> to generate
+predicted y-coordinates. It repeats this process <code class="highlighter-rouge">num_traces</code> times, and
 returns a vector of the resulting y-coordinate vectors.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> infer_and_predict</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">param_addrs</span><span class="x">,</span> <span class="n">num_traces</span><span class="x">,</span> <span class="n">amount_of_computation</span><span class="x">)</span>
     <span class="n">pred_ys</span> <span class="o">=</span> <span class="x">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_traces</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_traces</span>
         <span class="n">trace</span> <span class="o">=</span> <span class="n">do_inference</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">amount_of_computation</span><span class="x">)</span>
         <span class="n">push!</span><span class="x">(</span><span class="n">pred_ys</span><span class="x">,</span> <span class="n">predict_new_data</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="n">trace</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">param_addrs</span><span class="x">))</span>
     <span class="k">end</span>
@@ -755,22 +755,22 @@ returns a vector of the resulting y-coordinate vectors.</p>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>To illustrate, we generate predictions at <code class="language-plaintext highlighter-rouge">[1., 2., 3.]</code> given one (approximate) posterior
+<p>To illustrate, we generate predictions at <code class="highlighter-rouge">[1., 2., 3.]</code> given one (approximate) posterior
 trace.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="x">[</span><span class="mf">1.</span><span class="x">,</span> <span class="mf">2.</span><span class="x">,</span> <span class="mf">3.</span><span class="x">],</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="x">[</span><span class="mf">1.</span><span class="x">,</span> <span class="mf">2.</span><span class="x">,</span> <span class="mf">3.</span><span class="x">],</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">1</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1-element Vector{Any}:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1-element Vector{Any}:
  [1.0032271405440183, -0.13506083352207435, -0.9583356345851033]
 </code></pre></div></div>
 
-<p>Finally, we define a cell that plots the observed data set <code class="language-plaintext highlighter-rouge">(xs, ys)</code> as red dots, and the predicted data as small black dots.</p>
+<p>Finally, we define a cell that plots the observed data set <code class="highlighter-rouge">(xs, ys)</code> as red dots, and the predicted data as small black dots.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">;</span> <span class="n">title</span><span class="o">=</span><span class="s">"predictions"</span><span class="x">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">scatter</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="s">"observed data"</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="x">)</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">pred_ys_single</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">pred_ys</span><span class="x">)</span>
-        <span class="n">scatter!</span><span class="x">(</span><span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys_single</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="s">"predictions"</span> <span class="o">:</span> <span class="nb">nothing</span><span class="x">)</span>
+        <span class="n">scatter!</span><span class="x">(</span><span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys_single</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="s">"predictions"</span> <span class="x">:</span> <span class="n">nothing</span><span class="x">)</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">fig</span>
 <span class="k">end</span><span class="x">;</span>
@@ -790,7 +790,7 @@ trace.</p>
 
 <p>We generate and plot the predicted data:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
 <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -803,7 +803,7 @@ trace.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ys_noisy</span> <span class="o">=</span> <span class="x">[</span><span class="mf">5.092</span><span class="x">,</span> <span class="mf">4.781</span><span class="x">,</span> <span class="mf">2.46815</span><span class="x">,</span> <span class="mf">1.23047</span><span class="x">,</span> <span class="mf">0.903318</span><span class="x">,</span> <span class="mf">1.11819</span><span class="x">,</span> <span class="mf">2.10808</span><span class="x">,</span> <span class="mf">1.09198</span><span class="x">,</span> <span class="mf">0.0203789</span><span class="x">,</span> <span class="o">-</span><span class="mf">2.05068</span><span class="x">,</span> <span class="mf">2.66031</span><span class="x">];</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
 <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -811,30 +811,30 @@ trace.</p>
 
 <p>It looks like the generated data is less noisy than the observed data in the regime where data was observed, and it looks like the forecasted data is too overconfident. This is a sign that our model is mis-specified. In our case, this is because we have assumed that the noise has value 0.1. However, the actual noise in the data appears to be much larger. We can correct this by making the noise a random choice as well and inferring its value along with the other parameters.</p>
 
-<p>We first write a new version of the line model that samples a random choice for the noise from a <code class="language-plaintext highlighter-rouge">gamma(1, 1)</code> prior distribution.</p>
+<p>We first write a new version of the line model that samples a random choice for the noise from a <code class="highlighter-rouge">gamma(1, 1)</code> prior distribution.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> line_model_fancy</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
-    <span class="n">slope</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">slope</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
-    <span class="n">intercept</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">intercept</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> line_model_fancy</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="x">({:</span><span class="n">slope</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="n">intercept</span> <span class="o">=</span> <span class="x">({:</span><span class="n">intercept</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
     
     <span class="k">function</span><span class="nf"> y</span><span class="x">(</span><span class="n">x</span><span class="x">)</span>
         <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">intercept</span>
     <span class="k">end</span>
     
-    <span class="n">noise</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">noise</span><span class="x">}</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="x">({:</span><span class="n">noise</span><span class="x">}</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">intercept</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="x">{(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">intercept</span><span class="x">,</span> <span class="n">noise</span><span class="x">)</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">y</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>Then, we compare the predictions using inference of the unmodified and modified models on the <code class="language-plaintext highlighter-rouge">ys</code> data set:</p>
+<p>Then, we compare the predictions using inference of the unmodified and modified models on the <code class="highlighter-rouge">ys</code> data set:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
 <span class="n">fixed_noise_plot</span> <span class="o">=</span> <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">;</span> <span class="n">title</span><span class="o">=</span><span class="s">"fixed noise"</span><span class="x">)</span>
 
-<span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model_fancy</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">,</span> <span class="o">:</span><span class="n">noise</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span>
+<span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model_fancy</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">,</span> <span class="x">:</span><span class="n">noise</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span>
 <span class="n">inferred_noise_plot</span> <span class="o">=</span> <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">;</span> <span class="n">title</span><span class="o">=</span><span class="s">"inferred noise"</span><span class="x">)</span>
 
 <span class="n">plot</span><span class="x">(</span><span class="n">fixed_noise_plot</span><span class="x">,</span> <span class="n">inferred_noise_plot</span><span class="x">)</span>
@@ -844,13 +844,13 @@ trace.</p>
 
 <p>Notice that there is more uncertainty in the predictions made using the modified model.</p>
 
-<p>We also compare the predictions using inference of the unmodified and modified models on the <code class="language-plaintext highlighter-rouge">ys_noisy</code> data set:</p>
+<p>We also compare the predictions using inference of the unmodified and modified models on the <code class="highlighter-rouge">ys_noisy</code> data set:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">1000</span><span class="x">)</span>
 <span class="n">fixed_noise_plot</span> <span class="o">=</span> <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">;</span> <span class="n">title</span><span class="o">=</span><span class="s">"fixed noise"</span><span class="x">)</span>
 
 
-<span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model_fancy</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[</span><span class="o">:</span><span class="n">slope</span><span class="x">,</span> <span class="o">:</span><span class="n">intercept</span><span class="x">,</span> <span class="o">:</span><span class="n">noise</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span>
+<span class="n">pred_ys</span> <span class="o">=</span> <span class="n">infer_and_predict</span><span class="x">(</span><span class="n">line_model_fancy</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="x">[:</span><span class="n">slope</span><span class="x">,</span> <span class="x">:</span><span class="n">intercept</span><span class="x">,</span> <span class="x">:</span><span class="n">noise</span><span class="x">],</span> <span class="mi">20</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span>
 <span class="n">inferred_noise_plot</span> <span class="o">=</span> <span class="n">plot_predictions</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys_noisy</span><span class="x">,</span> <span class="n">new_xs</span><span class="x">,</span> <span class="n">pred_ys</span><span class="x">;</span> <span class="n">title</span><span class="o">=</span><span class="s">"inferred noise"</span><span class="x">)</span>
 
 <span class="n">plot</span><span class="x">(</span><span class="n">fixed_noise_plot</span><span class="x">,</span> <span class="n">inferred_noise_plot</span><span class="x">)</span>
@@ -863,18 +863,18 @@ trace.</p>
 <hr />
 <h3 id="exercise-4">Exercise</h3>
 
-<p>Write a modified version of the sine model that makes noise into a random choice. Compare the predicted data with the observed data using <code class="language-plaintext highlighter-rouge">infer_and_predict</code> and <code class="language-plaintext highlighter-rouge">plot_predictions</code> for the unmodified and modified models, and for the <code class="language-plaintext highlighter-rouge">ys_sine</code> and <code class="language-plaintext highlighter-rouge">ys_noisy</code> data sets. Discuss the results. Experiment with the amount of inference computation used. The amount of inference computation will need to be higher for the model with the noise as a random choice.</p>
+<p>Write a modified version of the sine model that makes noise into a random choice. Compare the predicted data with the observed data using <code class="highlighter-rouge">infer_and_predict</code> and <code class="highlighter-rouge">plot_predictions</code> for the unmodified and modified models, and for the <code class="highlighter-rouge">ys_sine</code> and <code class="highlighter-rouge">ys_noisy</code> data sets. Discuss the results. Experiment with the amount of inference computation used. The amount of inference computation will need to be higher for the model with the noise as a random choice.</p>
 
 <p>We have provided you with starter code:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> sine_model_fancy</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> sine_model_fancy</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
 
     <span class="c"># &lt; your code here &gt;</span>
 
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">0.1</span><span class="x">)</span> <span class="c"># &lt; edit this line &gt;</span>
+        <span class="x">{(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">0.1</span><span class="x">)</span> <span class="c"># &lt; edit this line &gt;</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="nb">nothing</span>
+    <span class="k">return</span> <span class="n">nothing</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
@@ -932,32 +932,32 @@ data. This is called <em>model selection</em>.</p>
 
 <ul>
   <li>
-    <p><strong>(NOT RECOMMENDED)</strong> using regular Julia function call syntax: <code class="language-plaintext highlighter-rouge">f(x)</code></p>
+    <p><strong>(NOT RECOMMENDED)</strong> using regular Julia function call syntax: <code class="highlighter-rouge">f(x)</code></p>
   </li>
   <li>
-    <p>using the <code class="language-plaintext highlighter-rouge">~</code> snytax with an address for the call: <code class="language-plaintext highlighter-rouge">{addr} ~ f(x)</code></p>
+    <p>using the <code class="highlighter-rouge">~</code> snytax with an address for the call: <code class="highlighter-rouge">{addr} ~ f(x)</code></p>
   </li>
   <li>
-    <p>using the <code class="language-plaintext highlighter-rouge">~</code> syntax with a wildcard address: <code class="language-plaintext highlighter-rouge">{*} ~ f(x)</code></p>
+    <p>using the <code class="highlighter-rouge">~</code> syntax with a wildcard address: <code class="highlighter-rouge">{*} ~ f(x)</code></p>
   </li>
 </ul>
 
 <p>When invoking using regular function call syntax, the random choices made by
 the callee function are not traced at all, and Gen cannot reason about them during inference. 
-When invoking using <code class="language-plaintext highlighter-rouge">~</code> with a <em>wildcard</em> address (<code class="language-plaintext highlighter-rouge">{*} ~ f(x)</code>), the random choices of the 
-callee function are imported directly into the caller’s trace. So, for example, if <code class="language-plaintext highlighter-rouge">f</code> makes a choice
-called <code class="language-plaintext highlighter-rouge">:f_choice</code>, then the caller’s trace will have a choice called <code class="language-plaintext highlighter-rouge">:f_choice</code> too. 
-Note that a downside of this is that if <code class="language-plaintext highlighter-rouge">f</code> is called <em>twice</em> by the same caller, then the two 
-choices called <code class="language-plaintext highlighter-rouge">:f_choice</code> will clash, leading to an error.
-In this case, it is best to provide an address (<code class="language-plaintext highlighter-rouge">{addr} ~ f(x)</code>): <code class="language-plaintext highlighter-rouge">f</code>’s random choices will
-be placed under the <em>namespace</em> <code class="language-plaintext highlighter-rouge">addr</code>.</p>
+When invoking using <code class="highlighter-rouge">~</code> with a <em>wildcard</em> address (<code class="highlighter-rouge">{*} ~ f(x)</code>), the random choices of the 
+callee function are imported directly into the caller’s trace. So, for example, if <code class="highlighter-rouge">f</code> makes a choice
+called <code class="highlighter-rouge">:f_choice</code>, then the caller’s trace will have a choice called <code class="highlighter-rouge">:f_choice</code> too. 
+Note that a downside of this is that if <code class="highlighter-rouge">f</code> is called <em>twice</em> by the same caller, then the two 
+choices called <code class="highlighter-rouge">:f_choice</code> will clash, leading to an error.
+In this case, it is best to provide an address (<code class="highlighter-rouge">{addr} ~ f(x)</code>): <code class="highlighter-rouge">f</code>’s random choices will
+be placed under the <em>namespace</em> <code class="highlighter-rouge">addr</code>.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> foo</span><span class="x">()</span>
-    <span class="x">{</span><span class="o">:</span><span class="n">y</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="x">{:</span><span class="n">y</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
 <span class="k">end</span>
 
 <span class="nd">@gen</span> <span class="k">function</span><span class="nf"> bar</span><span class="x">()</span>
-    <span class="x">{</span><span class="o">:</span><span class="n">x</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">)</span>
+    <span class="x">{:</span><span class="n">x</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">)</span>
     <span class="c"># Call `foo` with a wildcard address.</span>
     <span class="c"># Its choices (:y) will appear directly</span>
     <span class="c"># within the trace of `bar`.</span>
@@ -965,34 +965,34 @@ be placed under the <em>namespace</em> <code class="language-plaintext highlight
 <span class="k">end</span>
 
 <span class="nd">@gen</span> <span class="k">function</span><span class="nf"> bar_using_namespace</span><span class="x">()</span>
-    <span class="x">{</span><span class="o">:</span><span class="n">x</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">)</span>
+    <span class="x">{:</span><span class="n">x</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">)</span>
     <span class="c"># Call `foo` with the address `:z`.</span>
     <span class="c"># The internal choice `:y` of `foo`</span>
     <span class="c"># will appear in our trace at the</span>
     <span class="c"># hierarchical address `:z =&gt; :y`.</span>
-    <span class="x">{</span><span class="o">:</span><span class="n">z</span><span class="x">}</span> <span class="o">~</span> <span class="n">foo</span><span class="x">()</span>
+    <span class="x">{:</span><span class="n">z</span><span class="x">}</span> <span class="o">~</span> <span class="n">foo</span><span class="x">()</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We first show the addresses sampled by <code class="language-plaintext highlighter-rouge">bar</code>:</p>
+<p>We first show the addresses sampled by <code class="highlighter-rouge">bar</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">bar</span><span class="x">,</span> <span class="x">())</span>
 <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :y : 0.6475752978557953
 │
 └── :x : true
 </code></pre></div></div>
 
-<p>And the addresses sampled by <code class="language-plaintext highlighter-rouge">bar_using_namespace</code>:</p>
+<p>And the addresses sampled by <code class="highlighter-rouge">bar_using_namespace</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">bar_using_namespace</span><span class="x">,</span> <span class="x">())</span>
 <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :x : true
 │
 └── :z
@@ -1000,50 +1000,50 @@ be placed under the <em>namespace</em> <code class="language-plaintext highlight
     └── :y : 0.3801328264226968
 </code></pre></div></div>
 
-<p>Using <code class="language-plaintext highlighter-rouge">{addr} ~ f()</code>, with a namespace, can help avoid address collisions for complex models.</p>
+<p>Using <code class="highlighter-rouge">{addr} ~ f()</code>, with a namespace, can help avoid address collisions for complex models.</p>
 
-<p>A hierarchical address is represented as a Julia <code class="language-plaintext highlighter-rouge">Pair</code>, where the first element of the pair is the first element of the address and the second element of the pair is the rest of the address:</p>
+<p>A hierarchical address is represented as a Julia <code class="highlighter-rouge">Pair</code>, where the first element of the pair is the first element of the address and the second element of the pair is the rest of the address:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="kt">Pair</span><span class="x">(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">)]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="n">Pair</span><span class="x">(:</span><span class="n">z</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">)]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.3801328264226968
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.3801328264226968
 </code></pre></div></div>
 
-<p>Julia uses the <code class="language-plaintext highlighter-rouge">=&gt;</code> operator as a shorthand for the <code class="language-plaintext highlighter-rouge">Pair</code> constructor, so we can access choices at hierarchical addresses like:</p>
+<p>Julia uses the <code class="highlighter-rouge">=&gt;</code> operator as a shorthand for the <code class="highlighter-rouge">Pair</code> constructor, so we can access choices at hierarchical addresses like:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">z</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">y</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[:</span><span class="n">z</span> <span class="o">=&gt;</span> <span class="x">:</span><span class="n">y</span><span class="x">]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.3801328264226968
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.3801328264226968
 </code></pre></div></div>
 
-<p>If we have a hierarchical address with more than two elements, we can construct the address by chaining the <code class="language-plaintext highlighter-rouge">=&gt;</code> operator:</p>
+<p>If we have a hierarchical address with more than two elements, we can construct the address by chaining the <code class="highlighter-rouge">=&gt;</code> operator:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> baz</span><span class="x">()</span>
-    <span class="x">{</span><span class="o">:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bar_using_namespace</span><span class="x">()</span>
+    <span class="x">{:</span><span class="n">a</span><span class="x">}</span> <span class="o">~</span> <span class="n">bar_using_namespace</span><span class="x">()</span>
 <span class="k">end</span>
 
 <span class="n">trace</span> <span class="o">=</span> <span class="n">simulate</span><span class="x">(</span><span class="n">baz</span><span class="x">,</span> <span class="x">())</span>
 
-<span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">a</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">z</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">y</span><span class="x">]</span>
+<span class="n">trace</span><span class="x">[:</span><span class="n">a</span> <span class="o">=&gt;</span> <span class="x">:</span><span class="n">z</span> <span class="o">=&gt;</span> <span class="x">:</span><span class="n">y</span><span class="x">]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.5622991768999647
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.5622991768999647
 </code></pre></div></div>
 
-<p>Note that the <code class="language-plaintext highlighter-rouge">=&gt;</code> operator associated right, so this is equivalent to:</p>
+<p>Note that the <code class="highlighter-rouge">=&gt;</code> operator associated right, so this is equivalent to:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="kt">Pair</span><span class="x">(</span><span class="o">:</span><span class="n">a</span><span class="x">,</span> <span class="kt">Pair</span><span class="x">(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="o">:</span><span class="n">y</span><span class="x">))]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span><span class="x">[</span><span class="n">Pair</span><span class="x">(:</span><span class="n">a</span><span class="x">,</span> <span class="n">Pair</span><span class="x">(:</span><span class="n">z</span><span class="x">,</span> <span class="x">:</span><span class="n">y</span><span class="x">))]</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.5622991768999647
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.5622991768999647
 </code></pre></div></div>
 
 <p>Now, we write a generative function that combines the line and sine models. It makes a Bernoulli random choice (e.g. a coin flip that returns true or false) that determines which of the two models will generate the data.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> combined_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
-    <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">is_line</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> combined_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="k">if</span> <span class="x">({:</span><span class="n">is_line</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.5</span><span class="x">))</span>
         <span class="c"># Call line_model_fancy on xs, and import</span>
         <span class="c"># its random choices directly into our trace.</span>
         <span class="k">return</span> <span class="x">({</span><span class="o">*</span><span class="x">}</span> <span class="o">~</span> <span class="n">line_model_fancy</span><span class="x">(</span><span class="n">xs</span><span class="x">))</span>
@@ -1057,32 +1057,32 @@ be placed under the <em>namespace</em> <code class="language-plaintext highlight
 
 <p>We visualize some traces, and see that sometimes it samples linear data and other times sinusoidal data.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs</span><span class="x">,))</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_123_0.svg" alt="svg" /></p>
 
-<p>We run inference using this combined model on the <code class="language-plaintext highlighter-rouge">ys</code> data set and the <code class="language-plaintext highlighter-rouge">ys_sine</code> data set.</p>
+<p>We run inference using this combined model on the <code class="highlighter-rouge">ys</code> data set and the <code class="highlighter-rouge">ys_sine</code> data set.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">10</span><span class="x">];</span>
 <span class="n">linear_dataset_plot</span> <span class="o">=</span> <span class="n">overlay</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
-<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_sine</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="x">];</span>
+<span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">combined_model</span><span class="x">,</span> <span class="n">xs</span><span class="x">,</span> <span class="n">ys_sine</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">10</span><span class="x">];</span>
 <span class="n">sine_dataset_plot</span> <span class="o">=</span> <span class="n">overlay</span><span class="x">(</span><span class="n">render_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 <span class="n">Plots</span><span class="o">.</span><span class="n">plot</span><span class="x">(</span><span class="n">linear_dataset_plot</span><span class="x">,</span> <span class="n">sine_dataset_plot</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_125_0.svg" alt="svg" /></p>
 
-<p>The results should show that the line model was inferred for the <code class="language-plaintext highlighter-rouge">ys</code> data set, and the sine wave model was inferred for the <code class="language-plaintext highlighter-rouge">ys_sine</code> data set.</p>
+<p>The results should show that the line model was inferred for the <code class="highlighter-rouge">ys</code> data set, and the sine wave model was inferred for the <code class="highlighter-rouge">ys_sine</code> data set.</p>
 
 <hr />
 
 <h3 id="exercise-5">Exercise</h3>
 
-<p>Construct a data set for which it is ambiguous whether the line or sine wave model is best. Visualize the inferred traces using <code class="language-plaintext highlighter-rouge">render_combined</code> to illustrate the ambiguity. Write a program that takes the data set and returns an estimate of the posterior probability that the data was generated by the sine wave model, and run it on your data set.</p>
+<p>Construct a data set for which it is ambiguous whether the line or sine wave model is best. Visualize the inferred traces using <code class="highlighter-rouge">render_combined</code> to illustrate the ambiguity. Write a program that takes the data set and returns an estimate of the posterior probability that the data was generated by the sine wave model, and run it on your data set.</p>
 
-<p>Hint: To estimate the posterior probability that the data was generated by the sine wave model, run the inference program many times to compute a large number of traces, and then compute the fraction of those traces in which <code class="language-plaintext highlighter-rouge">:is_line</code> is false.</p>
+<p>Hint: To estimate the posterior probability that the data was generated by the sine wave model, run the inference program many times to compute a large number of traces, and then compute the fraction of those traces in which <code class="highlighter-rouge">:is_line</code> is false.</p>
 
 <hr />
 
@@ -1099,11 +1099,11 @@ nonparametric</em> model.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">xs_dense</span> <span class="o">=</span> <span class="n">collect</span><span class="x">(</span><span class="n">range</span><span class="x">(</span><span class="o">-</span><span class="mi">5</span><span class="x">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">5</span><span class="x">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="x">))</span>
 <span class="n">ys_simple</span> <span class="o">=</span> <span class="n">fill</span><span class="x">(</span><span class="mf">1.</span><span class="x">,</span> <span class="n">length</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">))</span> <span class="o">.+</span> <span class="n">randn</span><span class="x">(</span><span class="n">length</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">))</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="n">ys_complex</span> <span class="o">=</span> <span class="x">[</span><span class="kt">Int</span><span class="x">(</span><span class="n">floor</span><span class="x">(</span><span class="n">abs</span><span class="x">(</span><span class="n">x</span><span class="o">/</span><span class="mi">3</span><span class="x">)))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">xs_dense</span><span class="x">]</span> <span class="o">.+</span> <span class="n">randn</span><span class="x">(</span><span class="n">length</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">))</span> <span class="o">*</span> <span class="mf">0.1</span><span class="x">;</span>
+<span class="n">ys_complex</span> <span class="o">=</span> <span class="x">[</span><span class="kt">Int</span><span class="x">(</span><span class="n">floor</span><span class="x">(</span><span class="n">abs</span><span class="x">(</span><span class="n">x</span><span class="o">/</span><span class="mi">3</span><span class="x">)))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">2</span> <span class="x">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">xs_dense</span><span class="x">]</span> <span class="o">.+</span> <span class="n">randn</span><span class="x">(</span><span class="n">length</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">))</span> <span class="o">*</span> <span class="mf">0.1</span><span class="x">;</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">simple_plot</span> <span class="o">=</span> <span class="n">scatter</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_simple</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"ys-simple"</span><span class="x">,</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="mi">3</span><span class="x">))</span>
-<span class="n">complex_plot</span> <span class="o">=</span> <span class="n">scatter</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_complex</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"ys-complex"</span><span class="x">,</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="mi">3</span><span class="x">))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">simple_plot</span> <span class="o">=</span> <span class="n">scatter</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_simple</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"ys-simple"</span><span class="x">,</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="mi">3</span><span class="x">))</span>
+<span class="n">complex_plot</span> <span class="o">=</span> <span class="n">scatter</span><span class="x">(</span><span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_complex</span><span class="x">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"black"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"ys-complex"</span><span class="x">,</span> <span class="n">ylim</span><span class="o">=</span><span class="x">(</span><span class="o">-</span><span class="mi">1</span><span class="x">,</span> <span class="mi">3</span><span class="x">))</span>
 <span class="n">Plots</span><span class="o">.</span><span class="n">plot</span><span class="x">(</span><span class="n">simple_plot</span><span class="x">,</span> <span class="n">complex_plot</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -1117,54 +1117,54 @@ To do this, we will recursively partition the interval into regions. We
 define a Julia data structure that represents a binary tree of intervals;
 each leaf node represents a region in which the function is constant.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span><span class="nc"> Interval</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">struct</span> <span class="n">Interval</span>
     <span class="n">l</span><span class="o">::</span><span class="kt">Float64</span>
     <span class="n">u</span><span class="o">::</span><span class="kt">Float64</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">abstract type</span><span class="nc"> Node</span> <span class="k">end</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">abstract</span><span class="nc"> type</span> <span class="n">Node</span> <span class="k">end</span>
     
-<span class="k">struct</span><span class="nc"> InternalNode</span> <span class="o">&lt;:</span> <span class="n">Node</span>
+<span class="n">struct</span> <span class="n">InternalNode</span> <span class="o">&lt;:</span> <span class="n">Node</span>
     <span class="n">left</span><span class="o">::</span><span class="n">Node</span>
     <span class="n">right</span><span class="o">::</span><span class="n">Node</span>
     <span class="n">interval</span><span class="o">::</span><span class="n">Interval</span>
 <span class="k">end</span>
 
-<span class="k">struct</span><span class="nc"> LeafNode</span> <span class="o">&lt;:</span> <span class="n">Node</span>
+<span class="n">struct</span> <span class="n">LeafNode</span> <span class="o">&lt;:</span> <span class="n">Node</span>
     <span class="n">value</span><span class="o">::</span><span class="kt">Float64</span>
     <span class="n">interval</span><span class="o">::</span><span class="n">Interval</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
-<p>We now write a generative function that randomly creates such a tree. Note the use of recursion in this function to create arbitrarily large trees representing arbitrarily many changepoints. Also note that we assign the address namespaces <code class="language-plaintext highlighter-rouge">:left</code> and <code class="language-plaintext highlighter-rouge">:right</code> to the calls made for the two recursive calls to <code class="language-plaintext highlighter-rouge">generate_segments</code>.</p>
+<p>We now write a generative function that randomly creates such a tree. Note the use of recursion in this function to create arbitrarily large trees representing arbitrarily many changepoints. Also note that we assign the address namespaces <code class="highlighter-rouge">:left</code> and <code class="highlighter-rouge">:right</code> to the calls made for the two recursive calls to <code class="highlighter-rouge">generate_segments</code>.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> generate_segments</span><span class="x">(</span><span class="n">l</span><span class="o">::</span><span class="kt">Float64</span><span class="x">,</span> <span class="n">u</span><span class="o">::</span><span class="kt">Float64</span><span class="x">)</span>
     <span class="n">interval</span> <span class="o">=</span> <span class="n">Interval</span><span class="x">(</span><span class="n">l</span><span class="x">,</span> <span class="n">u</span><span class="x">)</span>
-    <span class="k">if</span> <span class="x">({</span><span class="o">:</span><span class="n">isleaf</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.7</span><span class="x">))</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">value</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
+    <span class="k">if</span> <span class="x">({:</span><span class="n">isleaf</span><span class="x">}</span> <span class="o">~</span> <span class="n">bernoulli</span><span class="x">(</span><span class="mf">0.7</span><span class="x">))</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="x">({:</span><span class="n">value</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mi">0</span><span class="x">,</span> <span class="mi">1</span><span class="x">))</span>
         <span class="k">return</span> <span class="n">LeafNode</span><span class="x">(</span><span class="n">value</span><span class="x">,</span> <span class="n">interval</span><span class="x">)</span>
     <span class="k">else</span>
-        <span class="n">frac</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">frac</span><span class="x">}</span> <span class="o">~</span> <span class="n">beta</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
+        <span class="n">frac</span> <span class="o">=</span> <span class="x">({:</span><span class="n">frac</span><span class="x">}</span> <span class="o">~</span> <span class="n">beta</span><span class="x">(</span><span class="mi">2</span><span class="x">,</span> <span class="mi">2</span><span class="x">))</span>
         <span class="n">mid</span>  <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="x">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">l</span><span class="x">)</span> <span class="o">*</span> <span class="n">frac</span>
         <span class="c"># Call generate_segments recursively!</span>
         <span class="c"># Because we will call it twice -- one for the left </span>
         <span class="c"># child and one for the right child -- we use</span>
         <span class="c"># addresses to distinguish the calls.</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">left</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">l</span><span class="x">,</span> <span class="n">mid</span><span class="x">))</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">right</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">mid</span><span class="x">,</span> <span class="n">u</span><span class="x">))</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="x">({:</span><span class="n">left</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">l</span><span class="x">,</span> <span class="n">mid</span><span class="x">))</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="x">({:</span><span class="n">right</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">mid</span><span class="x">,</span> <span class="n">u</span><span class="x">))</span>
         <span class="k">return</span> <span class="n">InternalNode</span><span class="x">(</span><span class="n">left</span><span class="x">,</span> <span class="n">right</span><span class="x">,</span> <span class="n">interval</span><span class="x">)</span>
     <span class="k">end</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We also define some helper functions to visualize traces of the <code class="language-plaintext highlighter-rouge">generate_segments</code> function.</p>
+<p>We also define some helper functions to visualize traces of the <code class="highlighter-rouge">generate_segments</code> function.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_node!</span><span class="x">(</span><span class="n">node</span><span class="o">::</span><span class="n">LeafNode</span><span class="x">)</span>
-    <span class="n">plot!</span><span class="x">([</span><span class="n">node</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">l</span><span class="x">,</span> <span class="n">node</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">u</span><span class="x">],</span> <span class="x">[</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="x">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="x">],</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_node</span><span class="o">!</span><span class="x">(</span><span class="n">node</span><span class="o">::</span><span class="n">LeafNode</span><span class="x">)</span>
+    <span class="n">plot!</span><span class="x">([</span><span class="n">node</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">l</span><span class="x">,</span> <span class="n">node</span><span class="o">.</span><span class="n">interval</span><span class="o">.</span><span class="n">u</span><span class="x">],</span> <span class="x">[</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="x">,</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="x">],</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="x">)</span>
 <span class="k">end</span>
 
-<span class="k">function</span><span class="nf"> render_node!</span><span class="x">(</span><span class="n">node</span><span class="o">::</span><span class="n">InternalNode</span><span class="x">)</span>
+<span class="k">function</span><span class="nf"> render_node</span><span class="o">!</span><span class="x">(</span><span class="n">node</span><span class="o">::</span><span class="n">InternalNode</span><span class="x">)</span>
     <span class="n">render_node!</span><span class="x">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="x">)</span>
     <span class="n">render_node!</span><span class="x">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="x">)</span>
 <span class="k">end</span><span class="x">;</span>
@@ -1180,7 +1180,7 @@ each leaf node represents a region in which the function is constant.</p>
 
 <p>We generate 12 traces from this function and visualize them below. We plot the piecewise constant function that was sampled by each run of the generative function. Different constant segments are shown in different colors. Run the cell a few times to get a better sense of the distribution on functions that is represented by the generative function.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">generate_segments</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">1.</span><span class="x">))</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">generate_segments</span><span class="x">,</span> <span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">1.</span><span class="x">))</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">]</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_segments_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -1207,33 +1207,33 @@ each leaf node represents a region in which the function is constant.</p>
 <span class="k">end</span>
 
 <span class="c"># Our full model</span>
-<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> changepoint_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">tree</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">minimum</span><span class="x">(</span><span class="n">xs</span><span class="x">),</span> <span class="n">maximum</span><span class="x">(</span><span class="n">xs</span><span class="x">)))</span>
-    <span class="n">noise</span> <span class="o">=</span> <span class="x">({</span><span class="o">:</span><span class="n">noise</span><span class="x">}</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">))</span>
+<span class="nd">@gen</span> <span class="k">function</span><span class="nf"> changepoint_model</span><span class="x">(</span><span class="n">xs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">})</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="x">({:</span><span class="n">tree</span><span class="x">}</span> <span class="o">~</span> <span class="n">generate_segments</span><span class="x">(</span><span class="n">minimum</span><span class="x">(</span><span class="n">xs</span><span class="x">),</span> <span class="n">maximum</span><span class="x">(</span><span class="n">xs</span><span class="x">)))</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="x">({:</span><span class="n">noise</span><span class="x">}</span> <span class="o">~</span> <span class="n">gamma</span><span class="x">(</span><span class="mf">0.5</span><span class="x">,</span> <span class="mf">0.5</span><span class="x">))</span>
     <span class="k">for</span> <span class="x">(</span><span class="n">i</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span> <span class="k">in</span> <span class="n">enumerate</span><span class="x">(</span><span class="n">xs</span><span class="x">)</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">get_value_at</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">node</span><span class="x">),</span> <span class="n">noise</span><span class="x">)</span>
+        <span class="x">{(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">get_value_at</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">node</span><span class="x">),</span> <span class="n">noise</span><span class="x">)</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">node</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>We write a visualization for <code class="language-plaintext highlighter-rouge">changepoint_model</code> below:</p>
+<p>We write a visualization for <code class="highlighter-rouge">changepoint_model</code> below:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_changepoint_model_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render_changepoint_model_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">)</span>
     <span class="n">xs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)[</span><span class="mi">1</span><span class="x">]</span>
     <span class="n">node</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">render_segments_trace</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">xlim</span><span class="o">=</span><span class="x">(</span><span class="n">minimum</span><span class="x">(</span><span class="n">xs</span><span class="x">),</span> <span class="n">maximum</span><span class="x">(</span><span class="n">xs</span><span class="x">)))</span>
     <span class="n">render_node!</span><span class="x">(</span><span class="n">node</span><span class="x">)</span>
     <span class="k">if</span> <span class="n">show_data</span>
-        <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">trace</span><span class="x">[(</span><span class="o">:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)]</span>
-        <span class="n">scatter!</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">c</span><span class="o">=</span><span class="s">"gray"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="x">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="x">[</span><span class="n">trace</span><span class="x">[(:</span><span class="n">y</span><span class="x">,</span> <span class="n">i</span><span class="x">)]</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">xs</span><span class="x">)]</span>
+        <span class="n">scatter!</span><span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">,</span> <span class="n">c</span><span class="o">=</span><span class="s">"gray"</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span><span class="x">)</span>
     <span class="k">end</span>
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
 <p>Finally, we generate some simulated data sets and visualize them on top of the underlying piecewise constant function from which they were generated:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs_dense</span><span class="x">,))</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">]</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="x">(</span><span class="n">xs_dense</span><span class="x">,))</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">]</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_changepoint_model_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -1243,7 +1243,7 @@ each leaf node represents a region in which the function is constant.</p>
 
 <p>Now we perform inference for the simple data set:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_simple</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_simple</span><span class="x">,</span> <span class="mi">10000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_changepoint_model_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -1255,7 +1255,7 @@ each leaf node represents a region in which the function is constant.</p>
 
 <h5 id="caveat-the-following-cell-may-run-for-2-3-minutes">Caveat: the following cell may run for 2-3 minutes.</h5>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_complex</span><span class="x">,</span> <span class="mi">100000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">12</span><span class="x">];</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">traces</span> <span class="o">=</span> <span class="x">[</span><span class="n">do_inference</span><span class="x">(</span><span class="n">changepoint_model</span><span class="x">,</span> <span class="n">xs_dense</span><span class="x">,</span> <span class="n">ys_complex</span><span class="x">,</span> <span class="mi">100000</span><span class="x">)</span> <span class="k">for</span> <span class="n">_</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="mi">12</span><span class="x">];</span>
 <span class="n">grid</span><span class="x">(</span><span class="n">render_changepoint_model_trace</span><span class="x">,</span> <span class="n">traces</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -1266,14 +1266,14 @@ each leaf node represents a region in which the function is constant.</p>
 <hr />
 <h3 id="exercise-6">Exercise</h3>
 <p>Write a function that takes a data set of x- and y-coordinates and plots the histogram of the probability distribution on the number of changepoints.
-Show the results for the <code class="language-plaintext highlighter-rouge">ys_simple</code> and <code class="language-plaintext highlighter-rouge">ys_complex</code> data sets.</p>
+Show the results for the <code class="highlighter-rouge">ys_simple</code> and <code class="highlighter-rouge">ys_complex</code> data sets.</p>
 
-<p>Hint: The return value of <code class="language-plaintext highlighter-rouge">changepoint_model</code> is the tree of <code class="language-plaintext highlighter-rouge">Node</code> values. Walk this tree.</p>
+<p>Hint: The return value of <code class="highlighter-rouge">changepoint_model</code> is the tree of <code class="highlighter-rouge">Node</code> values. Walk this tree.</p>
 
 <hr />
 
 <h3 id="exercise-7">Exercise</h3>
-<p>Write a new version of <code class="language-plaintext highlighter-rouge">changepoint_model</code> that uses <code class="language-plaintext highlighter-rouge">{*} ~ ...</code> without an address to make the recursive calls.</p>
+<p>Write a new version of <code class="highlighter-rouge">changepoint_model</code> that uses <code class="highlighter-rouge">{*} ~ ...</code> without an address to make the recursive calls.</p>
 
 <p>Hint: You will need to guarantee that all addresses are unique. How can you label each node in a binary tree using an integer?</p>
 

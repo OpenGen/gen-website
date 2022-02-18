@@ -110,12 +110,12 @@ We show how Gen’s support for SMC integrates with its support for MCMC, enabli
 “bearings only tracking” problem described in [4].</p>
 
 <p>This notebook will also introduce you to the 
-<a href="https://www.gen.dev/dev/ref/combinators/#Unfold-combinator-1"><code class="language-plaintext highlighter-rouge">Unfold</code></a> combinator, 
+<a href="https://www.gen.dev/dev/ref/combinators/#Unfold-combinator-1"><code class="highlighter-rouge">Unfold</code></a> combinator, 
 which can be used to improve performance of SMC.
-<code class="language-plaintext highlighter-rouge">Unfold</code> is just one example of the levers that Gen provides for
+<code class="highlighter-rouge">Unfold</code> is just one example of the levers that Gen provides for
 improving performance; once you understand it, you can check
 Gen’s documentation to see how similar principles apply to the 
-<a href="https://www.gen.dev/dev/ref/combinators/#Map-combinator-1"><code class="language-plaintext highlighter-rouge">Map</code></a> combinator 
+<a href="https://www.gen.dev/dev/ref/combinators/#Map-combinator-1"><code class="highlighter-rouge">Map</code></a> combinator 
 and to the static DSL. (These features are also covered in the previous tutorial,
 <a href="Scaling%20with%20Combinators%20and%20the%20Static%20Modeling%20Language.ipynb">Scaling with Combinators and the Static Modeling Language</a>.)</p>
 
@@ -137,7 +137,7 @@ and to the static DSL. (These features are also covered in the previous tutorial
 
 <p><strong>Section 4</strong>: <a href="#unfold">Using the unfold combinator to improve performance</a></p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">Plots</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">using</span> <span class="n">Gen</span><span class="x">,</span> <span class="n">Plots</span>
 </code></pre></div></div>
 
 <h2 id="1-implementing-the-generative-model-">1. Implementing the generative model <a name="basic-model"></a></h2>
@@ -158,8 +158,8 @@ to the positive x-axis.</p>
 
 <p>We write the generative model as a generative function below. The function
 first samples the initial state of the ship from a prior distribution, and
-then generates <code class="language-plaintext highlighter-rouge">T</code> successive states in a <code class="language-plaintext highlighter-rouge">for</code> loop. The argument to the
-model (<code class="language-plaintext highlighter-rouge">T</code>) is the number of time steps not including the initial state.</p>
+then generates <code class="highlighter-rouge">T</code> successive states in a <code class="highlighter-rouge">for</code> loop. The argument to the
+model (<code class="highlighter-rouge">T</code>) is the number of time steps not including the initial state.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">)</span> <span class="o">=</span> <span class="n">atan</span><span class="x">(</span><span class="n">y</span><span class="x">,</span> <span class="n">x</span><span class="x">)</span>
 
@@ -168,20 +168,20 @@ model (<code class="language-plaintext highlighter-rouge">T</code>) is the numbe
     <span class="n">measurement_noise</span> <span class="o">=</span> <span class="mf">0.005</span>
     <span class="n">velocity_var</span> <span class="o">=</span> <span class="mf">1e-6</span>
 
-    <span class="n">xs</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
 
     <span class="c"># prior on initial x-coordinate</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">x0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.01</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="x">{:</span><span class="n">x0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.01</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
 
     <span class="c"># prior on initial y-coordinate</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">y0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.95</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="x">{:</span><span class="n">y0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.95</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
 
     <span class="c"># prior on x-component of initial velocity</span>
-    <span class="n">vx</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">vx0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.002</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
+    <span class="n">vx</span> <span class="o">=</span> <span class="x">{:</span><span class="n">vx0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="mf">0.002</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
 
     <span class="c"># prior on y-component of initial velocity</span>
-    <span class="n">vy</span> <span class="o">=</span> <span class="x">{</span><span class="o">:</span><span class="n">vy0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="o">-</span><span class="mf">0.013</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
+    <span class="n">vy</span> <span class="o">=</span> <span class="x">{:</span><span class="n">vy0</span><span class="x">}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="o">-</span><span class="mf">0.013</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">)</span>
 
     <span class="c"># initial bearing measurement</span>
     <span class="n">z0</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">measurement_noise</span><span class="x">)</span>
@@ -191,16 +191,16 @@ model (<code class="language-plaintext highlighter-rouge">T</code>) is the numbe
     <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">y</span>
 
     <span class="c"># generate successive states and measurements</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">T</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">T</span>
 
         <span class="c"># update the state of the point</span>
-        <span class="n">vx</span> <span class="o">=</span> <span class="x">{(</span><span class="o">:</span><span class="n">vx</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vx</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
-        <span class="n">vy</span> <span class="o">=</span> <span class="x">{(</span><span class="o">:</span><span class="n">vy</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vy</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
+        <span class="n">vx</span> <span class="o">=</span> <span class="x">{(:</span><span class="n">vx</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vx</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="x">{(:</span><span class="n">vy</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vy</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
         <span class="n">x</span> <span class="o">+=</span> <span class="n">vx</span>
         <span class="n">y</span> <span class="o">+=</span> <span class="n">vy</span>
 
         <span class="c"># bearing measurement</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">measurement_noise</span><span class="x">)</span>
+        <span class="x">{(:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">measurement_noise</span><span class="x">)</span>
 
         <span class="c"># record position</span>
         <span class="n">xs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">x</span>
@@ -212,50 +212,50 @@ model (<code class="language-plaintext highlighter-rouge">T</code>) is the numbe
 <span class="k">end</span><span class="x">;</span>
 </code></pre></div></div>
 
-<p>Note that the <code class="language-plaintext highlighter-rouge">model</code> function itself uses mutation to evolve the variables <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, <code class="language-plaintext highlighter-rouge">vx</code>, and <code class="language-plaintext highlighter-rouge">vy</code>
-over time. The <code class="language-plaintext highlighter-rouge">{addr} ~ distribution()</code> syntax keeps the names of traced random variables (for which
-each address may only be used once) separate from the names of program variables, like <code class="language-plaintext highlighter-rouge">x</code>, which may
+<p>Note that the <code class="highlighter-rouge">model</code> function itself uses mutation to evolve the variables <code class="highlighter-rouge">x</code>, <code class="highlighter-rouge">y</code>, <code class="highlighter-rouge">vx</code>, and <code class="highlighter-rouge">vy</code>
+over time. The <code class="highlighter-rouge">{addr} ~ distribution()</code> syntax keeps the names of traced random variables (for which
+each address may only be used once) separate from the names of program variables, like <code class="highlighter-rouge">x</code>, which may
 be reassigned multiple times during the function’s execution.</p>
 
-<p>We generate a data set of positions, and observed bearings, by sampling from this model, with <code class="language-plaintext highlighter-rouge">T=50</code>:</p>
+<p>We generate a data set of positions, and observed bearings, by sampling from this model, with <code class="highlighter-rouge">T=50</code>:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="n">Random</span>
 <span class="n">Random</span><span class="o">.</span><span class="n">seed!</span><span class="x">(</span><span class="mi">3</span><span class="x">)</span>
 
 <span class="c"># generate trace with specific initial conditions</span>
 <span class="n">T</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">x0</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">y0</span><span class="x">,</span> <span class="mf">0.95</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">vx0</span><span class="x">,</span> <span class="mf">0.002</span><span class="x">),</span> <span class="x">(</span><span class="o">:</span><span class="n">vy0</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.013</span><span class="x">))</span>
+<span class="n">constraints</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">x0</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">),</span> <span class="x">(:</span><span class="n">y0</span><span class="x">,</span> <span class="mf">0.95</span><span class="x">),</span> <span class="x">(:</span><span class="n">vx0</span><span class="x">,</span> <span class="mf">0.002</span><span class="x">),</span> <span class="x">(:</span><span class="n">vy0</span><span class="x">,</span> <span class="o">-</span><span class="mf">0.013</span><span class="x">))</span>
 <span class="x">(</span><span class="n">trace</span><span class="x">,</span> <span class="n">_</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">generate</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="n">T</span><span class="x">,),</span> <span class="n">constraints</span><span class="x">)</span>
 
 <span class="c"># extract the observed data (zs) from the trace</span>
 <span class="n">choices</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
-<span class="n">zs</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
-<span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">z0</span><span class="x">]</span>
-<span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">T</span>
-    <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)]</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+<span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">z0</span><span class="x">]</span>
+<span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">T</span>
+    <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[(:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)]</span>
 <span class="k">end</span>
 </code></pre></div></div>
 
 <p>We next write a visualization for traces of this model below. It shows the positions and dots and the observed bearings as lines from the origin:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">max_T</span><span class="o">=</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)[</span><span class="mi">1</span><span class="x">],</span> <span class="n">overlay</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> render</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">max_T</span><span class="o">=</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)[</span><span class="mi">1</span><span class="x">],</span> <span class="n">overlay</span><span class="o">=</span><span class="n">false</span><span class="x">)</span>
     <span class="x">(</span><span class="n">T</span><span class="x">,)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
     <span class="x">(</span><span class="n">xs</span><span class="x">,</span> <span class="n">ys</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
     
-    <span class="n">zs</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
-    <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[</span><span class="o">:</span><span class="n">z0</span><span class="x">]</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">T</span>
-        <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)]</span>
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[:</span><span class="n">z0</span><span class="x">]</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">T</span>
+        <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">trace</span><span class="x">[(:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)]</span>
     <span class="k">end</span>
     
-    <span class="n">f</span> <span class="o">=</span> <span class="n">overlay</span> <span class="o">?</span> <span class="n">scatter!</span> <span class="o">:</span> <span class="n">scatter</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">xs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">s</span><span class="o">=:</span><span class="n">auto</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">overlay</span> <span class="o">?</span> <span class="n">scatter!</span> <span class="x">:</span> <span class="n">scatter</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">xs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">s</span><span class="o">=</span><span class="x">:</span><span class="n">auto</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
     
     <span class="k">if</span> <span class="n">show_data</span>
-        <span class="k">for</span> <span class="n">z</span> <span class="k">in</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="k">in</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span>
             <span class="n">dx</span> <span class="o">=</span> <span class="n">cos</span><span class="x">(</span><span class="n">z</span><span class="x">)</span> <span class="o">*</span> <span class="mf">0.5</span>
             <span class="n">dy</span> <span class="o">=</span> <span class="n">sin</span><span class="x">(</span><span class="n">z</span><span class="x">)</span> <span class="o">*</span> <span class="mf">0.5</span>
-            <span class="n">plot!</span><span class="x">([</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dx</span><span class="x">],</span> <span class="x">[</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dy</span><span class="x">],</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+            <span class="n">plot!</span><span class="x">([</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dx</span><span class="x">],</span> <span class="x">[</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dy</span><span class="x">],</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
     
@@ -265,7 +265,7 @@ be reassigned multiple times during the function’s execution.</p>
 
 <p>We visualize the synthetic trace below:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="x">(</span><span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
 <span class="n">render</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
@@ -278,8 +278,8 @@ be reassigned multiple times during the function’s execution.</p>
 <p>In Gen, a <strong>particle is represented as a trace</strong> and the particle filter
 state contains a weighted collection of traces. Below we define an inference
 program that runs a particle filter on an observed data set of bearings
-(<code class="language-plaintext highlighter-rouge">zs</code>). We use <code class="language-plaintext highlighter-rouge">num_particles</code> particles internally, and then we return a
-sample of <code class="language-plaintext highlighter-rouge">num_samples</code> traces from the weighted collection that the particle
+(<code class="highlighter-rouge">zs</code>). We use <code class="highlighter-rouge">num_particles</code> particles internally, and then we return a
+sample of <code class="highlighter-rouge">num_samples</code> traces from the weighted collection that the particle
 filter produces.</p>
 
 <p>Gen provides methods for initializing and updating the state of a particle
@@ -287,10 +287,10 @@ filter, documented in <a href="https://www.gen.dev/dev/ref/pf/">Particle Filteri
 
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">Gen.initialize_particle_filter</code></p>
+    <p><code class="highlighter-rouge">Gen.initialize_particle_filter</code></p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">Gen.particle_filter_step!</code></p>
+    <p><code class="highlighter-rouge">Gen.particle_filter_step!</code></p>
   </li>
 </ul>
 
@@ -302,26 +302,26 @@ particles based on their weights, which serves to redistribute the particles
 to more promising parts of the latent space.</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">Gen.maybe_resample!</code></li>
+  <li><code class="highlighter-rouge">Gen.maybe_resample!</code></li>
 </ul>
 
 <p>Gen also provides a method for sampling a collection of unweighted traces
 from the current weighted collection in the particle filter state:</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">Gen.sample_unweighted_traces</code></li>
+  <li><code class="highlighter-rouge">Gen.sample_unweighted_traces</code></li>
 </ul>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
     
     <span class="c"># construct initial observations</span>
-    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
+    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">initialize_particle_filter</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="mi">0</span><span class="x">,),</span> <span class="n">init_obs</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
     
     <span class="c"># steps</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">maybe_resample!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="n">ess_threshold</span><span class="o">=</span><span class="n">num_particles</span><span class="o">/</span><span class="mi">2</span><span class="x">)</span>
-        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">particle_filter_step!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="x">(</span><span class="n">t</span><span class="x">,),</span> <span class="x">(</span><span class="n">UnknownChange</span><span class="x">(),),</span> <span class="n">obs</span><span class="x">)</span>
     <span class="k">end</span>
     
@@ -331,28 +331,28 @@ from the current weighted collection in the particle filter state:</p>
 </code></pre></div></div>
 
 <p>The initial state is obtained by providing the following to
-<code class="language-plaintext highlighter-rouge">initialize_particle_filter</code>:</p>
+<code class="highlighter-rouge">initialize_particle_filter</code>:</p>
 
 <ul>
   <li>
-    <p>The generative function for the generative model (<code class="language-plaintext highlighter-rouge">model</code>)</p>
+    <p>The generative function for the generative model (<code class="highlighter-rouge">model</code>)</p>
   </li>
   <li>
     <p>The initial arguments to the generative function.</p>
   </li>
   <li>
     <p>The initial observations, expressed as a map from choice address to values
-(<code class="language-plaintext highlighter-rouge">init_obs</code>).</p>
+(<code class="highlighter-rouge">init_obs</code>).</p>
   </li>
   <li>
     <p>The number of particles.</p>
   </li>
 </ul>
 
-<p>At each step, we resample from the collection of traces (<code class="language-plaintext highlighter-rouge">maybe_resample!</code>)
+<p>At each step, we resample from the collection of traces (<code class="highlighter-rouge">maybe_resample!</code>)
 and then we introduce one additional bearing measurement by calling
-<code class="language-plaintext highlighter-rouge">particle_filter_step!</code> on the state. We pass the following arguments to
-<code class="language-plaintext highlighter-rouge">particle_filter_step!</code>:</p>
+<code class="highlighter-rouge">particle_filter_step!</code> on the state. We pass the following arguments to
+<code class="highlighter-rouge">particle_filter_step!</code>:</p>
 
 <ul>
   <li>
@@ -366,7 +366,7 @@ this is the number of measurements beyond the first measurement.</p>
     <p>The <a href="https://www.gen.dev/dev/ref/gfi/#Argdiffs-1">argdiff</a>
 value, which provides detailed information about the change to the
 arguments between the previous step and this step. We will revisit this
-value later.  For now, we indicate that we do not know how the <code class="language-plaintext highlighter-rouge">T::Int</code>
+value later.  For now, we indicate that we do not know how the <code class="highlighter-rouge">T::Int</code>
 argument will change with each step.</p>
   </li>
   <li>
@@ -380,18 +380,18 @@ contains the latest measurement.</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">pf_traces</span> <span class="o">=</span> <span class="n">particle_filter</span><span class="x">(</span><span class="mi">5000</span><span class="x">,</span> <span class="n">zs</span><span class="x">,</span> <span class="mi">200</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 29.409079 seconds (425.59 M allocations: 13.876 GiB, 23.89% gc time)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 29.409079 seconds (425.59 M allocations: 13.876 GiB, 23.89% gc time)
 </code></pre></div></div>
 
 <p>To render these traces, we first define a function that overlays many renderings:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> overlay</span><span class="x">(</span><span class="n">renderer</span><span class="x">,</span> <span class="n">traces</span><span class="x">;</span> <span class="n">same_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> overlay</span><span class="x">(</span><span class="n">renderer</span><span class="x">,</span> <span class="n">traces</span><span class="x">;</span> <span class="n">same_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plot</span><span class="x">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Observed bearings (red) and </span><span class="se">\n</span><span class="s">positions of individual traces (one color per trace)"</span><span class="x">,</span>
             <span class="n">xlabel</span><span class="o">=</span><span class="s">"X"</span><span class="x">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">"Y"</span><span class="x">)</span>
     
-    <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">overlay</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">traces</span><span class="x">)</span>
-        <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=!</span><span class="n">same_data</span><span class="x">,</span> <span class="n">overlay</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
+    <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="mi">1</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">overlay</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">traces</span><span class="x">)</span>
+        <span class="n">renderer</span><span class="x">(</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">show_data</span><span class="o">=!</span><span class="n">same_data</span><span class="x">,</span> <span class="n">overlay</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">args</span><span class="o">...</span><span class="x">)</span>
     <span class="k">end</span>
     <span class="n">fig</span>
 <span class="k">end</span><span class="x">;</span>
@@ -415,21 +415,21 @@ contains the latest measurement.</p>
 
 <h2 id="exercise-1">Exercise</h2>
 
-<p>Run the particle filter without the <code class="language-plaintext highlighter-rouge">maybe_resample!</code> step, and visualize the results.
+<p>Run the particle filter without the <code class="highlighter-rouge">maybe_resample!</code> step, and visualize the results.
 What do you observe? Why do you think this is? Answer in the free response section below.</p>
 
 <p>The code for particle_filter (from above) is copied in the body of the function below. Modify it so that it does NOT perform resampling after each time step.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_no_resampling</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_no_resampling</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
 
     <span class="c"># construct initial observations</span>
-    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
+    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">initialize_particle_filter</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="mi">0</span><span class="x">,),</span> <span class="n">init_obs</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
 
     <span class="c"># steps</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">maybe_resample!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="n">ess_threshold</span><span class="o">=</span><span class="n">num_particles</span><span class="o">/</span><span class="mi">2</span><span class="x">)</span>
-        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">particle_filter_step!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="x">(</span><span class="n">t</span><span class="x">,),</span> <span class="x">(</span><span class="n">UnknownChange</span><span class="x">(),),</span> <span class="n">obs</span><span class="x">)</span>
     <span class="k">end</span>
 
@@ -442,7 +442,7 @@ What do you observe? Why do you think this is? Answer in the free response secti
 <span class="n">overlay</span><span class="x">(</span><span class="n">render</span><span class="x">,</span> <span class="n">pf_traces_no_resampling</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 30.366808 seconds (425.59 M allocations: 13.862 GiB, 26.13% gc time)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 30.366808 seconds (425.59 M allocations: 13.862 GiB, 26.13% gc time)
 </code></pre></div></div>
 
 <p><img src="output_25_1.svg" alt="svg" /></p>
@@ -481,16 +481,16 @@ end;
 
 <ul>
   <li>At the start, guess many possible initial positions and velocities for the ship.</li>
-  <li>Score these proposals based on the initial observation, <code class="language-plaintext highlighter-rouge">z0</code>.</li>
-  <li>Use <code class="language-plaintext highlighter-rouge">maybe_resample!</code> to clone the guesses that explain <code class="language-plaintext highlighter-rouge">z0</code> well, and cull
+  <li>Score these proposals based on the initial observation, <code class="highlighter-rouge">z0</code>.</li>
+  <li>Use <code class="highlighter-rouge">maybe_resample!</code> to clone the guesses that explain <code class="highlighter-rouge">z0</code> well, and cull
 the guesses that explain it poorly.</li>
   <li>For each data point:
     <ol>
       <li>For each guess (particle) from the previous time step, guess many possible 
-<em>extensions</em> of the particle to include values of <code class="language-plaintext highlighter-rouge">vx</code> and <code class="language-plaintext highlighter-rouge">vy</code> for the next 
+<em>extensions</em> of the particle to include values of <code class="highlighter-rouge">vx</code> and <code class="highlighter-rouge">vy</code> for the next 
 time step.</li>
       <li>Score these extended proposed particles based on the latest bearing.</li>
-      <li>Use <code class="language-plaintext highlighter-rouge">maybe_resample!</code> to clone the guesses that explain the <code class="language-plaintext highlighter-rouge">z</code>’s so far, and
+      <li>Use <code class="highlighter-rouge">maybe_resample!</code> to clone the guesses that explain the <code class="highlighter-rouge">z</code>’s so far, and
 cull the guesses that don’t.</li>
     </ol>
   </li>
@@ -503,7 +503,7 @@ problematic in the presence of <em>resampling</em>: notice how, in the above res
 the starting locations of all the particles are likely nearly identical, even though
 the paths become more diverse as time goes on. This is because “good” particles at the
 first step were likely cloned and propagated through the particle filter, never
-changing the <code class="language-plaintext highlighter-rouge">x0</code> and <code class="language-plaintext highlighter-rouge">y0</code> values.</p>
+changing the <code class="highlighter-rouge">x0</code> and <code class="highlighter-rouge">y0</code> values.</p>
 
 <p>Therefore, it is sometimes useful to add MCMC moves to particles in a particle filter
 between steps. These MCMC moves are often called “rejuvenation moves” [4].
@@ -520,7 +520,7 @@ e.g., the velocities from the previous five time steps.</p>
 
 <p>In this section, we write two new versions of the particle filter, each of which uses
 Metropolis-Hastings rejuvenation moves to adjust each particle at every time step. 
-The first version uses so-called “resimulation MH” to adjust the initial choices (<code class="language-plaintext highlighter-rouge">x0</code>, <code class="language-plaintext highlighter-rouge">y0</code>,
+The first version uses so-called “resimulation MH” to adjust the initial choices (<code class="highlighter-rouge">x0</code>, <code class="highlighter-rouge">y0</code>,
 and the initial velocities). This means that the proposal distribution for
 MH is equal to the prior of the generative model.  The proposed next state
 under this rejuvenation move is independent of the current state.  By
@@ -532,19 +532,19 @@ light of new data — we can find better values for them.</p>
 <p>First, the resimulation MH rejuvenation move (this function is the same as the previous, 
 but with the addition of a rejuvenation move targeting the initial choices of each particle):</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_rejuv_resim</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
-    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_rejuv_resim</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">initialize_particle_filter</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="mi">0</span><span class="x">,),</span> <span class="n">init_obs</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
 
         <span class="c"># apply a rejuvenation move to each particle</span>
-        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_particles</span>
-            <span class="n">initial_choices</span> <span class="o">=</span> <span class="n">select</span><span class="x">(</span><span class="o">:</span><span class="n">x0</span><span class="x">,</span> <span class="o">:</span><span class="n">y0</span><span class="x">,</span> <span class="o">:</span><span class="n">vx0</span><span class="x">,</span> <span class="o">:</span><span class="n">vy0</span><span class="x">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_particles</span>
+            <span class="n">initial_choices</span> <span class="o">=</span> <span class="n">select</span><span class="x">(:</span><span class="n">x0</span><span class="x">,</span> <span class="x">:</span><span class="n">y0</span><span class="x">,</span> <span class="x">:</span><span class="n">vx0</span><span class="x">,</span> <span class="x">:</span><span class="n">vy0</span><span class="x">)</span>
             <span class="n">state</span><span class="o">.</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">_</span>  <span class="o">=</span> <span class="n">mh</span><span class="x">(</span><span class="n">state</span><span class="o">.</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">initial_choices</span><span class="x">)</span>
         <span class="k">end</span>
 
         <span class="n">Gen</span><span class="o">.</span><span class="n">maybe_resample!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="n">ess_threshold</span><span class="o">=</span><span class="n">num_particles</span><span class="o">/</span><span class="mi">2</span><span class="x">)</span>
-        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">particle_filter_step!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="x">(</span><span class="n">t</span><span class="x">,),</span> <span class="x">(</span><span class="n">UnknownChange</span><span class="x">(),),</span> <span class="n">obs</span><span class="x">)</span>
     <span class="k">end</span>
 
@@ -558,7 +558,7 @@ but with the addition of a rejuvenation move targeting the initial choices of ea
 <span class="n">overlay</span><span class="x">(</span><span class="n">pf_rejuv_traces</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 50.894260 seconds (743.99 M allocations: 24.945 GiB, 20.05% gc time)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 50.894260 seconds (743.99 M allocations: 24.945 GiB, 20.05% gc time)
 </code></pre></div></div>
 
 <p><img src="output_31_1.svg" alt="svg" /></p>
@@ -570,9 +570,9 @@ but with the addition of a rejuvenation move targeting the initial choices of ea
 <h2 id="exercise-2">Exercise</h2>
 
 <p>Write a random walk MH rejuvenation move that perturbs the velocity vectors
-for a block of time steps between <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code> inclusive. In this move, draw
-the perturbation from a normal distribution with standard deviation <code class="language-plaintext highlighter-rouge">1e-3</code>.
-When sampling a new <code class="language-plaintext highlighter-rouge">vx</code> and <code class="language-plaintext highlighter-rouge">vy</code> for time step <code class="language-plaintext highlighter-rouge">t</code> (where <code class="language-plaintext highlighter-rouge">a &lt;= t &lt;= b</code>),
+for a block of time steps between <code class="highlighter-rouge">a</code> and <code class="highlighter-rouge">b</code> inclusive. In this move, draw
+the perturbation from a normal distribution with standard deviation <code class="highlighter-rouge">1e-3</code>.
+When sampling a new <code class="highlighter-rouge">vx</code> and <code class="highlighter-rouge">vy</code> for time step <code class="highlighter-rouge">t</code> (where <code class="highlighter-rouge">a &lt;= t &lt;= b</code>),
 make sure you use the right <em>address</em> — <strong>you want to use the same address
 in your proposal as was used in the model.</strong></p>
 
@@ -580,8 +580,8 @@ in your proposal as was used in the model.</strong></p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="k">function</span><span class="nf"> perturbation_proposal</span><span class="x">(</span><span class="n">prev_trace</span><span class="x">,</span> <span class="n">a</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">b</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
     <span class="x">(</span><span class="n">T</span><span class="x">,)</span> <span class="o">=</span> <span class="n">get_args</span><span class="x">(</span><span class="n">prev_trace</span><span class="x">)</span>
-    <span class="n">speed</span> <span class="o">=</span> <span class="kt">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="mi">2</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="n">a</span><span class="o">:</span><span class="n">b</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">Array</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="mi">2</span><span class="x">,</span> <span class="mi">1</span><span class="x">)</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="n">a</span><span class="x">:</span><span class="n">b</span>
         <span class="n">speed</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span> <span class="c"># &lt;Remove zero and put your code to perturb vx here&gt;</span>
         <span class="n">speed</span><span class="x">[</span><span class="mi">2</span><span class="x">]</span> <span class="o">=</span> <span class="mf">0.</span> <span class="c"># &lt;Remove zero and put your code to perturb vy here&gt;</span>
     <span class="k">end</span>
@@ -595,18 +595,18 @@ in your proposal as was used in the model.</strong></p>
 
 <p>We add this into our particle filtering inference program below. We apply the rejuvenation move to adjust the velocities for the previous 5 time steps.</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_rejuv</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
-    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>    
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> particle_filter_rejuv</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>    
     <span class="n">state</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">initialize_particle_filter</span><span class="x">(</span><span class="n">model</span><span class="x">,</span> <span class="x">(</span><span class="mi">0</span><span class="x">,),</span> <span class="n">init_obs</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
         
         <span class="c"># apply a rejuvenation move to each particle</span>
-        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">num_particles</span>
+        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">num_particles</span>
             <span class="n">state</span><span class="o">.</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">perturbation_move</span><span class="x">(</span><span class="n">state</span><span class="o">.</span><span class="n">traces</span><span class="x">[</span><span class="n">i</span><span class="x">],</span> <span class="n">max</span><span class="x">(</span><span class="mi">1</span><span class="x">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">5</span><span class="x">),</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="x">)</span>
         <span class="k">end</span>
         
         <span class="n">Gen</span><span class="o">.</span><span class="n">maybe_resample!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="n">ess_threshold</span><span class="o">=</span><span class="n">num_particles</span><span class="o">/</span><span class="mi">2</span><span class="x">)</span>
-        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">(((:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">),</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">particle_filter_step!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="x">(</span><span class="n">t</span><span class="x">,),</span> <span class="x">(</span><span class="n">UnknownChange</span><span class="x">(),),</span> <span class="n">obs</span><span class="x">)</span>
     <span class="k">end</span>
     
@@ -620,7 +620,7 @@ in your proposal as was used in the model.</strong></p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">pf_rejuv_traces</span> <span class="o">=</span> <span class="n">particle_filter_rejuv</span><span class="x">(</span><span class="mi">5000</span><span class="x">,</span> <span class="n">zs</span><span class="x">,</span> <span class="mi">200</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 61.996773 seconds (955.22 M allocations: 31.208 GiB, 18.78% gc time, 0.22% compilation time)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 61.996773 seconds (955.22 M allocations: 31.208 GiB, 18.78% gc time, 0.22% compilation time)
 </code></pre></div></div>
 
 <p>We render the traces:</p>
@@ -648,7 +648,7 @@ function perturbation_move(trace, a::Int, b::Int)
 end; 
 -->
 
-<h2 id="4-using-the-unfold-combinator-to-improve-performance-">4. Using the <code class="language-plaintext highlighter-rouge">Unfold</code> combinator to improve performance <a name="unfold"></a></h2>
+<h2 id="4-using-the-unfold-combinator-to-improve-performance-">4. Using the <code class="highlighter-rouge">Unfold</code> combinator to improve performance <a name="unfold"></a></h2>
 
 <p>For the particle filtering algorithms above, within an update step it is only
 necessary to revisit the most recent state (or the most recent 5 states if
@@ -671,19 +671,19 @@ and enable asymptotically more efficient inference programs.</p>
 <p>To exploit the opportunity for incremental computation, and improve the
 scaling behavior of our particle filter inference programs, we will write a
 new model using a generative function combinator to replaces the following 
-Julia <code class="language-plaintext highlighter-rouge">for</code> loop in our model.</p>
+Julia <code class="highlighter-rouge">for</code> loop in our model.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c"># generate successive states and measurements</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">T</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">T</span>
 
         <span class="c"># update the state of the point</span>
-        <span class="n">vx</span> <span class="o">=</span> <span class="x">{(</span><span class="o">:</span><span class="n">vx</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vx</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
-        <span class="n">vy</span> <span class="o">=</span> <span class="x">{(</span><span class="o">:</span><span class="n">vy</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vy</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
+        <span class="n">vx</span> <span class="o">=</span> <span class="x">{(:</span><span class="n">vx</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vx</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
+        <span class="n">vy</span> <span class="o">=</span> <span class="x">{(:</span><span class="n">vy</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">vy</span><span class="x">,</span> <span class="n">sqrt</span><span class="x">(</span><span class="n">velocity_var</span><span class="x">))</span>
         <span class="n">x</span> <span class="o">+=</span> <span class="n">vx</span>
         <span class="n">y</span> <span class="o">+=</span> <span class="n">vy</span>
 
         <span class="c"># bearing measurement</span>
-        <span class="x">{(</span><span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">measurement_noise</span><span class="x">)</span>
+        <span class="x">{(:</span><span class="n">z</span><span class="x">,</span> <span class="n">t</span><span class="x">)}</span> <span class="o">~</span> <span class="n">normal</span><span class="x">(</span><span class="n">bearing</span><span class="x">(</span><span class="n">x</span><span class="x">,</span> <span class="n">y</span><span class="x">),</span> <span class="n">measurement_noise</span><span class="x">)</span>
 
         <span class="c"># record position</span>
         <span class="n">xs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">x</span>
@@ -691,21 +691,21 @@ Julia <code class="language-plaintext highlighter-rouge">for</code> loop in our 
     <span class="k">end</span>
 </code></pre></div></div>
 
-<p>This <code class="language-plaintext highlighter-rouge">for</code> loop has a very specific pattern of information flow—there is a
-sequence of states (represented by <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, <code class="language-plaintext highlighter-rouge">vx</code>, and <code class="language-plaintext highlighter-rouge">vy</code>), and each state is
+<p>This <code class="highlighter-rouge">for</code> loop has a very specific pattern of information flow—there is a
+sequence of states (represented by <code class="highlighter-rouge">x</code>, <code class="highlighter-rouge">y</code>, <code class="highlighter-rouge">vx</code>, and <code class="highlighter-rouge">vy</code>), and each state is
 generated from the previous state. This is exactly the pattern that the
 <a href="https://www.gen.dev/dev/ref/combinators/#Unfold-combinator-1">Unfold</a>
 generative function combinator is designed to handle.</p>
 
-<p>Below, we re-express the Julia <code class="language-plaintext highlighter-rouge">for</code> loop over the state sequence using the
-Unfold combinator. Specifically, we define a generative function (<code class="language-plaintext highlighter-rouge">kernel</code>)
+<p>Below, we re-express the Julia <code class="highlighter-rouge">for</code> loop over the state sequence using the
+Unfold combinator. Specifically, we define a generative function (<code class="highlighter-rouge">kernel</code>)
 that takes the prevous state as its second argument, and returns the new
 state. The Unfold combinator takes the kernel and returns a new generative
-function (<code class="language-plaintext highlighter-rouge">chain</code>) that applies kernel repeatedly. Read the Unfold combinator
+function (<code class="highlighter-rouge">chain</code>) that applies kernel repeatedly. Read the Unfold combinator
 documentation for details on the behavior of the resulting generative
-function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
+function (<code class="highlighter-rouge">chain</code>).</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span><span class="nc"> State</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">struct</span> <span class="n">State</span>
     <span class="n">x</span><span class="o">::</span><span class="kt">Float64</span>
     <span class="n">y</span><span class="o">::</span><span class="kt">Float64</span>
     <span class="n">vx</span><span class="o">::</span><span class="kt">Float64</span>
@@ -728,13 +728,13 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 <span class="n">Gen</span><span class="o">.</span><span class="nd">@load_generated_functions</span> <span class="c"># To allow use of the generative function written in the static modeling language above.</span>
 </code></pre></div></div>
 
-<p>We can understand the behavior of <code class="language-plaintext highlighter-rouge">chain</code> by getting a trace of it and printing the random choices:</p>
+<p>We can understand the behavior of <code class="highlighter-rouge">chain</code> by getting a trace of it and printing the random choices:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trace</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">simulate</span><span class="x">(</span><span class="n">chain</span><span class="x">,</span> <span class="x">(</span><span class="mi">4</span><span class="x">,</span> <span class="n">State</span><span class="x">(</span><span class="mf">0.</span><span class="x">,</span> <span class="mf">0.</span><span class="x">,</span> <span class="mf">0.</span><span class="x">,</span> <span class="mf">0.</span><span class="x">),</span> <span class="mf">0.01</span><span class="x">,</span> <span class="mf">0.01</span><span class="x">))</span>
 <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── 1
 │   │
 │   ├── :vx : -0.16005546360702977
@@ -768,7 +768,7 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
     └── :z : 2.946040343224056
 </code></pre></div></div>
 
-<p>We now write a new version of the generative model that invokes <code class="language-plaintext highlighter-rouge">chain</code> instead of using the Julia <code class="language-plaintext highlighter-rouge">for</code> loop:</p>
+<p>We now write a new version of the generative model that invokes <code class="highlighter-rouge">chain</code> instead of using the Julia <code class="highlighter-rouge">for</code> loop:</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@gen</span> <span class="x">(</span><span class="n">static</span><span class="x">)</span> <span class="k">function</span><span class="nf"> unfold_model</span><span class="x">(</span><span class="n">T</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
 
@@ -804,7 +804,7 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│
 ├── :x0 : 0.02829016704702266
 │
 ├── :y0 : 0.944130980723105
@@ -852,13 +852,13 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 
 <p>We can now run a particle filter on the Unfold model and see a speedup:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> unfold_particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
-    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> unfold_particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">zs</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">},</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+    <span class="n">init_obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">z0</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]))</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">initialize_particle_filter</span><span class="x">(</span><span class="n">unfold_model</span><span class="x">,</span> <span class="x">(</span><span class="mi">0</span><span class="x">,),</span> <span class="n">init_obs</span><span class="x">,</span> <span class="n">num_particles</span><span class="x">)</span>
     
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">length</span><span class="x">(</span><span class="n">zs</span><span class="x">)</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">maybe_resample!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="n">ess_threshold</span><span class="o">=</span><span class="n">num_particles</span><span class="o">/</span><span class="mi">2</span><span class="x">)</span>
-        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((</span><span class="o">:</span><span class="n">chain</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">z</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">choicemap</span><span class="x">((:</span><span class="n">chain</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="x">:</span><span class="n">z</span><span class="x">,</span> <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]))</span>
         <span class="n">Gen</span><span class="o">.</span><span class="n">particle_filter_step!</span><span class="x">(</span><span class="n">state</span><span class="x">,</span> <span class="x">(</span><span class="n">t</span><span class="x">,),</span> <span class="x">(</span><span class="n">UnknownChange</span><span class="x">(),),</span> <span class="n">obs</span><span class="x">)</span>
     <span class="k">end</span>
 
@@ -870,31 +870,31 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@time</span> <span class="n">unfold_pf_traces</span> <span class="o">=</span> <span class="n">unfold_particle_filter</span><span class="x">(</span><span class="mi">5000</span><span class="x">,</span> <span class="n">zs</span><span class="x">,</span> <span class="mi">200</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  2.501968 seconds (33.93 M allocations: 3.424 GiB, 18.76% gc time)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  2.501968 seconds (33.93 M allocations: 3.424 GiB, 18.76% gc time)
 </code></pre></div></div>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> unfold_render</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="nb">true</span><span class="x">,</span> <span class="n">max_T</span><span class="o">=</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)[</span><span class="mi">1</span><span class="x">],</span> <span class="n">overlay</span><span class="o">=</span><span class="nb">false</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span><span class="nf"> unfold_render</span><span class="x">(</span><span class="n">trace</span><span class="x">;</span> <span class="n">show_data</span><span class="o">=</span><span class="n">true</span><span class="x">,</span> <span class="n">max_T</span><span class="o">=</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)[</span><span class="mi">1</span><span class="x">],</span> <span class="n">overlay</span><span class="o">=</span><span class="n">false</span><span class="x">)</span>
     <span class="x">(</span><span class="n">T</span><span class="x">,)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_args</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_choices</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
     <span class="x">(</span><span class="n">init_state</span><span class="x">,</span> <span class="n">states</span><span class="x">)</span> <span class="o">=</span> <span class="n">Gen</span><span class="o">.</span><span class="n">get_retval</span><span class="x">(</span><span class="n">trace</span><span class="x">)</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
-    <span class="n">zs</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="nb">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}(</span><span class="n">undef</span><span class="x">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">1</span><span class="x">)</span>
     <span class="n">xs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">init_state</span><span class="o">.</span><span class="n">x</span>
     <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">init_state</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">z0</span><span class="x">]</span>
-    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">T</span>
+    <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">z0</span><span class="x">]</span>
+    <span class="k">for</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="x">:</span><span class="n">T</span>
         <span class="n">xs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">states</span><span class="x">[</span><span class="n">t</span><span class="x">]</span><span class="o">.</span><span class="n">x</span>
         <span class="n">ys</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">states</span><span class="x">[</span><span class="n">t</span><span class="x">]</span><span class="o">.</span><span class="n">y</span>
-        <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[</span><span class="o">:</span><span class="n">chain</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="o">:</span><span class="n">z</span><span class="x">]</span>
+        <span class="n">zs</span><span class="x">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span> <span class="o">=</span> <span class="n">choices</span><span class="x">[:</span><span class="n">chain</span> <span class="o">=&gt;</span> <span class="n">t</span> <span class="o">=&gt;</span> <span class="x">:</span><span class="n">z</span><span class="x">]</span>
     <span class="k">end</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">overlay</span> <span class="o">?</span> <span class="n">scatter!</span> <span class="o">:</span> <span class="n">scatter</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">xs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">s</span><span class="o">=:</span><span class="n">auto</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">overlay</span> <span class="o">?</span> <span class="n">scatter!</span> <span class="x">:</span> <span class="n">scatter</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">f</span><span class="x">(</span><span class="n">xs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">ys</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">],</span> <span class="n">s</span><span class="o">=</span><span class="x">:</span><span class="n">auto</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
     <span class="k">if</span> <span class="n">show_data</span>
-        <span class="k">for</span> <span class="n">z</span> <span class="k">in</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="k">in</span> <span class="n">zs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">max_T</span><span class="o">+</span><span class="mi">1</span><span class="x">]</span>
             <span class="n">dx</span> <span class="o">=</span> <span class="n">cos</span><span class="x">(</span><span class="n">z</span><span class="x">)</span> <span class="o">*</span> <span class="mf">0.5</span>
             <span class="n">dy</span> <span class="o">=</span> <span class="n">sin</span><span class="x">(</span><span class="n">z</span><span class="x">)</span> <span class="o">*</span> <span class="mf">0.5</span>
-            <span class="n">plot!</span><span class="x">([</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dx</span><span class="x">],</span> <span class="x">[</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dy</span><span class="x">],</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">nothing</span><span class="x">)</span>
+            <span class="n">plot!</span><span class="x">([</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dx</span><span class="x">],</span> <span class="x">[</span><span class="mf">0.</span><span class="x">,</span> <span class="n">dy</span><span class="x">],</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="x">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="x">,</span> <span class="n">label</span><span class="o">=</span><span class="n">nothing</span><span class="x">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
 <span class="k">end</span><span class="x">;</span>
@@ -902,26 +902,26 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 
 <p>Let’s check that the results are reasonable:</p>
 
-<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">overlay</span><span class="x">(</span><span class="n">unfold_render</span><span class="x">,</span> <span class="n">unfold_pf_traces</span><span class="x">,</span> <span class="n">same_data</span><span class="o">=</span><span class="nb">true</span><span class="x">)</span>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">overlay</span><span class="x">(</span><span class="n">unfold_render</span><span class="x">,</span> <span class="n">unfold_pf_traces</span><span class="x">,</span> <span class="n">same_data</span><span class="o">=</span><span class="n">true</span><span class="x">)</span>
 </code></pre></div></div>
 
 <p><img src="output_55_0.svg" alt="svg" /></p>
 
-<p>We now empirically investigate the scaling behavior of (1) the inference program that uses the Julia <code class="language-plaintext highlighter-rouge">for</code> loop,  and (2) the equivalent inference program that uses Unfold. We will use a fake long vector of z data, and we will investigate how the running time depends on the number of observations.</p>
+<p>We now empirically investigate the scaling behavior of (1) the inference program that uses the Julia <code class="highlighter-rouge">for</code> loop,  and (2) the equivalent inference program that uses Unfold. We will use a fake long vector of z data, and we will investigate how the running time depends on the number of observations.</p>
 
 <div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fake_zs</span> <span class="o">=</span> <span class="n">rand</span><span class="x">(</span><span class="mi">1000</span><span class="x">);</span>
 
-<span class="k">function</span><span class="nf"> timing_experiment</span><span class="x">(</span><span class="n">num_observations_list</span><span class="o">::</span><span class="kt">Vector</span><span class="x">{</span><span class="kt">Int</span><span class="x">},</span> <span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
-    <span class="n">times</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}()</span>
-    <span class="n">times_unfold</span> <span class="o">=</span> <span class="kt">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}()</span>
+<span class="k">function</span><span class="nf"> timing_experiment</span><span class="x">(</span><span class="n">num_observations_list</span><span class="o">::</span><span class="n">Vector</span><span class="x">{</span><span class="kt">Int</span><span class="x">},</span> <span class="n">num_particles</span><span class="o">::</span><span class="kt">Int</span><span class="x">,</span> <span class="n">num_samples</span><span class="o">::</span><span class="kt">Int</span><span class="x">)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}()</span>
+    <span class="n">times_unfold</span> <span class="o">=</span> <span class="n">Vector</span><span class="x">{</span><span class="kt">Float64</span><span class="x">}()</span>
     <span class="k">for</span> <span class="n">num_observations</span> <span class="k">in</span> <span class="n">num_observations_list</span>
         <span class="n">println</span><span class="x">(</span><span class="s">"evaluating inference programs for num_observations: </span><span class="si">$</span><span class="s">num_observations"</span><span class="x">)</span>
         <span class="n">tstart</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
-        <span class="n">traces</span> <span class="o">=</span> <span class="n">particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="x">,</span> <span class="n">fake_zs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">num_observations</span><span class="x">],</span> <span class="n">num_samples</span><span class="x">)</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="n">particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="x">,</span> <span class="n">fake_zs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">num_observations</span><span class="x">],</span> <span class="n">num_samples</span><span class="x">)</span>
         <span class="n">push!</span><span class="x">(</span><span class="n">times</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">tstart</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
         
         <span class="n">tstart</span> <span class="o">=</span> <span class="n">time_ns</span><span class="x">()</span>
-        <span class="n">traces</span> <span class="o">=</span> <span class="n">unfold_particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="x">,</span> <span class="n">fake_zs</span><span class="x">[</span><span class="mi">1</span><span class="o">:</span><span class="n">num_observations</span><span class="x">],</span> <span class="n">num_samples</span><span class="x">)</span>
+        <span class="n">traces</span> <span class="o">=</span> <span class="n">unfold_particle_filter</span><span class="x">(</span><span class="n">num_particles</span><span class="x">,</span> <span class="n">fake_zs</span><span class="x">[</span><span class="mi">1</span><span class="x">:</span><span class="n">num_observations</span><span class="x">],</span> <span class="n">num_samples</span><span class="x">)</span>
         <span class="n">push!</span><span class="x">(</span><span class="n">times_unfold</span><span class="x">,</span> <span class="x">(</span><span class="n">time_ns</span><span class="x">()</span> <span class="o">-</span> <span class="n">tstart</span><span class="x">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="x">)</span>
         
     <span class="k">end</span>
@@ -932,7 +932,7 @@ function (<code class="language-plaintext highlighter-rouge">chain</code>).</p>
 <span class="x">(</span><span class="n">times</span><span class="x">,</span> <span class="n">times_unfold</span><span class="x">)</span> <span class="o">=</span> <span class="n">timing_experiment</span><span class="x">(</span><span class="n">num_observations_list</span><span class="x">,</span> <span class="mi">100</span><span class="x">,</span> <span class="mi">20</span><span class="x">);</span>
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>evaluating inference programs for num_observations: 1
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>evaluating inference programs for num_observations: 1
 evaluating inference programs for num_observations: 3
 evaluating inference programs for num_observations: 10
 evaluating inference programs for num_observations: 30
