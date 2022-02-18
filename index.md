@@ -1,86 +1,248 @@
 ---
 layout: index
-title: "Gen"
+title: "OpenGen"
 ---
 
-
-<br>
-# Why Gen
-{: class="homepage"}
-
-### Gen automates the implementation details of probabilistic inference algorithms
-{: class="homepage"}
-Gen's inference library gives users building blocks for writing efficient probabilistic inference algorithms that are tailored to their models, while automating the tricky math and the low-level implementation details.
-Gen helps users write hybrid algorithms that combine neural networks, variational inference, sequential Monte Carlo samplers, and Markov chain Monte Carlo.
-
-### Gen allows users to flexibly navigate performance trade-offs
-{: class="homepage"}
-Gen features an easy-to-use modeling language for writing down generative models, inference models, variational families, and proposal distributions using ordinary code. 
-But it also lets users migrate parts of their model or inference algorithm to specialized modeling languages for which it can generate especially fast code.
-Users can also hand-code parts of their models that demand better performance.
-
-### Gen supports custom hybrid inference algorithms
-{: class="homepage"}
-Neural network inference is fast, but can be inaccurate on out-of-distribution data, and requires expensive training. Model-based inference is more computationally expensive, but does not require retraining, and can be more accurate. Gen supports custom hybrid inference algorithms that benefit from the strengths of both approaches.
-
-### Users write custom inference algorithms without extending the compiler
-{: class="homepage"}
-Instead of an *inference engine* that tightly couples inference algorithms with language compiler details, Gen gives users a *flexible API* for implementing an open-ended set of inference and learning algorithms.
-This API includes automatic differentiation (AD), but goes far beyond AD and includes many other operations that are needed for model-based inference algorithms.
-
-### Efficient inference in models with stochastic structure
-{: class="homepage"}
-Generative models and inference models in Gen can have dynamic computation graphs.
-Gen's unique support for custom reversible jump and [involutive MCMC](https://arxiv.org/abs/2007.09871) algorithms allows for more efficient inference in generative models with stochastic structure.
-
-
-<br>
-# Installing Gen
+# What is OpenGen?
 {: class="homepage"}
 
 <br>
-We maintain a Julia implementation of the Gen architecture, and we are currently working on porting Gen to other languages.
-To install the Julia implementation of Gen, [download Julia](https://julialang.org/downloads/).
-Then, install the Gen package with the Julia package manager:
 
-From the Julia REPL, type `]` to enter the Pkg REPL mode and then run:
+The goal of this site is to make **probabilistic modeling, inference, and learning** techniques accessible to a wider audience by 
+listing a curated set of software tools and reusable modeling components 
+that are based on a common set of design principles and interfaces.
+These software de-emphasize the role of custom mathematical derivations in the use of state-of-the-art probabilistic modeling, inference, and learning techniques, and instead
+encourage use of software engineering principles to simplify the implementation of these techniques.
 
-```
-pkg> add Gen
-```
+One core design principle for these software is the **separation of concerns between the implementation of a probabilistic model and the implementation of inference and learning algorithms** that operate on the model.
+This separation is based on an interface for models called the '**trace abstract data type**', which defines a set of core operations that are analogous to (and generalize) automatic differentiation as used in deep learning, but also support for incrementally optimizing and sampling hypotheses using model-based inference.
+We call software that utilizes similar abstract data types to represent generative models as 'in the Gen paradigm'.
+
+If a model is implemented in the Gen paradigm, then existing generic inference and learning algorithm implementations can be applied to it (reducing the amount of new code that has to be written),
+and the model and the inference and learning algorithms can be modified more independently, allowing for more rapid experimentation.
+Without this separation of concerns, it is easy to get stuck re-writing inference code from scratch when a changing the model.
+
+The trace abstract data type is most closely aligned with **Monte Carlo** algorithms, but also supports **variational inference** algorithms, **deep learning** algorithms, and hybrid algorithms that combine all three inference and learning paradigms.
+It is also compatible with symbolic inference algorithms.
+An early version of this abstract data type is described in [Marco Cusumano-Towner's PhD thesis](https://www.mct.dev/assets/mct-thesis.pdf) and a 2019 PLDI paper ([paper](https://dl.acm.org/doi/10.1145/3314221.3314642), [bibtex](https://www.gen.dev/assets/gen-pldi.txt)).
+
+**Probabilistic programming languages** can be used to automatically generate the implementation of the trace abstract data type from your declarative specification of the model.
+You can also always implement the data type yourself for your model for more control and, usually, better performance, once it is time to optimize your implementation.
 
 <br>
-# Institutions using Gen
+<div class="container">
+    <div class="row">
+    <div class="col-6 mx-auto">
+        <img src="assets/images/gen-architecture.svg" class="img-fluid">
+    </div>
+    </div>
+</div>
+<br>
+
+The core data type can also be implemented **compositionally**, which means that you can compose generaive models from smaller building blocks, which are themselves either implemented using a probabilistic programming language or by hand.
+The compositionality of generative models in this paradigm makes it possible to develop reusable libraries of modeling components for different domains (see 'Domain-Specific Software', below).
+
+While not every library listed on this site uses the same exact interface, the interfaces are similar to one another.
+This means that after learning to write inference and learning code using one library, it should be relatively easy to pick up another library.
+
+Probabilistic programming is a very active and still-early research field.
+This site will aim to provide a vehicle for research projects that are compatible with the Gen paradigm to be adopted more widely as engineering tools.
+
+# General-Purpose Software 
 {: class="homepage"}
 
-<div class="logo-table">
-<table>
-<tr>
-<td> <img src="assets/images/mit-logo.png" width="300" /> </td>
-<td> <img src="assets/images/berkeley-logo.jpg" width="200" /> </td>
-<td> <img src="assets/images/yale-logo.jpeg" width="300" /> </td>
-</tr>
-<tr>
-<td> <img src="assets/images/uw-madison-logo.png" width="300" /> </td>
-<td> <img src="assets/images/intel-logo.png" width="150" /> </td>
-<td> <img src="assets/images/ibm-logo.png" width="150" /> </td>
-</tr>
-<tr>
-<td> <img src="assets/images/umass-amherst-logo.png" width="200" /> </td>
-</tr>
-</table>
+<div id="accordion">
+
+  <!---
+  ***************
+  **** Julia ****
+  ***************
+  -->
+  <div class="card">
+    <div class="card-header" id="headingJulia">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseJulia" aria-expanded="true" aria-controls="julia">
+          <h4>Julia</h4>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseJulia" class="collapse show" aria-labelledby="headingOne" data-parent="#collapseJulia">
+      <div class="card-body">
+
+            <!-- Gen.jl -->
+            <div class="card" id="genjl">
+                <div class="card-body">
+                    <h5 class="card-title">Gen.jl</h5>
+                    <p class="card-text">
+                        A general-purpose probabilistic programming system with programmable inference, embedded in Julia.
+                    </p>
+                    <a href="https://gen.dev/" class="btn btn-primary">Web Site</a>
+                    <a href="https://github.com/probcomp/Gen.jl" class="btn btn-primary">GitHub</a>
+                    <a href="https://gen.dev/dev/" class="btn btn-primary">Documentation</a>
+                    <a href="https://gen.dev/tutorials/" class="btn btn-primary">Tutorials</a>
+                    <a href="https://gen.dev/ecosystem/" class="btn btn-primary">Ecosystem</a>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <div></div>
+                    <div class="text-success font-weight-bold">Supported</div>
+                </div>
+    </div>
+
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!---
+  *************
+  **** C++ ****
+  *************
+  -->
+  <div class="card">
+    <div class="card-header" id="cpp">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseCpp" aria-expanded="true" aria-controls="collapseCpp">
+          <h4>C++</h4>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseCpp" class="collapse show" aria-labelledby="headingOne" data-parent="#collapseCpp">
+      <div class="card-body">
+
+<div class="card" id="gentl">
+    <div class="card-body">
+        <h5 class="card-title">GenTL</h5>
+        <p class="card-text">
+            C++ template library for probabilistic inference and learning based on probabilistic programming
+        </p>
+        <a href="https://github.com/OpenGen/GenTL" class="btn btn-primary">GitHub</a>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <div></div>
+        <div class="text-warning font-weight-bold">Under development</div>
+    </div>
 </div>
 
-<br>
-# The Gen.jl team
+<div class="card" id="gentorch">
+    <div class="card-body">
+        <h5 class="card-title">GenTorch</h5>
+        <p class="card-text">
+            Work-in-progress C++/LibTorch-based Gen probabilistic programming language
+        </p>
+        <a href="https://github.com/OpenGen/GenTorch" class="btn btn-primary">GitHub</a>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <div>Compatible with <a href="#gentl">GenTL</a></div>
+        <div class="text-warning font-weight-bold">Under development</div>
+    </div>
+</div>
+
+
+
+    </div>
+    </div>
+
+  </div>
+
+  <!---
+  ****************
+  **** Python ****
+  ****************
+  -->
+  <div class="card">
+    <div class="card-header" id="python">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapsePython" aria-expanded="true" aria-controls="collapsePython">
+          <h4>Python</h4>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapsePython" class="collapse show" aria-labelledby="headingOne" data-parent="#collapsePython">
+      <div class="card-body">
+
+<div class="card" id="pygen">
+    <div class="card-body">
+        <h5 class="card-title">PyGen</h5>
+        <p class="card-text">
+            A minimal Gen dynamic modeling language (DML) implementation in PyTorch
+        </p>
+        <a href="https://github.com/OpenGen/pygen" class="btn btn-primary">GitHub</a>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <div></div>
+        <div class="text-danger font-weight-bold">Experimental</div>
+    </div>
+</div>
+    </div>
+</div>
+</div>
+
+
+</div> <!-- general purpose software -->
+
+# Domain-Specific Software 
 {: class="homepage"}
 
-Gen.jl was created by [Marco Cusumano-Towner](https://www.mct.dev) the [MIT Probabilistic Computing Project](http://probcomp.csail.mit.edu/), which is led by [Vikash Mansinghka](http://probcomp.csail.mit.edu/principal-investigator/).
-Gen.jl has grown and is maintained through the help of a core research and engineering team that includes Ben Zinberg, [Alex Lew](http://alexlew.net/), [Tan Zhi-Xuan](https://github.com/ztangent/), and [George Matheos](https://www.linkedin.com/in/george-matheos-429982160/), as well as a number of open-source [contributors](https://github.com/probcomp/Gen.jl/graphs/contributors).
-The Gen architecture is described in Marco's [PhD thesis](https://www.mct.dev/assets/mct-thesis.pdf).
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <h4>Time series modeling</h4>
+        </button>
+      </h5>
+    </div>
 
-If you use Gen in your research, please cite our PLDI paper:
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#collapseOne">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
 
-Gen: A General-Purpose Probabilistic Programming System with Programmable Inference. Cusumano-Towner, M. F.; Saad, F. A.; Lew, A.; and Mansinghka, V. K. In Proceedings of the 40th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI ‘19). ([pdf](https://dl.acm.org/doi/10.1145/3314221.3314642)) ([bibtex](assets/gen-pldi.txt))
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <h4>3D perception</h4>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#collapseTwo">
+      <div class="card-body">
 
-<br>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">PyGen</h5>
+        <p class="card-text">
+            A minimal Gen dynamic modeling language (DML) implementation in PyTorch
+        </p>
+        <a href="https://github.com/OpenGen/pygen" class="btn btn-primary">GitHub</a>
+    </div>
+    <div class="card-footer text-danger font-weight-bold">
+        Experimental
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Compatible with <a href="#genjl">Gen.jl</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">PyGen</h5>
+        <p class="card-text">
+            A minimal Gen dynamic modeling language (DML) implementation in PyTorch
+        </p>
+        <a href="https://github.com/OpenGen/pygen" class="btn btn-primary">GitHub</a>
+    </div>
+    <div class="card-footer text-danger font-weight-bold">
+        Experimental
+    </div>
+</div>
+
+</div> 
